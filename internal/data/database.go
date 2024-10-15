@@ -18,6 +18,7 @@ type Storage interface {
 	Close() error
 
 	AuthStore() AuthStore
+	DocumentStore() DocumentStore
 }
 
 type storage struct {
@@ -27,7 +28,7 @@ type storage struct {
 }
 
 var (
-	database   = os.Getenv("DB_DATABASE")
+	database   = os.Getenv("DB_NAME")
 	password   = os.Getenv("DB_PASSWORD")
 	username   = os.Getenv("DB_USERNAME")
 	port       = os.Getenv("DB_PORT")

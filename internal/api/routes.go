@@ -1,6 +1,8 @@
 package api
 
 import (
+	"time"
+
 	"github.com/JueViGrace/clo-backend/internal/types"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
@@ -11,6 +13,7 @@ func (a *api) RegisterRoutes() {
 	a.MonitorRoute()
 
 	a.AuthRoutes()
+	a.DocumentRoutes()
 }
 
 func (a *api) HealthRoute() {
@@ -21,5 +24,7 @@ func (a *api) HealthRoute() {
 }
 
 func (a *api) MonitorRoute() {
-	a.Get("/api/metrics", monitor.New())
+	a.Get("/api/metrics", monitor.New(monitor.Config{
+		Refresh: time.Duration(time.Second),
+	}))
 }

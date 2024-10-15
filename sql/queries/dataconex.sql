@@ -1,22 +1,27 @@
 -- name: GetCompanies :many
-SELECT * FROM ke_dataconex
-WHERE deleted_at IS NULL;
+select *
+from ke_dataconex
+where deleted_at is null
+;
 
 -- name: GetCompanyById :one
-SELECT * FROM ke_dataconex
-WHERE 
-ked_codigo = $1 AND
-ked_status = 1 AND
-deleted_at IS NULL;
+select *
+from ke_dataconex
+where ked_codigo = $1 and ked_status = 1 and deleted_at is null
+;
 
 -- name: GetAllCompanies :many
-SELECT * FROM ke_dataconex;
+select *
+from ke_dataconex
+;
 
 -- name: GetOneCompanyById :one
-SELECT * FROM ke_dataconex
-WHERE ked_codigo = $1;
+select *
+from ke_dataconex
+where ked_codigo = $1
+;
 
--- name: CreateCompany :one
+-- name: CreateCompany :exec
 INSERT INTO ke_dataconex (
         ked_codigo,
         ked_nombre,
@@ -29,7 +34,7 @@ INSERT INTO ke_dataconex (
 VALUES ($1, $2, $3, $4, $5, NOW(), NOW())
 RETURNING *;
 
--- name: UpdateCompany :one
+-- name: UpdateCompany :exec
 UPDATE ke_dataconex
 SET ked_codigo = $1,
     ked_nombre = $2,
