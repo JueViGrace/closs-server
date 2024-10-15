@@ -7,5 +7,5 @@ func (a *api) AuthRoutes() {
 	authHandler := handlers.NewAuthHandler(a.db.AuthStore())
 
 	authGroup.Post("/signIn", authHandler.SignIn)
-	authGroup.Post("signUp", authHandler.SignUp)
+	authGroup.Post("/signUp", authHandler.SignUp)
 }

@@ -35,7 +35,7 @@ SET ked_codigo = $1,
     ked_nombre = $2,
     ked_status = $3,
     ked_enlace = $4,
-    ked_agen = 5$,
+    ked_agen = $5,
     updated_at = NOW()
 WHERE ked_codigo = $6
 RETURNING *;

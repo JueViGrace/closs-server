@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/JueViGrace/clo-backend/internal/db"
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
@@ -20,8 +21,9 @@ type Storage interface {
 }
 
 type storage struct {
-	db  *sql.DB
-	ctx context.Context
+	db      *sql.DB
+	ctx     context.Context
+	queries *db.Queries
 }
 
 var (
@@ -33,6 +35,7 @@ var (
 	schema     = os.Getenv("DB_SCHEMA")
 	ctx        = context.Background()
 	dbInstance *storage
+	queries    *db.Queries
 )
 
 func NewStorage() Storage {
@@ -50,9 +53,12 @@ func NewStorage() Storage {
 		log.Fatal("Ping to the database failed ", err)
 	}
 
+	queries = db.New(conn)
+
 	dbInstance = &storage{
-		db:  conn,
-		ctx: ctx,
+		db:      conn,
+		ctx:     ctx,
+		queries: queries,
 	}
 
 	return dbInstance

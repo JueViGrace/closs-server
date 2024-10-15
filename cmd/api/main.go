@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/JueViGrace/clo-backend/internal/server"
-	_ "github.com/joho/godotenv/autoload"
 )
 
 func main() {

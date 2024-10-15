@@ -9,6 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	_ "github.com/joho/godotenv/autoload"
 )
 
 type Api interface {
@@ -36,10 +37,10 @@ func (a *api) Init() (err error) {
 		return err
 	}
 
-	a.RegisterRoutes()
-
 	a.Use(cors.New())
 	a.Use(logger.New())
+
+	a.RegisterRoutes()
 
 	err = a.Listen(fmt.Sprintf(":%d", port))
 
