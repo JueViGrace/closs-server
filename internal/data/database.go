@@ -10,7 +10,8 @@ import (
 	"time"
 
 	"github.com/JueViGrace/clo-backend/internal/db"
-	_ "github.com/jackc/pgx/v5/stdlib"
+	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/joho/godotenv/autoload"
 )
 
 type Storage interface {
@@ -33,7 +34,6 @@ var (
 	username   = os.Getenv("DB_USERNAME")
 	port       = os.Getenv("DB_PORT")
 	host       = os.Getenv("DB_HOST")
-	schema     = os.Getenv("DB_SCHEMA")
 	ctx        = context.Background()
 	dbInstance *storage
 	queries    *db.Queries
@@ -44,8 +44,8 @@ func NewStorage() Storage {
 		return dbInstance
 	}
 
-	connStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=verify-full&search_path=%s", username, password, host, port, database, schema)
-	conn, err := sql.Open("pgx", connStr)
+	connStr := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", username, password, host, port, database)
+	conn, err := sql.Open("mysql", connStr)
 	if err != nil {
 		log.Fatal("Couldn't connect to database ", err)
 	}
