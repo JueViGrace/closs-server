@@ -163,60 +163,6 @@ func DbKeDoccToDocument(kd *db.KeDoccti) *Document {
 	}
 }
 
-func DbKeDoclToDocumentLine(kd *db.KeDoclmv) *DocumentLine {
-	return &DocumentLine{
-		Agencia:       kd.Agencia,
-		Tipodoc:       kd.Tipodoc,
-		Documento:     kd.Documento,
-		Tipodocv:      kd.Tipodocv,
-		Grupo:         kd.Grupo,
-		Subgrupo:      kd.Subgrupo,
-		Origen:        kd.Origen,
-		Codigo:        kd.Codigo,
-		Codhijo:       kd.Codhijo,
-		Pid:           kd.Pid,
-		Nombre:        kd.Nombre,
-		Cantidad:      kd.Cantidad,
-		Cntdevuelt:    kd.Cntdevuelt,
-		Vndcntdevuelt: kd.Vndcntdevuelt,
-		Dvndmtototal:  kd.Dvndmtototal,
-		Dpreciofin:    kd.Dpreciofin,
-		Dpreciounit:   kd.Dpreciounit,
-		Dmontoneto:    kd.Dmontoneto,
-		Dmontototal:   kd.Dmontototal,
-		Timpueprc:     kd.Timpueprc,
-		Unidevuelt:    kd.Unidevuelt,
-		Fechadoc:      kd.Fechadoc,
-		Vendedor:      kd.Vendedor,
-		Codcoord:      kd.Codcoord,
-		Fechamodifi:   kd.Fechamodifi,
-	}
-}
-
-// func DbDocToDocumentWithLines(dbDocs []db.FindAllDocumentsWithLinesRow) []*DocumentWithLines {
-// 	docs := make([]*DocumentWithLines, 0)
-// 	docMap := make(map[Document][]DocumentLine)
-// 	doc := new(Document)
-//
-// 	for _, dbDoc := range dbDocs {
-// 		if doc == nil {
-// 			doc = dbDocToDocument(dbDoc)
-// 		}
-//
-// 		if doc.Documento != dbDoc.Documento {
-// 			doc = dbDocToDocument(dbDoc)
-// 		}
-//
-// 		docMap[*doc] = append(docMap[*doc], *dbDocToDocLine(dbDoc))
-// 	}
-//
-// 	for key, value := range docMap {
-// 		docs = append(docs, docMapToDocWithLines(&key, &value))
-// 	}
-//
-// 	return docs
-// }
-
 func DocMapToDocWithLines(key *Document, value *[]DocumentLine) *DocumentWithLines {
 	return &DocumentWithLines{
 		Document: Document{

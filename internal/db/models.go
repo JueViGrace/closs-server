@@ -19,8 +19,6 @@ type KeDataconex struct {
 	UpdatedAt time.Time
 	DeletedAt sql.NullTime
 }
-<<<<<<< HEAD
-=======
 
 type KeDoccti struct {
 	// Agencia
@@ -195,4 +193,3 @@ type KeDoclmv struct {
 	// Ultima actualización del registro
 	Fechamodifi time.Time
 }
->>>>>>> 14869e
