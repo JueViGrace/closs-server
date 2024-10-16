@@ -8,7 +8,7 @@ func (a *api) DocumentRoutes() {
 	docHandler := handlers.NewDocumentHandler(a.db.DocumentStore())
 
 	docGroup.Get("/", docHandler.GetDocuments)
-	// docGroup.Get("/:code", docHandler.GetDocumentsByCode)
+	docGroup.Get("/:code", docHandler.GetDocumentsByCode)
 	docGroup.Get("/all", docHandler.GetDocumentsWithLines)
-	// docGroup.Get("/all/:code", docHandler.GetDocumentsWithLinesByCode)
+	docGroup.Get("/all/:code", docHandler.GetDocumentsWithLinesByCode)
 }

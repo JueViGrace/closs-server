@@ -7,7 +7,3 @@ sql:
       go:
         out: "internal/db"
         package: "db"
-        overrides:
-          - db_type: "tinyint"
-            go_type:
-              type: "uint8"

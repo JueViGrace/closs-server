@@ -9,10 +9,93 @@ import (
 	"time"
 )
 
+type Articulo struct {
+	Codigo       string
+	Grupo        string
+	Subgrupo     string
+	Nombre       string
+	Referencia   string
+	Marca        string
+	Unidad       string
+	Existencia   int32
+	Precio1      string
+	Precio2      string
+	Precio3      string
+	Precio4      string
+	Precio5      string
+	Precio6      string
+	Precio7      string
+	Discont      bool
+	VtaMax       int32
+	VtaMin       int32
+	Dctotope     string
+	Enpreventa   bool
+	Comprometido int32
+	VtaMinenx    int32
+	VtaSolofac   bool
+	VtaSolone    bool
+	Codbarras    string
+	Detalles     string
+	Cantbulto    int32
+	CostoProm    string
+	Util1        string
+	Util2        string
+	Util3        string
+	Fchultcomp   time.Time
+	Qtyultcomp   int32
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
+	DeletedAt    sql.NullTime
+}
+
+type Cliempre struct {
+	Codigo          string
+	Nombre          string
+	Direccion       sql.NullString
+	Telefonos       sql.NullString
+	Perscont        sql.NullString
+	Vendedor        sql.NullString
+	Contribespecial bool
+	Status          int16
+	Sector          sql.NullString
+	Subcodigo       string
+	Precio          int16
+	Email           string
+	KneActiva       bool
+	KneMtomin       string
+	Noemifac        bool
+	Noeminota       bool
+	Fchultvta       time.Time
+	Mtoultvta       string
+	Prcdpagdia      string
+	Promdiasp       string
+	Riesgocrd       string
+	Cantdocs        int32
+	Totmtodocs      string
+	Prommtodoc      string
+	Diasultvta      string
+	Promdiasvta     string
+	Limcred         string
+	Fchcrea         time.Time
+	Dolarflete      bool
+	Nodolarflete    bool
+	CreatedAt       time.Time
+	UpdatedAt       time.Time
+	DeletedAt       sql.NullTime
+}
+
+type Grupo struct {
+	Codigo    int32
+	Nombre    sql.NullString
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt sql.NullTime
+}
+
 type KeDataconex struct {
 	KedCodigo string
 	KedNombre string
-	KedStatus int32
+	KedStatus bool
 	KedEnlace string
 	KedAgen   string
 	CreatedAt time.Time
@@ -21,175 +104,254 @@ type KeDataconex struct {
 }
 
 type KeDoccti struct {
-	// Agencia
-	Agencia string
-	// Tipo de documento
-	Tipodoc string
-	// numero de documento
-	Documento string
-	// Tipo de documento visual
-	Tipodocv string
-	// Código de cliente
-	Codcliente string
-	// Nombre de Cliente
-	Nombrecli string
-	// Contribuyente especial
-	Contribesp string
-	// Cliente en ruta parme
-	RutaParme string
-	// Tipo de precio aplicado
-	Tipoprecio string
-	// Emision del documento
-	Emision time.Time
-	// recepcion de la mercancía
-	Recepcion time.Time
-	// vencimiento del documento
-	Vence time.Time
-	// días de crédito
-	Diascred string
-	// estatus del documento
-	Estatusdoc string
-	// monto neto del doc
-	Dtotneto string
-	// Total impuestos
-	Dtotimpuest string
-	// Total final del documento
-	Dtotalfinal string
-	// Total monto pagado
-	Dtotpagos string
-	// Total monto descuentos
-	Dtotdescuen string
-	// Monto del flete incluido en doc
-	Dflete string
-	// Monto total de devoluciones
-	Dtotdev string
-	// Monto total dev x vend
-	Dvndmtototal string
-	// Monto total de retenciones
-	Dretencion string
-	// Monto retencion IVA
-	Dretencioniva string
-	// Código del vendedor
-	Vendedor string
-	// Código del coordinador
-	Codcoord string
-	// Ultima actualización del registro
-	Fechamodifi time.Time
-	// si acepta dev el doc (0 = no 1= si)
-	Aceptadev string
-	// Si posee negociación especial
-	KtiNegesp string
-	// IVA del documento en bolívares
-	Bsiva string
-	// Flete del documento en bolívares
-	Bsflete string
-	// Retención total del documento en bolívares ?
-	Bsretencion string
-	// Retención del IVA del documento en bolívares ?
+	Agencia        string
+	Tipodoc        string
+	Documento      string
+	Tipodocv       string
+	Codcliente     string
+	Nombrecli      string
+	Contribesp     bool
+	RutaParme      bool
+	Tipoprecio     string
+	Emision        time.Time
+	Recepcion      time.Time
+	Vence          time.Time
+	Diascred       string
+	Estatusdoc     string
+	Dtotneto       string
+	Dtotimpuest    string
+	Dtotalfinal    string
+	Dtotpagos      string
+	Dtotdescuen    string
+	Dflete         string
+	Dtotdev        string
+	Dvndmtototal   string
+	Dretencion     string
+	Dretencioniva  string
+	Vendedor       string
+	Codcoord       string
+	Aceptadev      bool
+	KtiNegesp      bool
+	Bsiva          string
+	Bsflete        string
+	Bsretencion    string
 	Bsretencioniva string
-	// Tasa del Documento cuando es facturado ?
-	Tasadoc string
-	// Monto de dscto aplicado en divisas
-	Mtodcto string
-	// Fecha hasta la cual estará en vigencia el descuento
-	Fchvencedcto time.Time
-	// Edo del dcto (0=vigente,1=Por aplicar, 2=aplicado, 3=Vencido o Anulado)
-	Tienedcto string
-	// Lo que hay que cobrar en total de las retenciones del documento en bolívares
-	Cbsret string
-	// Lo que hay que cobrar en total de las retenciones del documento en dólares
-	Cdret string
-	// Lo que hay que cobrar de la retención del IVA en bolívares
-	Cbsretiva string
-	// Lo que hay que cobrar de la retención del IVA en dólares
-	Cdretiva string
-	// Lo que hay que cobrar de la retención del PARME en bolívares
-	Cbsrparme string
-	// Lo que hay que cobrar de la retención del PARME en dólares
-	Cdrparme string
-	// Lo que hay que cobrar de la de la retención del Flete en bolívares
-	Cbsretflete string
-	// Lo que hay que cobrar de la retención del Flete en dólares
-	Cdretflete string
-	// Cobrado del IVA en bolívares
-	Bsmtoiva string
-	// Cobrado del Flete en bolívares
-	Bsmtofte string
-	// Parme cobrado del documento en bolívares bs
-	RetmunMto string
-	// Documento con flete dolarizado 0 = no, 1 = si
-	Dolarflete int32
-	// Lo cobrado de la retención de flete en bolívares BS
-	Bsretflete string
-	// Lo cobrado de la retención de flete en dólares $
-	Dretflete string
-	// Parme cobrado del documento en dólares $
-	DretmunMto string
-	// Retención de IVA Obligatoria
-	Retivaoblig uint8
-	// 0 = Facturado,
-	// 1 = En tránsito,
-	// 2 = Entregado
-	Edoentrega uint8
-	// Moto cobrando del IVA en divisas
-	Dmtoiva string
-	// % Dcto a aplicado
-	Prcdctoaplic string
-	// Monto del dcto en $
-	Montodctodol string
-	// Monto del dcto en Bs
-	Montodctobs string
+	Tasadoc        string
+	Mtodcto        string
+	Fchvencedcto   time.Time
+	Tienedcto      bool
+	Cbsret         string
+	Cdret          string
+	Cbsretiva      string
+	Cdretiva       string
+	Cbsrparme      string
+	Cdrparme       string
+	Cbsretflete    string
+	Cdretflete     string
+	Bsmtoiva       string
+	Bsmtofte       string
+	RetmunMto      string
+	Dolarflete     bool
+	Bsretflete     string
+	Dretflete      string
+	DretmunMto     string
+	Retivaoblig    bool
+	Edoentrega     bool
+	Dmtoiva        string
+	Prcdctoaplic   string
+	Montodctodol   string
+	Montodctobs    string
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
+	DeletedAt      sql.NullTime
 }
 
 type KeDoclmv struct {
-	// Agencia
-	Agencia string
-	// Tipo de documento
-	Tipodoc string
-	// Numero de documento
-	Documento string
-	// Tipo de documento visual
-	Tipodocv string
-	// Grupo del articulo
-	Grupo string
-	// Subgrupo del articulo
-	Subgrupo string
-	// Origen del articulo
-	Origen string
-	// Código del artículo
-	Codigo string
-	// Código art. dependiente
-	Codhijo string
-	// Id de linea
-	Pid string
-	// Nombre de articulo
-	Nombre string
-	// Cantidad de unds
-	Cantidad string
-	// Cantidad devuelta
-	Cntdevuelt string
-	// Cantidad dev x vendedor
+	Agencia       string
+	Tipodoc       string
+	Documento     string
+	Tipodocv      string
+	Grupo         string
+	Subgrupo      string
+	Origen        string
+	Codigo        string
+	Codhijo       string
+	Pid           string
+	Nombre        string
+	Cantidad      int32
+	Cntdevuelt    int32
 	Vndcntdevuelt string
-	// Monto total dev x vend
-	Dvndmtototal string
-	// Precio final en divisas
-	Dpreciofin string
-	// Precio unitario en divisas
-	Dpreciounit string
-	// Monto Neto en divisas
-	Dmontoneto string
-	// Monto total en divisas
-	Dmontototal string
-	// Tasa de IVA del artículo
-	Timpueprc string
-	// Tasa de IVA del artículo
-	Unidevuelt string
-	// Emision del documento
-	Fechadoc time.Time
-	// Código del vendedor
-	Vendedor string
-	// Código del coordinador
-	Codcoord string
-	// Ultima actualización del registro
-	Fechamodifi time.Time
+	Dvndmtototal  string
+	Dpreciofin    string
+	Dpreciounit   string
+	Dmontoneto    string
+	Dmontototal   string
+	Timpueprc     string
+	Unidevuelt    int32
+	Fechadoc      time.Time
+	Vendedor      string
+	Codcoord      string
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
+	DeletedAt     sql.NullTime
+}
+
+type KeEstadc01 struct {
+	Codcoord      string
+	Nomcoord      string
+	Vendedor      string
+	Nombrevend    string
+	Cntpedidos    int32
+	Mtopedidos    string
+	Cntfacturas   int32
+	Mtofacturas   string
+	Metavend      string
+	Prcmeta       string
+	Cntclientes   int32
+	Clivisit      int32
+	Prcvisitas    string
+	LomMontovtas  string
+	LomPrcvtas    string
+	LomPrcvisit   string
+	RlomMontovtas string
+	RlomPrcvtas   string
+	RlomPrcvisit  string
+	FechaEstad    time.Time
+	PpgdolTotneto string
+	DevdolTotneto string
+	DefdolTotneto string
+	Totdolcob     string
+	Cntrecl       string
+	Mtorecl       string
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
+	DeletedAt     sql.NullTime
+}
+
+type KeOpmv struct {
+	KtiTdoc    string
+	KtiNdoc    string
+	KtiTipprec string
+	KmvCodart  string
+	KmvNombre  string
+	KmvCant    int32
+	KmvArtprec string
+	KmvStot    string
+	KmvDctolin string
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+	DeletedAt  sql.NullTime
+}
+
+type KeOpti struct {
+	KtiNdoc        string
+	KtiTdoc        string
+	KtiCodcli      string
+	KtiNombrecli   string
+	KtiCodven      string
+	KtiDocsol      string
+	KtiCondicion   string
+	KtiTipprec     string
+	KtiTotneto     string
+	KtiStatus      string
+	KtiNroped      string
+	KtiFchdoc      time.Time
+	KtiNegesp      bool
+	KePedstatus    string
+	Dolarflete     bool
+	Complemento    bool
+	NroComplemento string
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
+	DeletedAt      sql.NullTime
+}
+
+type KeWcnfConf struct {
+	CnfgIdconfig string
+	CnfgClase    string
+	CnfgTipo     string
+	CnfgValnum   string
+	CnfgValsino  bool
+	CnfgValtxt   string
+	CnfgLentxt   int16
+	CnfgValfch   time.Time
+	CnfgActiva   bool
+	CnfgEtiq     string
+	CnfgTtip     string
+	Username     string
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
+	DeletedAt    sql.NullTime
+}
+
+type Listbanc struct {
+	Codbanco  int16
+	Nombanco  string
+	Cuentanac string
+	Inactiva  bool
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt sql.NullTime
+}
+
+type Listvend struct {
+	Codigo        string
+	Nombre        sql.NullString
+	Telefonos     sql.NullString
+	TelefonoMovil sql.NullString
+	Status        string
+	Superves      string
+	Supervpor     string
+	Sector        sql.NullString
+	Subcodigo     string
+	Nivgcial      bool
+	Email         string
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
+	DeletedAt     sql.NullTime
+}
+
+type Sectore struct {
+	Codigo    int32
+	Zona      string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt sql.NullTime
+}
+
+type Subgrupo struct {
+	Codigo    int32
+	Subcodigo int32
+	Nombre    sql.NullString
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt sql.NullTime
+}
+
+type Subsectore struct {
+	Codigo    int32
+	Subcodigo int32
+	Subsector string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt sql.NullTime
+}
+
+type Usuario struct {
+	Nombre       string
+	Username     string
+	Password     sql.NullString
+	Vendedor     string
+	Almacen      sql.NullString
+	Desactivo    bool
+	Ualterprec   int32
+	Sesionactiva time.Time
+	UltSinc      time.Time
+	Version      string
+	Sesion       bool
+	CierreSesion bool
+	Comisiones   bool
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
+	DeletedAt    sql.NullTime
 }

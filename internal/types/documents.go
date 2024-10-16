@@ -18,8 +18,8 @@ type Document struct {
 	Tipodocv       string    `json:"tipodocv"`
 	Codcliente     string    `json:"codcliente"`
 	Nombrecli      string    `json:"nombrecli"`
-	Contribesp     string    `json:"contribesp"`
-	RutaParme      string    `json:"ruta_parme"`
+	Contribesp     bool      `json:"contribesp"`
+	RutaParme      bool      `json:"ruta_parme"`
 	Tipoprecio     string    `json:"tipoprecio"`
 	Emision        time.Time `json:"emision"`
 	Recepcion      time.Time `json:"recepcion"`
@@ -38,9 +38,8 @@ type Document struct {
 	Dretencioniva  string    `json:"dretencioniva"`
 	Vendedor       string    `json:"vendedor"`
 	Codcoord       string    `json:"codcoord"`
-	Fechamodifi    time.Time `json:"fechamodifi"`
-	Aceptadev      string    `json:"aceptadev"`
-	KtiNegesp      string    `json:"kti_negesp"`
+	Aceptadev      bool      `json:"aceptadev"`
+	KtiNegesp      bool      `json:"kti_negesp"`
 	Bsiva          string    `json:"bsiva"`
 	Bsflete        string    `json:"bsflete"`
 	Bsretencion    string    `json:"bsretencion"`
@@ -48,7 +47,7 @@ type Document struct {
 	Tasadoc        string    `json:"tasadoc"`
 	Mtodcto        string    `json:"mtodcto"`
 	Fchvencedcto   time.Time `json:"fchvencedcto"`
-	Tienedcto      string    `json:"tienedcto"`
+	Tienedcto      bool      `json:"tienedcto"`
 	Cbsret         string    `json:"cbsret"`
 	Cdret          string    `json:"cdret"`
 	Cbsretiva      string    `json:"cbsretiva"`
@@ -60,16 +59,19 @@ type Document struct {
 	Bsmtoiva       string    `json:"bsmtoiva"`
 	Bsmtofte       string    `json:"bsmtofte"`
 	RetmunMto      string    `json:"retmun_mto"`
-	Dolarflete     int32     `json:"dolarflete"`
+	Dolarflete     bool      `json:"dolarflete"`
 	Bsretflete     string    `json:"bsretflete"`
 	Dretflete      string    `json:"dretflete"`
 	DretmunMto     string    `json:"dretmun_mto"`
-	Retivaoblig    uint8     `json:"retivaoblig"`
-	Edoentrega     uint8     `json:"edoentrega"`
+	Retivaoblig    bool      `json:"retivaoblig"`
+	Edoentrega     bool      `json:"edoentrega"`
 	Dmtoiva        string    `json:"dmtoiva"`
 	Prcdctoaplic   string    `json:"prcdctoaplic"`
 	Montodctodol   string    `json:"montodctodol"`
 	Montodctobs    string    `json:"montodctobs"`
+	CreatedAt      time.Time `json:"created_at"`
+	UpdatedAt      time.Time `json:"updated_at"`
+	DeletedAt      time.Time `json:"-"`
 }
 
 type DocumentLine struct {
@@ -84,8 +86,8 @@ type DocumentLine struct {
 	Codhijo       string    `json:"codhijo"`
 	Pid           string    `json:"pid"`
 	Nombre        string    `json:"nombre"`
-	Cantidad      string    `json:"cantidad"`
-	Cntdevuelt    string    `json:"cntdevuelt"`
+	Cantidad      int32     `json:"cantidad"`
+	Cntdevuelt    int32     `json:"cntdevuelt"`
 	Vndcntdevuelt string    `json:"vndcntdevuelt"`
 	Dvndmtototal  string    `json:"dvndmtototal"`
 	Dpreciofin    string    `json:"dpreciofin"`
@@ -93,11 +95,13 @@ type DocumentLine struct {
 	Dmontoneto    string    `json:"dmontoneto"`
 	Dmontototal   string    `json:"dmontototal"`
 	Timpueprc     string    `json:"timpueprc"`
-	Unidevuelt    string    `json:"unidevuelt"`
+	Unidevuelt    int32     `json:"unidevuelt"`
 	Fechadoc      time.Time `json:"fechadoc"`
 	Vendedor      string    `json:"vendedor"`
 	Codcoord      string    `json:"codcoord"`
-	Fechamodifi   time.Time `json:"fechamodifi"`
+	CreatedAt     time.Time `json:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at"`
+	DeletedAt     time.Time `json:"-"`
 }
 
 func DbKeDoccToDocument(kd *db.KeDoccti) *Document {
@@ -128,7 +132,6 @@ func DbKeDoccToDocument(kd *db.KeDoccti) *Document {
 		Dretencioniva:  kd.Dretencioniva,
 		Vendedor:       kd.Vendedor,
 		Codcoord:       kd.Codcoord,
-		Fechamodifi:    kd.Fechamodifi,
 		Aceptadev:      kd.Aceptadev,
 		KtiNegesp:      kd.KtiNegesp,
 		Bsiva:          kd.Bsiva,
@@ -192,7 +195,6 @@ func DocMapToDocWithLines(key *Document, value *[]DocumentLine) *DocumentWithLin
 			Dretencioniva:  key.Dretencioniva,
 			Vendedor:       key.Vendedor,
 			Codcoord:       key.Codcoord,
-			Fechamodifi:    key.Fechamodifi,
 			Aceptadev:      key.Aceptadev,
 			KtiNegesp:      key.KtiNegesp,
 			Bsiva:          key.Bsiva,
@@ -257,7 +259,6 @@ func DbDocToDocument(dbDoc *db.FindAllDocumentsWithLinesRow) *Document {
 		Dretencioniva:  dbDoc.Dretencioniva,
 		Vendedor:       dbDoc.Vendedor,
 		Codcoord:       dbDoc.Codcoord,
-		Fechamodifi:    dbDoc.Fechamodifi,
 		Aceptadev:      dbDoc.Aceptadev,
 		KtiNegesp:      dbDoc.KtiNegesp,
 		Bsiva:          dbDoc.Bsiva,
@@ -305,8 +306,8 @@ func DbDocToDocLine(dbDoc *db.FindAllDocumentsWithLinesRow) *DocumentLine {
 		Codhijo:       dbDoc.Codhijo.String,
 		Pid:           dbDoc.Pid.String,
 		Nombre:        dbDoc.Nombre.String,
-		Cantidad:      dbDoc.Cantidad.String,
-		Cntdevuelt:    dbDoc.Cntdevuelt.String,
+		Cantidad:      dbDoc.Cantidad,
+		Cntdevuelt:    dbDoc.Cntdevuelt,
 		Vndcntdevuelt: dbDoc.Vndcntdevuelt.String,
 		Dvndmtototal:  dbDoc.Dvndmtototal_2.String,
 		Dpreciofin:    dbDoc.Dpreciofin.String,
@@ -314,7 +315,7 @@ func DbDocToDocLine(dbDoc *db.FindAllDocumentsWithLinesRow) *DocumentLine {
 		Dmontoneto:    dbDoc.Dmontoneto.String,
 		Dmontototal:   dbDoc.Dmontototal.String,
 		Timpueprc:     dbDoc.Timpueprc.String,
-		Unidevuelt:    dbDoc.Unidevuelt.String,
+		Unidevuelt:    dbDoc.Unidevuelt,
 		Fechadoc:      dbDoc.Fechadoc.Time,
 		Vendedor:      dbDoc.Vendedor_2.String,
 		Codcoord:      dbDoc.Codcoord_2.String,

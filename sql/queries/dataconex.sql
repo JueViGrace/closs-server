@@ -1,20 +1,25 @@
 -- name: GetCompanies :many
-SELECT * FROM ke_dataconex
-WHERE deleted_at IS NULL;
+select *
+from ke_dataconex
+where deleted_at is null
+;
 
 -- name: GetCompanyById :one
-SELECT * FROM ke_dataconex
-WHERE 
-ked_codigo = $1 AND
-ked_status = 1 AND
-deleted_at IS NULL;
+select *
+from ke_dataconex
+where ked_codigo = ? and ked_status = 1 and deleted_at is null
+;
 
 -- name: GetAllCompanies :many
-SELECT * FROM ke_dataconex;
+select *
+from ke_dataconex
+;
 
 -- name: GetOneCompanyById :one
-SELECT * FROM ke_dataconex
-WHERE ked_codigo = $1;
+select *
+from ke_dataconex
+where ked_codigo = ?
+;
 
 -- name: CreateCompany :exec
 INSERT INTO ke_dataconex (
@@ -26,20 +31,21 @@ INSERT INTO ke_dataconex (
         created_at,
         updated_at
     )
-VALUES ($1, $2, $3, $4, $5, NOW(), NOW());
+VALUES (?, ?, ?, ?, ?, NOW(), NOW());
 
 -- name: UpdateCompany :exec
 UPDATE ke_dataconex
-SET ked_codigo = $1,
-    ked_nombre = $2,
-    ked_status = $3,
-    ked_enlace = $4,
-    ked_agen = 5$,
+SET ked_codigo = ?,
+    ked_nombre = ?,
+    ked_status = ?, 
+    ked_enlace = ?,
+    ked_agen = ?,
     updated_at = NOW()
-WHERE ked_codigo = $6;
+WHERE ked_codigo = ?;
 
 -- name: DeleteCompany :exec
 UPDATE ke_dataconex
 SET ked_status = 0,
     deleted_at = NOW()
-WHERE ked_codigo = $1;
+WHERE ked_codigo = ?;
+

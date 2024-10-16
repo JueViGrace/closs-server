@@ -48,7 +48,7 @@ func (s *documentStore) GetDocuments() ([]*types.Document, error) {
 func (s *documentStore) GetDocumentsByCode(code string) ([]*types.Document, error) {
 	docs := make([]*types.Document, 0)
 
-	dbDocs, err := s.db.FindAllDocumentsByCode(s.ctx)
+	dbDocs, err := s.db.FindAllDocumentsByCode(s.ctx, code)
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +94,7 @@ func (s *documentStore) GetDocumentsWithLinesByCode(code string) ([]*types.Docum
 	docMap := make(map[types.Document][]types.DocumentLine)
 	doc := new(types.Document)
 
-	dbDocs, err := s.db.FindAllDocumentsWithLinesByCode(s.ctx)
+	dbDocs, err := s.db.FindAllDocumentsWithLinesByCode(s.ctx, code)
 	if err != nil {
 		return nil, err
 	}

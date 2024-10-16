@@ -12,7 +12,7 @@ import (
 )
 
 const findAllDocuments = `-- name: FindAllDocuments :many
-select agencia, tipodoc, documento, tipodocv, codcliente, nombrecli, contribesp, ruta_parme, tipoprecio, emision, recepcion, vence, diascred, estatusdoc, dtotneto, dtotimpuest, dtotalfinal, dtotpagos, dtotdescuen, dflete, dtotdev, dvndmtototal, dretencion, dretencioniva, vendedor, codcoord, fechamodifi, aceptadev, kti_negesp, bsiva, bsflete, bsretencion, bsretencioniva, tasadoc, mtodcto, fchvencedcto, tienedcto, cbsret, cdret, cbsretiva, cdretiva, cbsrparme, cdrparme, cbsretflete, cdretflete, bsmtoiva, bsmtofte, retmun_mto, dolarflete, bsretflete, dretflete, dretmun_mto, retivaoblig, edoentrega, dmtoiva, prcdctoaplic, montodctodol, montodctobs
+select agencia, tipodoc, documento, tipodocv, codcliente, nombrecli, contribesp, ruta_parme, tipoprecio, emision, recepcion, vence, diascred, estatusdoc, dtotneto, dtotimpuest, dtotalfinal, dtotpagos, dtotdescuen, dflete, dtotdev, dvndmtototal, dretencion, dretencioniva, vendedor, codcoord, aceptadev, kti_negesp, bsiva, bsflete, bsretencion, bsretencioniva, tasadoc, mtodcto, fchvencedcto, tienedcto, cbsret, cdret, cbsretiva, cdretiva, cbsrparme, cdrparme, cbsretflete, cdretflete, bsmtoiva, bsmtofte, retmun_mto, dolarflete, bsretflete, dretflete, dretmun_mto, retivaoblig, edoentrega, dmtoiva, prcdctoaplic, montodctodol, montodctobs, created_at, updated_at, deleted_at
 from ke_doccti
 `
 
@@ -52,7 +52,6 @@ func (q *Queries) FindAllDocuments(ctx context.Context) ([]KeDoccti, error) {
 			&i.Dretencioniva,
 			&i.Vendedor,
 			&i.Codcoord,
-			&i.Fechamodifi,
 			&i.Aceptadev,
 			&i.KtiNegesp,
 			&i.Bsiva,
@@ -84,6 +83,9 @@ func (q *Queries) FindAllDocuments(ctx context.Context) ([]KeDoccti, error) {
 			&i.Prcdctoaplic,
 			&i.Montodctodol,
 			&i.Montodctobs,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.DeletedAt,
 		); err != nil {
 			return nil, err
 		}
@@ -99,13 +101,13 @@ func (q *Queries) FindAllDocuments(ctx context.Context) ([]KeDoccti, error) {
 }
 
 const findAllDocumentsByCode = `-- name: FindAllDocumentsByCode :many
-select agencia, tipodoc, documento, tipodocv, codcliente, nombrecli, contribesp, ruta_parme, tipoprecio, emision, recepcion, vence, diascred, estatusdoc, dtotneto, dtotimpuest, dtotalfinal, dtotpagos, dtotdescuen, dflete, dtotdev, dvndmtototal, dretencion, dretencioniva, vendedor, codcoord, fechamodifi, aceptadev, kti_negesp, bsiva, bsflete, bsretencion, bsretencioniva, tasadoc, mtodcto, fchvencedcto, tienedcto, cbsret, cdret, cbsretiva, cdretiva, cbsrparme, cdrparme, cbsretflete, cdretflete, bsmtoiva, bsmtofte, retmun_mto, dolarflete, bsretflete, dretflete, dretmun_mto, retivaoblig, edoentrega, dmtoiva, prcdctoaplic, montodctodol, montodctobs
+select agencia, tipodoc, documento, tipodocv, codcliente, nombrecli, contribesp, ruta_parme, tipoprecio, emision, recepcion, vence, diascred, estatusdoc, dtotneto, dtotimpuest, dtotalfinal, dtotpagos, dtotdescuen, dflete, dtotdev, dvndmtototal, dretencion, dretencioniva, vendedor, codcoord, aceptadev, kti_negesp, bsiva, bsflete, bsretencion, bsretencioniva, tasadoc, mtodcto, fchvencedcto, tienedcto, cbsret, cdret, cbsretiva, cdretiva, cbsrparme, cdrparme, cbsretflete, cdretflete, bsmtoiva, bsmtofte, retmun_mto, dolarflete, bsretflete, dretflete, dretmun_mto, retivaoblig, edoentrega, dmtoiva, prcdctoaplic, montodctodol, montodctobs, created_at, updated_at, deleted_at
 from ke_doccti
-where ke_doccti.vendedor = $1
+where ke_doccti.vendedor = ?
 `
 
-func (q *Queries) FindAllDocumentsByCode(ctx context.Context) ([]KeDoccti, error) {
-	rows, err := q.db.QueryContext(ctx, findAllDocumentsByCode)
+func (q *Queries) FindAllDocumentsByCode(ctx context.Context, vendedor string) ([]KeDoccti, error) {
+	rows, err := q.db.QueryContext(ctx, findAllDocumentsByCode, vendedor)
 	if err != nil {
 		return nil, err
 	}
@@ -140,7 +142,6 @@ func (q *Queries) FindAllDocumentsByCode(ctx context.Context) ([]KeDoccti, error
 			&i.Dretencioniva,
 			&i.Vendedor,
 			&i.Codcoord,
-			&i.Fechamodifi,
 			&i.Aceptadev,
 			&i.KtiNegesp,
 			&i.Bsiva,
@@ -172,6 +173,9 @@ func (q *Queries) FindAllDocumentsByCode(ctx context.Context) ([]KeDoccti, error
 			&i.Prcdctoaplic,
 			&i.Montodctodol,
 			&i.Montodctobs,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.DeletedAt,
 		); err != nil {
 			return nil, err
 		}
@@ -187,7 +191,7 @@ func (q *Queries) FindAllDocumentsByCode(ctx context.Context) ([]KeDoccti, error
 }
 
 const findAllDocumentsWithLines = `-- name: FindAllDocumentsWithLines :many
-select ke_doccti.agencia, ke_doccti.tipodoc, ke_doccti.documento, ke_doccti.tipodocv, codcliente, nombrecli, contribesp, ruta_parme, tipoprecio, emision, recepcion, vence, diascred, estatusdoc, dtotneto, dtotimpuest, dtotalfinal, dtotpagos, dtotdescuen, dflete, dtotdev, ke_doccti.dvndmtototal, dretencion, dretencioniva, ke_doccti.vendedor, ke_doccti.codcoord, ke_doccti.fechamodifi, aceptadev, kti_negesp, bsiva, bsflete, bsretencion, bsretencioniva, tasadoc, mtodcto, fchvencedcto, tienedcto, cbsret, cdret, cbsretiva, cdretiva, cbsrparme, cdrparme, cbsretflete, cdretflete, bsmtoiva, bsmtofte, retmun_mto, dolarflete, bsretflete, dretflete, dretmun_mto, retivaoblig, edoentrega, dmtoiva, prcdctoaplic, montodctodol, montodctobs, ke_doclmv.agencia, ke_doclmv.tipodoc, ke_doclmv.documento, ke_doclmv.tipodocv, grupo, subgrupo, origen, codigo, codhijo, pid, nombre, cantidad, cntdevuelt, vndcntdevuelt, ke_doclmv.dvndmtototal, dpreciofin, dpreciounit, dmontoneto, dmontototal, timpueprc, unidevuelt, fechadoc, ke_doclmv.vendedor, ke_doclmv.codcoord, ke_doclmv.fechamodifi
+select ke_doccti.agencia, ke_doccti.tipodoc, ke_doccti.documento, ke_doccti.tipodocv, codcliente, nombrecli, contribesp, ruta_parme, tipoprecio, emision, recepcion, vence, diascred, estatusdoc, dtotneto, dtotimpuest, dtotalfinal, dtotpagos, dtotdescuen, dflete, dtotdev, ke_doccti.dvndmtototal, dretencion, dretencioniva, ke_doccti.vendedor, ke_doccti.codcoord, aceptadev, kti_negesp, bsiva, bsflete, bsretencion, bsretencioniva, tasadoc, mtodcto, fchvencedcto, tienedcto, cbsret, cdret, cbsretiva, cdretiva, cbsrparme, cdrparme, cbsretflete, cdretflete, bsmtoiva, bsmtofte, retmun_mto, dolarflete, bsretflete, dretflete, dretmun_mto, retivaoblig, edoentrega, dmtoiva, prcdctoaplic, montodctodol, montodctobs, ke_doccti.created_at, ke_doccti.updated_at, ke_doccti.deleted_at, ke_doclmv.agencia, ke_doclmv.tipodoc, ke_doclmv.documento, ke_doclmv.tipodocv, grupo, subgrupo, origen, codigo, codhijo, pid, nombre, cantidad, cntdevuelt, vndcntdevuelt, ke_doclmv.dvndmtototal, dpreciofin, dpreciounit, dmontoneto, dmontototal, timpueprc, unidevuelt, fechadoc, ke_doclmv.vendedor, ke_doclmv.codcoord, ke_doclmv.created_at, ke_doclmv.updated_at, ke_doclmv.deleted_at
 from ke_doccti
 left join ke_doclmv on ke_doccti.documento = ke_doclmv.documento
 `
@@ -199,8 +203,8 @@ type FindAllDocumentsWithLinesRow struct {
 	Tipodocv       string
 	Codcliente     string
 	Nombrecli      string
-	Contribesp     string
-	RutaParme      string
+	Contribesp     bool
+	RutaParme      bool
 	Tipoprecio     string
 	Emision        time.Time
 	Recepcion      time.Time
@@ -219,9 +223,8 @@ type FindAllDocumentsWithLinesRow struct {
 	Dretencioniva  string
 	Vendedor       string
 	Codcoord       string
-	Fechamodifi    time.Time
-	Aceptadev      string
-	KtiNegesp      string
+	Aceptadev      bool
+	KtiNegesp      bool
 	Bsiva          string
 	Bsflete        string
 	Bsretencion    string
@@ -229,7 +232,7 @@ type FindAllDocumentsWithLinesRow struct {
 	Tasadoc        string
 	Mtodcto        string
 	Fchvencedcto   time.Time
-	Tienedcto      string
+	Tienedcto      bool
 	Cbsret         string
 	Cdret          string
 	Cbsretiva      string
@@ -241,16 +244,19 @@ type FindAllDocumentsWithLinesRow struct {
 	Bsmtoiva       string
 	Bsmtofte       string
 	RetmunMto      string
-	Dolarflete     int32
+	Dolarflete     bool
 	Bsretflete     string
 	Dretflete      string
 	DretmunMto     string
-	Retivaoblig    uint8
-	Edoentrega     uint8
+	Retivaoblig    bool
+	Edoentrega     bool
 	Dmtoiva        string
 	Prcdctoaplic   string
 	Montodctodol   string
 	Montodctobs    string
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
+	DeletedAt      sql.NullTime
 	Agencia_2      sql.NullString
 	Tipodoc_2      sql.NullString
 	Documento_2    sql.NullString
@@ -262,8 +268,8 @@ type FindAllDocumentsWithLinesRow struct {
 	Codhijo        sql.NullString
 	Pid            sql.NullString
 	Nombre         sql.NullString
-	Cantidad       sql.NullString
-	Cntdevuelt     sql.NullString
+	Cantidad       sql.NullInt32
+	Cntdevuelt     sql.NullInt32
 	Vndcntdevuelt  sql.NullString
 	Dvndmtototal_2 sql.NullString
 	Dpreciofin     sql.NullString
@@ -271,11 +277,13 @@ type FindAllDocumentsWithLinesRow struct {
 	Dmontoneto     sql.NullString
 	Dmontototal    sql.NullString
 	Timpueprc      sql.NullString
-	Unidevuelt     sql.NullString
+	Unidevuelt     sql.NullInt32
 	Fechadoc       sql.NullTime
 	Vendedor_2     sql.NullString
 	Codcoord_2     sql.NullString
-	Fechamodifi_2  sql.NullTime
+	CreatedAt_2    sql.NullTime
+	UpdatedAt_2    sql.NullTime
+	DeletedAt_2    sql.NullTime
 }
 
 func (q *Queries) FindAllDocumentsWithLines(ctx context.Context) ([]FindAllDocumentsWithLinesRow, error) {
@@ -314,7 +322,6 @@ func (q *Queries) FindAllDocumentsWithLines(ctx context.Context) ([]FindAllDocum
 			&i.Dretencioniva,
 			&i.Vendedor,
 			&i.Codcoord,
-			&i.Fechamodifi,
 			&i.Aceptadev,
 			&i.KtiNegesp,
 			&i.Bsiva,
@@ -346,6 +353,9 @@ func (q *Queries) FindAllDocumentsWithLines(ctx context.Context) ([]FindAllDocum
 			&i.Prcdctoaplic,
 			&i.Montodctodol,
 			&i.Montodctobs,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.DeletedAt,
 			&i.Agencia_2,
 			&i.Tipodoc_2,
 			&i.Documento_2,
@@ -370,7 +380,9 @@ func (q *Queries) FindAllDocumentsWithLines(ctx context.Context) ([]FindAllDocum
 			&i.Fechadoc,
 			&i.Vendedor_2,
 			&i.Codcoord_2,
-			&i.Fechamodifi_2,
+			&i.CreatedAt_2,
+			&i.UpdatedAt_2,
+			&i.DeletedAt_2,
 		); err != nil {
 			return nil, err
 		}
@@ -386,10 +398,10 @@ func (q *Queries) FindAllDocumentsWithLines(ctx context.Context) ([]FindAllDocum
 }
 
 const findAllDocumentsWithLinesByCode = `-- name: FindAllDocumentsWithLinesByCode :many
-select ke_doccti.agencia, ke_doccti.tipodoc, ke_doccti.documento, ke_doccti.tipodocv, codcliente, nombrecli, contribesp, ruta_parme, tipoprecio, emision, recepcion, vence, diascred, estatusdoc, dtotneto, dtotimpuest, dtotalfinal, dtotpagos, dtotdescuen, dflete, dtotdev, ke_doccti.dvndmtototal, dretencion, dretencioniva, ke_doccti.vendedor, ke_doccti.codcoord, ke_doccti.fechamodifi, aceptadev, kti_negesp, bsiva, bsflete, bsretencion, bsretencioniva, tasadoc, mtodcto, fchvencedcto, tienedcto, cbsret, cdret, cbsretiva, cdretiva, cbsrparme, cdrparme, cbsretflete, cdretflete, bsmtoiva, bsmtofte, retmun_mto, dolarflete, bsretflete, dretflete, dretmun_mto, retivaoblig, edoentrega, dmtoiva, prcdctoaplic, montodctodol, montodctobs, ke_doclmv.agencia, ke_doclmv.tipodoc, ke_doclmv.documento, ke_doclmv.tipodocv, grupo, subgrupo, origen, codigo, codhijo, pid, nombre, cantidad, cntdevuelt, vndcntdevuelt, ke_doclmv.dvndmtototal, dpreciofin, dpreciounit, dmontoneto, dmontototal, timpueprc, unidevuelt, fechadoc, ke_doclmv.vendedor, ke_doclmv.codcoord, ke_doclmv.fechamodifi
+select ke_doccti.agencia, ke_doccti.tipodoc, ke_doccti.documento, ke_doccti.tipodocv, codcliente, nombrecli, contribesp, ruta_parme, tipoprecio, emision, recepcion, vence, diascred, estatusdoc, dtotneto, dtotimpuest, dtotalfinal, dtotpagos, dtotdescuen, dflete, dtotdev, ke_doccti.dvndmtototal, dretencion, dretencioniva, ke_doccti.vendedor, ke_doccti.codcoord, aceptadev, kti_negesp, bsiva, bsflete, bsretencion, bsretencioniva, tasadoc, mtodcto, fchvencedcto, tienedcto, cbsret, cdret, cbsretiva, cdretiva, cbsrparme, cdrparme, cbsretflete, cdretflete, bsmtoiva, bsmtofte, retmun_mto, dolarflete, bsretflete, dretflete, dretmun_mto, retivaoblig, edoentrega, dmtoiva, prcdctoaplic, montodctodol, montodctobs, ke_doccti.created_at, ke_doccti.updated_at, ke_doccti.deleted_at, ke_doclmv.agencia, ke_doclmv.tipodoc, ke_doclmv.documento, ke_doclmv.tipodocv, grupo, subgrupo, origen, codigo, codhijo, pid, nombre, cantidad, cntdevuelt, vndcntdevuelt, ke_doclmv.dvndmtototal, dpreciofin, dpreciounit, dmontoneto, dmontototal, timpueprc, unidevuelt, fechadoc, ke_doclmv.vendedor, ke_doclmv.codcoord, ke_doclmv.created_at, ke_doclmv.updated_at, ke_doclmv.deleted_at
 from ke_doccti
 left join ke_doclmv on ke_doccti.documento = ke_doclmv.documento
-where vendedor = $1
+where ke_doccti.vendedor = ?
 `
 
 type FindAllDocumentsWithLinesByCodeRow struct {
@@ -399,8 +411,8 @@ type FindAllDocumentsWithLinesByCodeRow struct {
 	Tipodocv       string
 	Codcliente     string
 	Nombrecli      string
-	Contribesp     string
-	RutaParme      string
+	Contribesp     bool
+	RutaParme      bool
 	Tipoprecio     string
 	Emision        time.Time
 	Recepcion      time.Time
@@ -419,9 +431,8 @@ type FindAllDocumentsWithLinesByCodeRow struct {
 	Dretencioniva  string
 	Vendedor       string
 	Codcoord       string
-	Fechamodifi    time.Time
-	Aceptadev      string
-	KtiNegesp      string
+	Aceptadev      bool
+	KtiNegesp      bool
 	Bsiva          string
 	Bsflete        string
 	Bsretencion    string
@@ -429,7 +440,7 @@ type FindAllDocumentsWithLinesByCodeRow struct {
 	Tasadoc        string
 	Mtodcto        string
 	Fchvencedcto   time.Time
-	Tienedcto      string
+	Tienedcto      bool
 	Cbsret         string
 	Cdret          string
 	Cbsretiva      string
@@ -441,16 +452,19 @@ type FindAllDocumentsWithLinesByCodeRow struct {
 	Bsmtoiva       string
 	Bsmtofte       string
 	RetmunMto      string
-	Dolarflete     int32
+	Dolarflete     bool
 	Bsretflete     string
 	Dretflete      string
 	DretmunMto     string
-	Retivaoblig    uint8
-	Edoentrega     uint8
+	Retivaoblig    bool
+	Edoentrega     bool
 	Dmtoiva        string
 	Prcdctoaplic   string
 	Montodctodol   string
 	Montodctobs    string
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
+	DeletedAt      sql.NullTime
 	Agencia_2      sql.NullString
 	Tipodoc_2      sql.NullString
 	Documento_2    sql.NullString
@@ -462,8 +476,8 @@ type FindAllDocumentsWithLinesByCodeRow struct {
 	Codhijo        sql.NullString
 	Pid            sql.NullString
 	Nombre         sql.NullString
-	Cantidad       sql.NullString
-	Cntdevuelt     sql.NullString
+	Cantidad       sql.NullInt32
+	Cntdevuelt     sql.NullInt32
 	Vndcntdevuelt  sql.NullString
 	Dvndmtototal_2 sql.NullString
 	Dpreciofin     sql.NullString
@@ -471,15 +485,17 @@ type FindAllDocumentsWithLinesByCodeRow struct {
 	Dmontoneto     sql.NullString
 	Dmontototal    sql.NullString
 	Timpueprc      sql.NullString
-	Unidevuelt     sql.NullString
+	Unidevuelt     sql.NullInt32
 	Fechadoc       sql.NullTime
 	Vendedor_2     sql.NullString
 	Codcoord_2     sql.NullString
-	Fechamodifi_2  sql.NullTime
+	CreatedAt_2    sql.NullTime
+	UpdatedAt_2    sql.NullTime
+	DeletedAt_2    sql.NullTime
 }
 
-func (q *Queries) FindAllDocumentsWithLinesByCode(ctx context.Context) ([]FindAllDocumentsWithLinesByCodeRow, error) {
-	rows, err := q.db.QueryContext(ctx, findAllDocumentsWithLinesByCode)
+func (q *Queries) FindAllDocumentsWithLinesByCode(ctx context.Context, vendedor string) ([]FindAllDocumentsWithLinesByCodeRow, error) {
+	rows, err := q.db.QueryContext(ctx, findAllDocumentsWithLinesByCode, vendedor)
 	if err != nil {
 		return nil, err
 	}
@@ -514,7 +530,6 @@ func (q *Queries) FindAllDocumentsWithLinesByCode(ctx context.Context) ([]FindAl
 			&i.Dretencioniva,
 			&i.Vendedor,
 			&i.Codcoord,
-			&i.Fechamodifi,
 			&i.Aceptadev,
 			&i.KtiNegesp,
 			&i.Bsiva,
@@ -546,6 +561,9 @@ func (q *Queries) FindAllDocumentsWithLinesByCode(ctx context.Context) ([]FindAl
 			&i.Prcdctoaplic,
 			&i.Montodctodol,
 			&i.Montodctobs,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.DeletedAt,
 			&i.Agencia_2,
 			&i.Tipodoc_2,
 			&i.Documento_2,
@@ -570,7 +588,9 @@ func (q *Queries) FindAllDocumentsWithLinesByCode(ctx context.Context) ([]FindAl
 			&i.Fechadoc,
 			&i.Vendedor_2,
 			&i.Codcoord_2,
-			&i.Fechamodifi_2,
+			&i.CreatedAt_2,
+			&i.UpdatedAt_2,
+			&i.DeletedAt_2,
 		); err != nil {
 			return nil, err
 		}

@@ -19,11 +19,25 @@ INSERT INTO ke_dataconex (
         created_at,
         updated_at
     )
-VALUES ($1, $2, $3, $4, $5, NOW(), NOW())
+VALUES (?, ?, ?, ?, ?, NOW(), NOW())
 `
 
-func (q *Queries) CreateCompany(ctx context.Context) error {
-	_, err := q.db.ExecContext(ctx, createCompany)
+type CreateCompanyParams struct {
+	KedCodigo string
+	KedNombre string
+	KedStatus bool
+	KedEnlace string
+	KedAgen   string
+}
+
+func (q *Queries) CreateCompany(ctx context.Context, arg CreateCompanyParams) error {
+	_, err := q.db.ExecContext(ctx, createCompany,
+		arg.KedCodigo,
+		arg.KedNombre,
+		arg.KedStatus,
+		arg.KedEnlace,
+		arg.KedAgen,
+	)
 	return err
 }
 
@@ -31,16 +45,17 @@ const deleteCompany = `-- name: DeleteCompany :exec
 UPDATE ke_dataconex
 SET ked_status = 0,
     deleted_at = NOW()
-WHERE ked_codigo = $1
+WHERE ked_codigo = ?
 `
 
-func (q *Queries) DeleteCompany(ctx context.Context) error {
-	_, err := q.db.ExecContext(ctx, deleteCompany)
+func (q *Queries) DeleteCompany(ctx context.Context, kedCodigo string) error {
+	_, err := q.db.ExecContext(ctx, deleteCompany, kedCodigo)
 	return err
 }
 
 const getAllCompanies = `-- name: GetAllCompanies :many
-SELECT ked_codigo, ked_nombre, ked_status, ked_enlace, ked_agen, created_at, updated_at, deleted_at FROM ke_dataconex
+select ked_codigo, ked_nombre, ked_status, ked_enlace, ked_agen, created_at, updated_at, deleted_at
+from ke_dataconex
 `
 
 func (q *Queries) GetAllCompanies(ctx context.Context) ([]KeDataconex, error) {
@@ -76,8 +91,9 @@ func (q *Queries) GetAllCompanies(ctx context.Context) ([]KeDataconex, error) {
 }
 
 const getCompanies = `-- name: GetCompanies :many
-SELECT ked_codigo, ked_nombre, ked_status, ked_enlace, ked_agen, created_at, updated_at, deleted_at FROM ke_dataconex
-WHERE deleted_at IS NULL
+select ked_codigo, ked_nombre, ked_status, ked_enlace, ked_agen, created_at, updated_at, deleted_at
+from ke_dataconex
+where deleted_at is null
 `
 
 func (q *Queries) GetCompanies(ctx context.Context) ([]KeDataconex, error) {
@@ -113,15 +129,13 @@ func (q *Queries) GetCompanies(ctx context.Context) ([]KeDataconex, error) {
 }
 
 const getCompanyById = `-- name: GetCompanyById :one
-SELECT ked_codigo, ked_nombre, ked_status, ked_enlace, ked_agen, created_at, updated_at, deleted_at FROM ke_dataconex
-WHERE 
-ked_codigo = $1 AND
-ked_status = 1 AND
-deleted_at IS NULL
+select ked_codigo, ked_nombre, ked_status, ked_enlace, ked_agen, created_at, updated_at, deleted_at
+from ke_dataconex
+where ked_codigo = ? and ked_status = 1 and deleted_at is null
 `
 
-func (q *Queries) GetCompanyById(ctx context.Context) (KeDataconex, error) {
-	row := q.db.QueryRowContext(ctx, getCompanyById)
+func (q *Queries) GetCompanyById(ctx context.Context, kedCodigo string) (KeDataconex, error) {
+	row := q.db.QueryRowContext(ctx, getCompanyById, kedCodigo)
 	var i KeDataconex
 	err := row.Scan(
 		&i.KedCodigo,
@@ -137,12 +151,13 @@ func (q *Queries) GetCompanyById(ctx context.Context) (KeDataconex, error) {
 }
 
 const getOneCompanyById = `-- name: GetOneCompanyById :one
-SELECT ked_codigo, ked_nombre, ked_status, ked_enlace, ked_agen, created_at, updated_at, deleted_at FROM ke_dataconex
-WHERE ked_codigo = $1
+select ked_codigo, ked_nombre, ked_status, ked_enlace, ked_agen, created_at, updated_at, deleted_at
+from ke_dataconex
+where ked_codigo = ?
 `
 
-func (q *Queries) GetOneCompanyById(ctx context.Context) (KeDataconex, error) {
-	row := q.db.QueryRowContext(ctx, getOneCompanyById)
+func (q *Queries) GetOneCompanyById(ctx context.Context, kedCodigo string) (KeDataconex, error) {
+	row := q.db.QueryRowContext(ctx, getOneCompanyById, kedCodigo)
 	var i KeDataconex
 	err := row.Scan(
 		&i.KedCodigo,
@@ -159,16 +174,32 @@ func (q *Queries) GetOneCompanyById(ctx context.Context) (KeDataconex, error) {
 
 const updateCompany = `-- name: UpdateCompany :exec
 UPDATE ke_dataconex
-SET ked_codigo = $1,
-    ked_nombre = $2,
-    ked_status = $3,
-    ked_enlace = $4,
-    ked_agen = 5$,
+SET ked_codigo = ?,
+    ked_nombre = ?,
+    ked_status = ?, 
+    ked_enlace = ?,
+    ked_agen = ?,
     updated_at = NOW()
-WHERE ked_codigo = $6
+WHERE ked_codigo = ?
 `
 
-func (q *Queries) UpdateCompany(ctx context.Context) error {
-	_, err := q.db.ExecContext(ctx, updateCompany)
+type UpdateCompanyParams struct {
+	KedCodigo   string
+	KedNombre   string
+	KedStatus   bool
+	KedEnlace   string
+	KedAgen     string
+	KedCodigo_2 string
+}
+
+func (q *Queries) UpdateCompany(ctx context.Context, arg UpdateCompanyParams) error {
+	_, err := q.db.ExecContext(ctx, updateCompany,
+		arg.KedCodigo,
+		arg.KedNombre,
+		arg.KedStatus,
+		arg.KedEnlace,
+		arg.KedAgen,
+		arg.KedCodigo_2,
+	)
 	return err
 }
