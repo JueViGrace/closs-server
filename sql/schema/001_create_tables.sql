@@ -1,28 +1,29 @@
 -- +goose Up
 CREATE TABLE IF NOT EXISTS ke_dataconex (
-  ked_codigo VARCHAR(6) NOT NULL,
+  id CHAR(36) NOT NULL PRIMARY KEY,
+  ked_codigo VARCHAR(6) NOT NULL UNIQUE,
   ked_nombre VARCHAR(80) NOT NULL DEFAULT '',
   ked_status BOOLEAN NOT NULL DEFAULT 0,
   ked_enlace TEXT NOT NULL,
   ked_agen VARCHAR(20) NOT NULL DEFAULT '',
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  deleted_at TIMESTAMP DEFAULT NULL,
-  CONSTRAINT PK_dataconex PRIMARY KEY (ked_codigo)
+  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  deleted_at TIMESTAMP DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS listbanc (
-  codbanco SMALLINT NOT NULL,
+  id CHAR(36) NOT NULL PRIMARY KEY,
+  codbanco SMALLINT NOT NULL UNIQUE,
   nombanco VARCHAR(59) NOT NULL DEFAULT '',
   cuentanac CHAR(1) NOT NULL DEFAULT '0',
   inactiva BOOLEAN NOT NULL DEFAULT 0,
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  deleted_at TIMESTAMP DEFAULT NULL,
-  CONSTRAINT PK_config PRIMARY KEY (codbanco)
+  deleted_at TIMESTAMP DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS ke_wcnf_conf (
+  id CHAR(36) NOT NULL PRIMARY KEY,
   cnfg_idconfig char(30) NOT NULL,
   cnfg_clase char(1) NOT NULL DEFAULT '',
   cnfg_tipo char(1) NOT NULL,
@@ -38,51 +39,48 @@ CREATE TABLE IF NOT EXISTS ke_wcnf_conf (
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
   deleted_at TIMESTAMP DEFAULT NULL,
-  CONSTRAINT PK_config PRIMARY KEY (cnfg_idconfig, username)
+  CONSTRAINT UC_wcnf_idconfig UNIQUE (cnfg_idconfig, username)
 );
 
 CREATE TABLE IF NOT EXISTS grupos (
-  codigo INT NOT NULL,
+  id CHAR(36) NOT NULL PRIMARY KEY,
+  codigo INT NOT NULL UNIQUE,
   nombre VARCHAR(80) DEFAULT '',
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  deleted_at TIMESTAMP DEFAULT NULL,
-  CONSTRAINT PK_grupos PRIMARY KEY (codigo)
+  deleted_at TIMESTAMP DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS subgrupos (
+  grupo_id CHAR(36) NOT NULL PRIMARY KEY,
   codigo INT NOT NULL,
   subcodigo INT NOT NULL,
   nombre varchar(80) DEFAULT '',
-  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  deleted_at TIMESTAMP DEFAULT NULL,
-  CONSTRAINT PK_subgrupos PRIMARY KEY (codigo, subcodigo)
+  CONSTRAINT UC_codigo_subgrupos UNIQUE (codigo, subcodigo)
 );
 
 CREATE TABLE IF NOT EXISTS sectores (
-  codigo INT NOT NULL,
+  id CHAR(36) NOT NULL PRIMARY KEY,
+  codigo INT NOT NULL UNIQUE,
   zona varchar(50) NOT NULL DEFAULT '',
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  deleted_at TIMESTAMP DEFAULT NULL,
-  CONSTRAINT PK_config PRIMARY KEY (codigo)
+  deleted_at TIMESTAMP DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS subsectores (
+  sector_id CHAR(36) NOT NULL PRIMARY KEY,
   codigo INT NOT NULL,
   subcodigo INT NOT NULL,
-  subsector varchar(50) NOT NULL DEFAULT '',
-  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  deleted_at TIMESTAMP DEFAULT NULL,
-  CONSTRAINT PK_config PRIMARY KEY (codigo)
+  nombre varchar(50) NOT NULL DEFAULT '',
+  CONSTRAINT UC_codigo_subgrupos UNIQUE (codigo, subcodigo)
 );
 
 CREATE TABLE IF NOT EXISTS articulo (
-  codigo VARCHAR(25) NOT NULL,
-  grupo VARCHAR(6) NOT NULL DEFAULT '',
-  subgrupo VARCHAR(6) NOT NULL DEFAULT '',
+  id CHAR(36) NOT NULL PRIMARY KEY,
+  codigo VARCHAR(25) NOT NULL UNIQUE,
+  grupo INT NOT NULL DEFAULT 0,
+  subgrupo INT NOT NULL DEFAULT 0,
   nombre VARCHAR(150) NOT NULL DEFAULT '',
   referencia VARCHAR(20) NOT NULL DEFAULT '',
   marca VARCHAR(20) NOT NULL DEFAULT '',
@@ -115,49 +113,35 @@ CREATE TABLE IF NOT EXISTS articulo (
   qtyultcomp INT NOT NULL DEFAULT 0,
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  deleted_at TIMESTAMP DEFAULT NULL,
-  CONSTRAINT PK_articulo PRIMARY KEY (codigo)
+  deleted_at TIMESTAMP DEFAULT NULL
 );
 
-CREATE TABLE IF NOT EXISTS listvend (
-  codigo VARCHAR(8) NOT NULL,
+CREATE TABLE IF NOT EXISTS usuario (
+  id CHAR(36) NOT NULL PRIMARY KEY,
+  codigo varchar(8) NOT NULL DEFAULT '',
+  username varchar(30) NOT NULL UNIQUE DEFAULT '',
+  email TEXT NOT NULL,
+  password varchar(20) DEFAULT NULL,
   nombre VARCHAR(54) DEFAULT '',
   telefonos VARCHAR(100) DEFAULT '',
   telefono_movil VARCHAR(100) DEFAULT '',
-  status CHAR(1) NOT NULL DEFAULT '1',
-  superves CHAR(1) NOT NULL DEFAULT '0',
+  direccion VARCHAR(200) DEFAULT '',
+  sector INT DEFAULT 0,
+  subcodigo INT NOT NULL DEFAULT 0,
   supervpor VARCHAR(8) NOT NULL DEFAULT '',
-  sector VARCHAR(6) DEFAULT '',
-  subcodigo VARCHAR(6) NOT NULL,
-  nivgcial BOOLEAN NOT NULL DEFAULT 0,
-  email TEXT NOT NULL,
-  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  deleted_at TIMESTAMP DEFAULT NULL,
-  CONSTRAINT PK_config PRIMARY KEY (codigo)
-);
-
-CREATE TABLE IF NOT EXISTS usuarios (
-  nombre varchar(30) NOT NULL DEFAULT '',
-  username varchar(30) NOT NULL DEFAULT '',
-  password varchar(20) DEFAULT NULL,
-  vendedor varchar(8) NOT NULL DEFAULT '',
-  almacen char(2) DEFAULT '01',
+  status CHAR(1) NOT NULL DEFAULT '1',
   desactivo BOOLEAN NOT NULL DEFAULT 0,
-  ualterprec INT NOT NULL DEFAULT 0,
-  sesionactiva TIMESTAMP NOT NULL DEFAULT NOW(),
-  ult_sinc TIMESTAMP NOT NULL DEFAULT NOW(),
-  version varchar(30)  NOT NULL DEFAULT '0.0.0',
-  sesion BOOLEAN NOT NULL DEFAULT 0,
   cierre_sesion BOOLEAN NOT NULL DEFAULT 0,
   comisiones BOOLEAN NOT NULL DEFAULT 0,
+  ult_sinc TIMESTAMP NOT NULL DEFAULT NOW(),
+  version varchar(30)  NOT NULL DEFAULT '0.0.0'
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  deleted_at TIMESTAMP DEFAULT NULL,
-  CONSTRAINT PK_config PRIMARY KEY (vendedor)
+  deleted_at TIMESTAMP DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS cliempre (
+  id CHAR(36) NOT NULL PRIMARY KEY,
   codigo VARCHAR(20) NOT NULL,
   nombre VARCHAR(100) NOT NULL DEFAULT '',
   direccion VARCHAR(200) DEFAULT '',
@@ -166,8 +150,8 @@ CREATE TABLE IF NOT EXISTS cliempre (
   vendedor VARCHAR(8) DEFAULT '',
   contribespecial BOOLEAN NOT NULL DEFAULT 0,
   status SMALLINT NOT NULL DEFAULT 0,
-  sector VARCHAR(6) DEFAULT '',
-  subcodigo VARCHAR(6) NOT NULL DEFAULT '',
+  sector INT DEFAULT 0,
+  subcodigo INT NOT NULL DEFAULT 0,
   precio SMALLINT NOT NULL DEFAULT 1,
   email TEXT NOT NULL,
   kne_activa BOOLEAN NOT NULL DEFAULT 0,
@@ -190,15 +174,15 @@ CREATE TABLE IF NOT EXISTS cliempre (
   nodolarflete BOOLEAN NOT NULL DEFAULT 0,
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  deleted_at TIMESTAMP DEFAULT NULL,
-  CONSTRAINT PK_cliempre PRIMARY KEY (codigo)
+  deleted_at TIMESTAMP DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS ke_estadc01 (
-  codcoord VARCHAR(8) NOT NULL DEFAULT '' ,
-  nomcoord VARCHAR(54) NOT NULL DEFAULT '' ,
-  vendedor VARCHAR(8) NOT NULL,
-  nombrevend VARCHAR(54) NOT NULL DEFAULT '' ,
+  id CHAR(36) NOT NULL PRIMARY KEY,
+  codcoord VARCHAR(8) NOT NULL DEFAULT '',
+  nomcoord VARCHAR(54) NOT NULL DEFAULT '',
+  vendedor VARCHAR(8) NOT NULL UNIQUE,
+  nombrevend VARCHAR(54) NOT NULL DEFAULT '',
   cntpedidos INT NOT NULL DEFAULT 0,
   mtopedidos DECIMAL(8, 4) NOT NULL DEFAULT 0.00,
   cntfacturas INT NOT NULL DEFAULT 0,
@@ -223,35 +207,37 @@ CREATE TABLE IF NOT EXISTS ke_estadc01 (
   mtorecl DECIMAL(8, 4) NOT NULL DEFAULT 0.00,
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  deleted_at TIMESTAMP DEFAULT NULL,
-  CONSTRAINT PK_estad PRIMARY KEY (vendedor)
+  deleted_at TIMESTAMP DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS ke_opti (
-  kti_ndoc varchar(17) NOT NULL,
-  kti_tdoc varchar(3) NOT NULL DEFAULT '',
-  kti_codcli varchar(20) NOT NULL DEFAULT '',
-  kti_nombrecli varchar(100) NOT NULL DEFAULT ' ',
-  kti_codven varchar(8) NOT NULL DEFAULT '',
+  id CHAR(36) NOT NULL PRIMARY KEY,
+  cliente_id CHAR(36) NOT NULL,
+  kti_ndoc VARCHAR(17) NOT NULL,
+  kti_tdoc VARCHAR(3) NOT NULL DEFAULT '',
+  kti_codcli VARCHAR(20) NOT NULL DEFAULT '',
+  kti_nombrecli VARCHAR(100) NOT NULL DEFAULT ' ',
+  kti_codven VARCHAR(8) NOT NULL DEFAULT '',
   kti_docsol CHAR(1) NOT NULL DEFAULT '',
   kti_condicion CHAR(1) NOT NULL DEFAULT '',
   kti_tipprec CHAR(1) NOT NULL DEFAULT '0',
   kti_totneto DECIMAL(8,4) NOT NULL DEFAULT 0.00,
   kti_status CHAR(1) NOT NULL DEFAULT '0',
-  kti_nroped varchar(8) NOT NULL DEFAULT '',
-  kti_fchdoc datetime NOT NULL DEFAULT '0001-01-01 01:01:01',
+  kti_nroped VARCHAR(8) NOT NULL DEFAULT '',
+  kti_fchdoc DATETIME NOT NULL DEFAULT '0001-01-01 01:01:01',
   kti_negesp BOOLEAN NOT NULL DEFAULT 0,
   ke_pedstatus CHAR(2) NOT NULL DEFAULT '',
   dolarflete BOOLEAN NOT NULL DEFAULT 0,
   complemento BOOLEAN NOT NULL DEFAULT 0,
-  nro_complemento varchar(17) NOT NULL DEFAULT '',
+  nro_complemento VARCHAR(17) NOT NULL DEFAULT '',
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  deleted_at TIMESTAMP DEFAULT NULL,
-  CONSTRAINT PK_estad PRIMARY KEY (kti_ndoc)
+  deleted_at TIMESTAMP DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS ke_opmv (
+  pedido_id CHAR(36) NOT NULL,
+  articulo_id CHAR(36) NOT NULL,
   kti_tdoc VARCHAR(8) NOT NULL DEFAULT '',
   kti_ndoc VARCHAR(17) NOT NULL,
   kti_tipprec CHAR(1) NOT NULL DEFAULT '1',
@@ -264,13 +250,16 @@ CREATE TABLE IF NOT EXISTS ke_opmv (
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
   deleted_at TIMESTAMP DEFAULT NULL,
-  CONSTRAINT PK_opmv PRIMARY KEY (kti_ndoc, kmv_codart)
+  CONSTRAINT PK_pedido_lineas PRIMARY KEY (pedido_id, articulo_id),
+  CONSTRAINT UC_ndoc_lineas UNIQUE (kti_ndoc, kmv_codart)
 );
 
 CREATE TABLE IF NOT EXISTS ke_doccti (
+  id CHAR(36) NOT NULL PRIMARY KEY,
+  cliente_id CHAR(36) NOT NULL,
   agencia VARCHAR(3) NOT NULL DEFAULT '',
   tipodoc VARCHAR(3) NOT NULL DEFAULT '',
-  documento VARCHAR(8) NOT NULL,
+  documento VARCHAR(8) NOT NULL UNIQUE,
   tipodocv VARCHAR(3) NOT NULL DEFAULT '',
   codcliente VARCHAR(20) NOT NULL DEFAULT '',
   nombrecli VARCHAR(100) NOT NULL DEFAULT '',
@@ -327,17 +316,18 @@ CREATE TABLE IF NOT EXISTS ke_doccti (
   montodctobs DECIMAL(8, 4) NOT NULL DEFAULT 0.00,
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  deleted_at TIMESTAMP DEFAULT NULL,
-  CONSTRAINT PK_documento PRIMARY KEY (documento)
+  deleted_at TIMESTAMP DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS ke_doclmv (
+  doc_id CHAR(36) NOT NULL,
+  articulo_id CHAR(36) NOT NULL,
   agencia VARCHAR(3) NOT NULL DEFAULT '',
   tipodoc VARCHAR(3) NOT NULL DEFAULT '',
   documento VARCHAR(8) NOT NULL,
   tipodocv VARCHAR(3) NOT NULL DEFAULT '',
-  grupo VARCHAR(6) NOT NULL DEFAULT '',
-  subgrupo VARCHAR(6) NOT NULL DEFAULT '',
+  grupo INT NOT NULL DEFAULT 0,
+  subgrupo INT NOT NULL DEFAULT 0,
   origen DECIMAL(8, 4) NOT NULL DEFAULT 0.00,
   codigo VARCHAR(25) NOT NULL,
   codhijo VARCHAR(25) NOT NULL DEFAULT '',
@@ -359,7 +349,8 @@ CREATE TABLE IF NOT EXISTS ke_doclmv (
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
   deleted_at TIMESTAMP DEFAULT NULL,
-  CONSTRAINT PK_documento_lineas PRIMARY KEY (documento, codigo)
+  CONSTRAINT PK_docc_lineas PRIMARY KEY (doc_id, articulo_id),
+  CONSTRAINT UC_docc_lineas UNIQUE (documento, codigo)
 );
 
 -- +goose Down
@@ -371,8 +362,8 @@ DROP TABLE subgrupos;
 DROP TABLE sectores;
 DROP TABLE subsectores;
 DROP TABLE articulo;
-DROP TABLE listvend;
-DROP TABLE usuarios;
+DROP TABLE usuario;
+DROP TABLE datos_usuario;
 DROP TABLE cliempre;
 DROP TABLE ke_estadc01;
 DROP TABLE ke_opti;

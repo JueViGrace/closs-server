@@ -79,8 +79,8 @@ type DocumentLine struct {
 	Tipodoc       string    `json:"tipodoc"`
 	Documento     string    `json:"documento"`
 	Tipodocv      string    `json:"tipodocv"`
-	Grupo         string    `json:"grupo"`
-	Subgrupo      string    `json:"subgrupo"`
+	Grupo         int32     `json:"grupo"`
+	Subgrupo      int32     `json:"subgrupo"`
 	Origen        string    `json:"origen"`
 	Codigo        string    `json:"codigo"`
 	Codhijo       string    `json:"codhijo"`
@@ -163,6 +163,9 @@ func DbKeDoccToDocument(kd *db.KeDoccti) *Document {
 		Prcdctoaplic:   kd.Prcdctoaplic,
 		Montodctodol:   kd.Montodctodol,
 		Montodctobs:    kd.Montodctobs,
+		CreatedAt:      kd.CreatedAt,
+		UpdatedAt:      kd.UpdatedAt,
+		DeletedAt:      kd.DeletedAt.Time,
 	}
 }
 
@@ -226,6 +229,9 @@ func DocMapToDocWithLines(key *Document, value *[]DocumentLine) *DocumentWithLin
 			Prcdctoaplic:   key.Prcdctoaplic,
 			Montodctodol:   key.Montodctodol,
 			Montodctobs:    key.Montodctobs,
+			CreatedAt:      key.CreatedAt,
+			UpdatedAt:      key.UpdatedAt,
+			DeletedAt:      key.DeletedAt,
 		},
 		Lines: *value,
 	}
@@ -290,6 +296,9 @@ func DbDocToDocument(dbDoc *db.FindAllDocumentsWithLinesRow) *Document {
 		Prcdctoaplic:   dbDoc.Prcdctoaplic,
 		Montodctodol:   dbDoc.Montodctodol,
 		Montodctobs:    dbDoc.Montodctobs,
+		CreatedAt:      dbDoc.CreatedAt,
+		UpdatedAt:      dbDoc.UpdatedAt,
+		DeletedAt:      dbDoc.DeletedAt.Time,
 	}
 }
 
@@ -299,15 +308,15 @@ func DbDocToDocLine(dbDoc *db.FindAllDocumentsWithLinesRow) *DocumentLine {
 		Tipodoc:       dbDoc.Tipodoc_2.String,
 		Documento:     dbDoc.Documento_2.String,
 		Tipodocv:      dbDoc.Tipodocv_2.String,
-		Grupo:         dbDoc.Grupo.String,
-		Subgrupo:      dbDoc.Subgrupo.String,
+		Grupo:         dbDoc.Grupo.Int32,
+		Subgrupo:      dbDoc.Subgrupo.Int32,
 		Origen:        dbDoc.Origen.String,
 		Codigo:        dbDoc.Codigo.String,
 		Codhijo:       dbDoc.Codhijo.String,
 		Pid:           dbDoc.Pid.String,
 		Nombre:        dbDoc.Nombre.String,
-		Cantidad:      dbDoc.Cantidad,
-		Cntdevuelt:    dbDoc.Cntdevuelt,
+		Cantidad:      dbDoc.Cantidad.Int32,
+		Cntdevuelt:    dbDoc.Cntdevuelt.Int32,
 		Vndcntdevuelt: dbDoc.Vndcntdevuelt.String,
 		Dvndmtototal:  dbDoc.Dvndmtototal_2.String,
 		Dpreciofin:    dbDoc.Dpreciofin.String,
@@ -315,11 +324,13 @@ func DbDocToDocLine(dbDoc *db.FindAllDocumentsWithLinesRow) *DocumentLine {
 		Dmontoneto:    dbDoc.Dmontoneto.String,
 		Dmontototal:   dbDoc.Dmontototal.String,
 		Timpueprc:     dbDoc.Timpueprc.String,
-		Unidevuelt:    dbDoc.Unidevuelt,
+		Unidevuelt:    dbDoc.Unidevuelt.Int32,
 		Fechadoc:      dbDoc.Fechadoc.Time,
 		Vendedor:      dbDoc.Vendedor_2.String,
 		Codcoord:      dbDoc.Codcoord_2.String,
-		Fechamodifi:   dbDoc.Fechamodifi_2.Time,
+		CreatedAt:     dbDoc.CreatedAt_2.Time,
+		UpdatedAt:     dbDoc.UpdatedAt_2.Time,
+		DeletedAt:     dbDoc.DeletedAt_2.Time,
 	}
 }
 
@@ -351,7 +362,6 @@ func DbDocByCodeToDocument(dbDoc *db.FindAllDocumentsWithLinesByCodeRow) *Docume
 		Dretencioniva:  dbDoc.Dretencioniva,
 		Vendedor:       dbDoc.Vendedor,
 		Codcoord:       dbDoc.Codcoord,
-		Fechamodifi:    dbDoc.Fechamodifi,
 		Aceptadev:      dbDoc.Aceptadev,
 		KtiNegesp:      dbDoc.KtiNegesp,
 		Bsiva:          dbDoc.Bsiva,
@@ -383,6 +393,9 @@ func DbDocByCodeToDocument(dbDoc *db.FindAllDocumentsWithLinesByCodeRow) *Docume
 		Prcdctoaplic:   dbDoc.Prcdctoaplic,
 		Montodctodol:   dbDoc.Montodctodol,
 		Montodctobs:    dbDoc.Montodctobs,
+		CreatedAt:      dbDoc.CreatedAt,
+		UpdatedAt:      dbDoc.UpdatedAt,
+		DeletedAt:      dbDoc.DeletedAt.Time,
 	}
 }
 
@@ -392,15 +405,15 @@ func DbDocByCodeToDocLine(dbDoc *db.FindAllDocumentsWithLinesByCodeRow) *Documen
 		Tipodoc:       dbDoc.Tipodoc_2.String,
 		Documento:     dbDoc.Documento_2.String,
 		Tipodocv:      dbDoc.Tipodocv_2.String,
-		Grupo:         dbDoc.Grupo.String,
-		Subgrupo:      dbDoc.Subgrupo.String,
+		Grupo:         dbDoc.Grupo.Int32,
+		Subgrupo:      dbDoc.Subgrupo.Int32,
 		Origen:        dbDoc.Origen.String,
 		Codigo:        dbDoc.Codigo.String,
 		Codhijo:       dbDoc.Codhijo.String,
 		Pid:           dbDoc.Pid.String,
 		Nombre:        dbDoc.Nombre.String,
-		Cantidad:      dbDoc.Cantidad.String,
-		Cntdevuelt:    dbDoc.Cntdevuelt.String,
+		Cantidad:      dbDoc.Cantidad.Int32,
+		Cntdevuelt:    dbDoc.Cntdevuelt.Int32,
 		Vndcntdevuelt: dbDoc.Vndcntdevuelt.String,
 		Dvndmtototal:  dbDoc.Dvndmtototal_2.String,
 		Dpreciofin:    dbDoc.Dpreciofin.String,
@@ -408,10 +421,12 @@ func DbDocByCodeToDocLine(dbDoc *db.FindAllDocumentsWithLinesByCodeRow) *Documen
 		Dmontoneto:    dbDoc.Dmontoneto.String,
 		Dmontototal:   dbDoc.Dmontototal.String,
 		Timpueprc:     dbDoc.Timpueprc.String,
-		Unidevuelt:    dbDoc.Unidevuelt.String,
+		Unidevuelt:    dbDoc.Unidevuelt.Int32,
 		Fechadoc:      dbDoc.Fechadoc.Time,
 		Vendedor:      dbDoc.Vendedor_2.String,
 		Codcoord:      dbDoc.Codcoord_2.String,
-		Fechamodifi:   dbDoc.Fechamodifi_2.Time,
+		CreatedAt:     dbDoc.CreatedAt,
+		UpdatedAt:     dbDoc.UpdatedAt,
+		DeletedAt:     dbDoc.DeletedAt.Time,
 	}
 }

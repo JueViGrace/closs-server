@@ -261,8 +261,8 @@ type FindAllDocumentsWithLinesRow struct {
 	Tipodoc_2      sql.NullString
 	Documento_2    sql.NullString
 	Tipodocv_2     sql.NullString
-	Grupo          sql.NullString
-	Subgrupo       sql.NullString
+	Grupo          sql.NullInt32
+	Subgrupo       sql.NullInt32
 	Origen         sql.NullString
 	Codigo         sql.NullString
 	Codhijo        sql.NullString
@@ -469,8 +469,8 @@ type FindAllDocumentsWithLinesByCodeRow struct {
 	Tipodoc_2      sql.NullString
 	Documento_2    sql.NullString
 	Tipodocv_2     sql.NullString
-	Grupo          sql.NullString
-	Subgrupo       sql.NullString
+	Grupo          sql.NullInt32
+	Subgrupo       sql.NullInt32
 	Origen         sql.NullString
 	Codigo         sql.NullString
 	Codhijo        sql.NullString

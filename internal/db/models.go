@@ -11,8 +11,8 @@ import (
 
 type Articulo struct {
 	Codigo       string
-	Grupo        string
-	Subgrupo     string
+	Grupo        int32
+	Subgrupo     int32
 	Nombre       string
 	Referencia   string
 	Marca        string
@@ -57,8 +57,8 @@ type Cliempre struct {
 	Vendedor        sql.NullString
 	Contribespecial bool
 	Status          int16
-	Sector          sql.NullString
-	Subcodigo       string
+	Sector          sql.NullInt32
+	Subcodigo       int32
 	Precio          int16
 	Email           string
 	KneActiva       bool
@@ -82,6 +82,20 @@ type Cliempre struct {
 	CreatedAt       time.Time
 	UpdatedAt       time.Time
 	DeletedAt       sql.NullTime
+}
+
+type DatosUsuario struct {
+	UserCodigo    string
+	Nombre        sql.NullString
+	Telefonos     sql.NullString
+	TelefonoMovil sql.NullString
+	Direccion     sql.NullString
+	Sector        sql.NullInt32
+	Subcodigo     int32
+	Supervpor     string
+	Comisiones    bool
+	UltSinc       time.Time
+	Version       string
 }
 
 type Grupo struct {
@@ -171,8 +185,8 @@ type KeDoclmv struct {
 	Tipodoc       string
 	Documento     string
 	Tipodocv      string
-	Grupo         string
-	Subgrupo      string
+	Grupo         int32
+	Subgrupo      int32
 	Origen        string
 	Codigo        string
 	Codhijo       string
@@ -294,23 +308,6 @@ type Listbanc struct {
 	DeletedAt sql.NullTime
 }
 
-type Listvend struct {
-	Codigo        string
-	Nombre        sql.NullString
-	Telefonos     sql.NullString
-	TelefonoMovil sql.NullString
-	Status        string
-	Superves      string
-	Supervpor     string
-	Sector        sql.NullString
-	Subcodigo     string
-	Nivgcial      bool
-	Email         string
-	CreatedAt     time.Time
-	UpdatedAt     time.Time
-	DeletedAt     sql.NullTime
-}
-
 type Sectore struct {
 	Codigo    int32
 	Zona      string
@@ -338,19 +335,13 @@ type Subsectore struct {
 }
 
 type Usuario struct {
-	Nombre       string
+	Codigo       string
 	Username     string
+	Email        string
 	Password     sql.NullString
-	Vendedor     string
-	Almacen      sql.NullString
+	Status       string
 	Desactivo    bool
-	Ualterprec   int32
-	Sesionactiva time.Time
-	UltSinc      time.Time
-	Version      string
-	Sesion       bool
 	CierreSesion bool
-	Comisiones   bool
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
 	DeletedAt    sql.NullTime

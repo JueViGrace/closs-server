@@ -1,24 +1,12 @@
--- name: GetCompanies :many
-select *
-from ke_dataconex
-where deleted_at is null
-;
-
--- name: GetCompanyById :one
-select *
-from ke_dataconex
-where ked_codigo = ? and ked_status = 1 and deleted_at is null
-;
-
--- name: GetAllCompanies :many
+-- name: AdminGetAllCompanies :many
 select *
 from ke_dataconex
 ;
 
--- name: GetOneCompanyById :one
+-- name: AdminGetCompanyById :one
 select *
 from ke_dataconex
-where ked_codigo = ?
+where id = ?
 ;
 
 -- name: CreateCompany :exec
@@ -48,4 +36,10 @@ UPDATE ke_dataconex
 SET ked_status = 0,
     deleted_at = NOW()
 WHERE ked_codigo = ?;
+
+-- name: GetCompanyByCode :one
+select *
+from ke_dataconex
+where ked_codigo = ? and ked_status = 1 and deleted_at is null
+;
 
