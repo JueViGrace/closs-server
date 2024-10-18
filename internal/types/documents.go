@@ -237,7 +237,7 @@ func DocMapToDocWithLines(key *Document, value *[]DocumentLine) *DocumentWithLin
 	}
 }
 
-func DbDocToDocument(dbDoc *db.FindAllDocumentsWithLinesRow) *Document {
+func DbDocToDocument(dbDoc *db.AdminGetDocumentsWithLinesRow) *Document {
 	return &Document{
 		Agencia:        dbDoc.Agencia,
 		Tipodoc:        dbDoc.Tipodoc,
@@ -302,7 +302,7 @@ func DbDocToDocument(dbDoc *db.FindAllDocumentsWithLinesRow) *Document {
 	}
 }
 
-func DbDocToDocLine(dbDoc *db.FindAllDocumentsWithLinesRow) *DocumentLine {
+func DbDocToDocLine(dbDoc *db.AdminGetDocumentsWithLinesRow) *DocumentLine {
 	return &DocumentLine{
 		Agencia:       dbDoc.Agencia_2.String,
 		Tipodoc:       dbDoc.Tipodoc_2.String,
@@ -334,7 +334,7 @@ func DbDocToDocLine(dbDoc *db.FindAllDocumentsWithLinesRow) *DocumentLine {
 	}
 }
 
-func DbDocByCodeToDocument(dbDoc *db.FindAllDocumentsWithLinesByCodeRow) *Document {
+func DbDocByCodeToDocument(dbDoc *db.GetDocumentsWithLinesBySalesmanRow) *Document {
 	return &Document{
 		Agencia:        dbDoc.Agencia,
 		Tipodoc:        dbDoc.Tipodoc,
@@ -399,7 +399,7 @@ func DbDocByCodeToDocument(dbDoc *db.FindAllDocumentsWithLinesByCodeRow) *Docume
 	}
 }
 
-func DbDocByCodeToDocLine(dbDoc *db.FindAllDocumentsWithLinesByCodeRow) *DocumentLine {
+func DbDocByCodeToDocLine(dbDoc *db.GetDocumentsWithLinesBySalesmanRow) *DocumentLine {
 	return &DocumentLine{
 		Agencia:       dbDoc.Agencia_2.String,
 		Tipodoc:       dbDoc.Tipodoc_2.String,

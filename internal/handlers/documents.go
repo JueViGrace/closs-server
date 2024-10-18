@@ -8,9 +8,9 @@ import (
 
 type DocumentHandler interface {
 	GetDocuments(c *fiber.Ctx) error
-	GetDocumentsByCode(c *fiber.Ctx) error
+	GetDocumentsBySalesman(c *fiber.Ctx) error
 	GetDocumentsWithLines(c *fiber.Ctx) error
-	GetDocumentsWithLinesByCode(c *fiber.Ctx) error
+	GetDocumentsWithLinesBySalesman(c *fiber.Ctx) error
 }
 
 type documentHandler struct {
@@ -35,10 +35,10 @@ func (h *documentHandler) GetDocuments(c *fiber.Ctx) error {
 	return c.Status(res.Status).JSON(res)
 }
 
-func (h *documentHandler) GetDocumentsByCode(c *fiber.Ctx) error {
+func (h *documentHandler) GetDocumentsBySalesman(c *fiber.Ctx) error {
 	res := new(types.APIResponse)
 	id := c.Params("id")
-	docs, err := h.db.GetDocumentsByCode(id)
+	docs, err := h.db.GetDocumentsBySalesman(id)
 	if err != nil {
 		res = types.RespondNotFound(err.Error(), "Failed to find documents")
 		return c.Status(res.Status).JSON(res)
@@ -60,10 +60,10 @@ func (h *documentHandler) GetDocumentsWithLines(c *fiber.Ctx) error {
 	return c.Status(res.Status).JSON(res)
 }
 
-func (h *documentHandler) GetDocumentsWithLinesByCode(c *fiber.Ctx) error {
+func (h *documentHandler) GetDocumentsWithLinesBySalesman(c *fiber.Ctx) error {
 	res := new(types.APIResponse)
 	id := c.Params("id")
-	docs, err := h.db.GetDocumentsWithLinesByCode(id)
+	docs, err := h.db.GetDocumentsWithLinesBySalesman(id)
 	if err != nil {
 		res = types.RespondNotFound(err.Error(), "Failed to find documents")
 		return c.Status(res.Status).JSON(res)

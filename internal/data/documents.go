@@ -9,9 +9,9 @@ import (
 
 type DocumentStore interface {
 	GetDocuments() ([]*types.Document, error)
-	GetDocumentsByCode(code string) ([]*types.Document, error)
+	GetDocumentsBySalesman(code string) ([]*types.Document, error)
 	GetDocumentsWithLines() ([]*types.DocumentWithLines, error)
-	GetDocumentsWithLinesByCode(code string) ([]*types.DocumentWithLines, error)
+	GetDocumentsWithLinesBySalesman(code string) ([]*types.DocumentWithLines, error)
 }
 
 func (s *storage) DocumentStore() DocumentStore {
@@ -33,7 +33,7 @@ func NewDocumentStore(ctx context.Context, db *db.Queries) DocumentStore {
 func (s *documentStore) GetDocuments() ([]*types.Document, error) {
 	docs := make([]*types.Document, 0)
 
-	dbDocs, err := s.db.FindAllDocuments(s.ctx)
+	dbDocs, err := s.db.AdminGetDocuments(s.ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -45,10 +45,10 @@ func (s *documentStore) GetDocuments() ([]*types.Document, error) {
 	return docs, nil
 }
 
-func (s *documentStore) GetDocumentsByCode(code string) ([]*types.Document, error) {
+func (s *documentStore) GetDocumentsBySalesman(code string) ([]*types.Document, error) {
 	docs := make([]*types.Document, 0)
 
-	dbDocs, err := s.db.FindAllDocumentsByCode(s.ctx, code)
+	dbDocs, err := s.db.GetDocumentsBySalesman(s.ctx, code)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +65,7 @@ func (s *documentStore) GetDocumentsWithLines() ([]*types.DocumentWithLines, err
 	docMap := make(map[types.Document][]types.DocumentLine)
 	doc := new(types.Document)
 
-	dbDocs, err := s.db.FindAllDocumentsWithLines(s.ctx)
+	dbDocs, err := s.db.AdminGetDocumentsWithLines(s.ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -89,12 +89,12 @@ func (s *documentStore) GetDocumentsWithLines() ([]*types.DocumentWithLines, err
 	return docs, nil
 }
 
-func (s *documentStore) GetDocumentsWithLinesByCode(code string) ([]*types.DocumentWithLines, error) {
+func (s *documentStore) GetDocumentsWithLinesBySalesman(code string) ([]*types.DocumentWithLines, error) {
 	docs := make([]*types.DocumentWithLines, 0)
 	docMap := make(map[types.Document][]types.DocumentLine)
 	doc := new(types.Document)
 
-	dbDocs, err := s.db.FindAllDocumentsWithLinesByCode(s.ctx, code)
+	dbDocs, err := s.db.GetDocumentsWithLinesBySalesman(s.ctx, code)
 	if err != nil {
 		return nil, err
 	}
