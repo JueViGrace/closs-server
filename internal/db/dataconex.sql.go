@@ -9,6 +9,67 @@ import (
 	"context"
 )
 
+const adminGetAllCompanies = `-- name: AdminGetAllCompanies :many
+select id, ked_codigo, ked_nombre, ked_status, ked_enlace, ked_agen, created_at, updated_at, deleted_at
+from ke_dataconex
+`
+
+func (q *Queries) AdminGetAllCompanies(ctx context.Context) ([]KeDataconex, error) {
+	rows, err := q.db.QueryContext(ctx, adminGetAllCompanies)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []KeDataconex
+	for rows.Next() {
+		var i KeDataconex
+		if err := rows.Scan(
+			&i.ID,
+			&i.KedCodigo,
+			&i.KedNombre,
+			&i.KedStatus,
+			&i.KedEnlace,
+			&i.KedAgen,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.DeletedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const adminGetCompanyById = `-- name: AdminGetCompanyById :one
+select id, ked_codigo, ked_nombre, ked_status, ked_enlace, ked_agen, created_at, updated_at, deleted_at
+from ke_dataconex
+where id = ?
+`
+
+func (q *Queries) AdminGetCompanyById(ctx context.Context, id string) (KeDataconex, error) {
+	row := q.db.QueryRowContext(ctx, adminGetCompanyById, id)
+	var i KeDataconex
+	err := row.Scan(
+		&i.ID,
+		&i.KedCodigo,
+		&i.KedNombre,
+		&i.KedStatus,
+		&i.KedEnlace,
+		&i.KedAgen,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DeletedAt,
+	)
+	return i, err
+}
+
 const createCompany = `-- name: CreateCompany :exec
 INSERT INTO ke_dataconex (
         ked_codigo,
@@ -41,135 +102,39 @@ func (q *Queries) CreateCompany(ctx context.Context, arg CreateCompanyParams) er
 	return err
 }
 
-const deleteCompany = `-- name: DeleteCompany :exec
+const getCompanyByCode = `-- name: GetCompanyByCode :one
+select id, ked_codigo, ked_nombre, ked_status, ked_enlace, ked_agen, created_at, updated_at, deleted_at
+from ke_dataconex
+where ked_codigo = ? and ked_status = 1 and deleted_at is null
+`
+
+func (q *Queries) GetCompanyByCode(ctx context.Context, kedCodigo string) (KeDataconex, error) {
+	row := q.db.QueryRowContext(ctx, getCompanyByCode, kedCodigo)
+	var i KeDataconex
+	err := row.Scan(
+		&i.ID,
+		&i.KedCodigo,
+		&i.KedNombre,
+		&i.KedStatus,
+		&i.KedEnlace,
+		&i.KedAgen,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DeletedAt,
+	)
+	return i, err
+}
+
+const softDeleteCompany = `-- name: SoftDeleteCompany :exec
 UPDATE ke_dataconex
 SET ked_status = 0,
     deleted_at = NOW()
 WHERE ked_codigo = ?
 `
 
-func (q *Queries) DeleteCompany(ctx context.Context, kedCodigo string) error {
-	_, err := q.db.ExecContext(ctx, deleteCompany, kedCodigo)
+func (q *Queries) SoftDeleteCompany(ctx context.Context, kedCodigo string) error {
+	_, err := q.db.ExecContext(ctx, softDeleteCompany, kedCodigo)
 	return err
-}
-
-const getAllCompanies = `-- name: GetAllCompanies :many
-select ked_codigo, ked_nombre, ked_status, ked_enlace, ked_agen, created_at, updated_at, deleted_at
-from ke_dataconex
-`
-
-func (q *Queries) GetAllCompanies(ctx context.Context) ([]KeDataconex, error) {
-	rows, err := q.db.QueryContext(ctx, getAllCompanies)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []KeDataconex
-	for rows.Next() {
-		var i KeDataconex
-		if err := rows.Scan(
-			&i.KedCodigo,
-			&i.KedNombre,
-			&i.KedStatus,
-			&i.KedEnlace,
-			&i.KedAgen,
-			&i.CreatedAt,
-			&i.UpdatedAt,
-			&i.DeletedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const getCompanies = `-- name: GetCompanies :many
-select ked_codigo, ked_nombre, ked_status, ked_enlace, ked_agen, created_at, updated_at, deleted_at
-from ke_dataconex
-where deleted_at is null
-`
-
-func (q *Queries) GetCompanies(ctx context.Context) ([]KeDataconex, error) {
-	rows, err := q.db.QueryContext(ctx, getCompanies)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []KeDataconex
-	for rows.Next() {
-		var i KeDataconex
-		if err := rows.Scan(
-			&i.KedCodigo,
-			&i.KedNombre,
-			&i.KedStatus,
-			&i.KedEnlace,
-			&i.KedAgen,
-			&i.CreatedAt,
-			&i.UpdatedAt,
-			&i.DeletedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const getCompanyById = `-- name: GetCompanyById :one
-select ked_codigo, ked_nombre, ked_status, ked_enlace, ked_agen, created_at, updated_at, deleted_at
-from ke_dataconex
-where ked_codigo = ? and ked_status = 1 and deleted_at is null
-`
-
-func (q *Queries) GetCompanyById(ctx context.Context, kedCodigo string) (KeDataconex, error) {
-	row := q.db.QueryRowContext(ctx, getCompanyById, kedCodigo)
-	var i KeDataconex
-	err := row.Scan(
-		&i.KedCodigo,
-		&i.KedNombre,
-		&i.KedStatus,
-		&i.KedEnlace,
-		&i.KedAgen,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-		&i.DeletedAt,
-	)
-	return i, err
-}
-
-const getOneCompanyById = `-- name: GetOneCompanyById :one
-select ked_codigo, ked_nombre, ked_status, ked_enlace, ked_agen, created_at, updated_at, deleted_at
-from ke_dataconex
-where ked_codigo = ?
-`
-
-func (q *Queries) GetOneCompanyById(ctx context.Context, kedCodigo string) (KeDataconex, error) {
-	row := q.db.QueryRowContext(ctx, getOneCompanyById, kedCodigo)
-	var i KeDataconex
-	err := row.Scan(
-		&i.KedCodigo,
-		&i.KedNombre,
-		&i.KedStatus,
-		&i.KedEnlace,
-		&i.KedAgen,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-		&i.DeletedAt,
-	)
-	return i, err
 }
 
 const updateCompany = `-- name: UpdateCompany :exec

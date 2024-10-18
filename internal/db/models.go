@@ -6,10 +6,57 @@ package db
 
 import (
 	"database/sql"
+	"database/sql/driver"
+	"fmt"
 	"time"
 )
 
+type UsuarioRole string
+
+const (
+	UsuarioRoleCliente       UsuarioRole = "cliente"
+	UsuarioRoleVendedor      UsuarioRole = "vendedor"
+	UsuarioRoleGerente       UsuarioRole = "gerente"
+	UsuarioRoleAdministrador UsuarioRole = "administrador"
+)
+
+func (e *UsuarioRole) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = UsuarioRole(s)
+	case string:
+		*e = UsuarioRole(s)
+	default:
+		return fmt.Errorf("unsupported scan type for UsuarioRole: %T", src)
+	}
+	return nil
+}
+
+type NullUsuarioRole struct {
+	UsuarioRole UsuarioRole
+	Valid       bool // Valid is true if UsuarioRole is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullUsuarioRole) Scan(value interface{}) error {
+	if value == nil {
+		ns.UsuarioRole, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.UsuarioRole.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullUsuarioRole) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.UsuarioRole), nil
+}
+
 type Articulo struct {
+	ID           string
 	Codigo       string
 	Grupo        int32
 	Subgrupo     int32
@@ -48,7 +95,8 @@ type Articulo struct {
 	DeletedAt    sql.NullTime
 }
 
-type Cliempre struct {
+type Cliente struct {
+	ID              string
 	Codigo          string
 	Nombre          string
 	Direccion       sql.NullString
@@ -76,7 +124,6 @@ type Cliempre struct {
 	Diasultvta      string
 	Promdiasvta     string
 	Limcred         string
-	Fchcrea         time.Time
 	Dolarflete      bool
 	Nodolarflete    bool
 	CreatedAt       time.Time
@@ -84,29 +131,8 @@ type Cliempre struct {
 	DeletedAt       sql.NullTime
 }
 
-type DatosUsuario struct {
-	UserCodigo    string
-	Nombre        sql.NullString
-	Telefonos     sql.NullString
-	TelefonoMovil sql.NullString
-	Direccion     sql.NullString
-	Sector        sql.NullInt32
-	Subcodigo     int32
-	Supervpor     string
-	Comisiones    bool
-	UltSinc       time.Time
-	Version       string
-}
-
-type Grupo struct {
-	Codigo    int32
-	Nombre    sql.NullString
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt sql.NullTime
-}
-
 type KeDataconex struct {
+	ID        string
 	KedCodigo string
 	KedNombre string
 	KedStatus bool
@@ -118,6 +144,7 @@ type KeDataconex struct {
 }
 
 type KeDoccti struct {
+	ID             string
 	Agencia        string
 	Tipodoc        string
 	Documento      string
@@ -181,6 +208,8 @@ type KeDoccti struct {
 }
 
 type KeDoclmv struct {
+	DocID         string
+	ArticuloID    string
 	Agencia       string
 	Tipodoc       string
 	Documento     string
@@ -211,6 +240,7 @@ type KeDoclmv struct {
 }
 
 type KeEstadc01 struct {
+	ID            string
 	Codcoord      string
 	Nomcoord      string
 	Vendedor      string
@@ -242,7 +272,18 @@ type KeEstadc01 struct {
 	DeletedAt     sql.NullTime
 }
 
+type KeNivgcium struct {
+	ID          string
+	KngCodgcia  string
+	KngCodcoord string
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	DeletedAt   sql.NullTime
+}
+
 type KeOpmv struct {
+	PedidoID   string
+	ArticuloID string
 	KtiTdoc    string
 	KtiNdoc    string
 	KtiTipprec string
@@ -258,6 +299,7 @@ type KeOpmv struct {
 }
 
 type KeOpti struct {
+	ID             string
 	KtiNdoc        string
 	KtiTdoc        string
 	KtiCodcli      string
@@ -281,6 +323,7 @@ type KeOpti struct {
 }
 
 type KeWcnfConf struct {
+	ID           string
 	CnfgIdconfig string
 	CnfgClase    string
 	CnfgTipo     string
@@ -298,51 +341,34 @@ type KeWcnfConf struct {
 	DeletedAt    sql.NullTime
 }
 
-type Listbanc struct {
-	Codbanco  int16
-	Nombanco  string
-	Cuentanac string
-	Inactiva  bool
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt sql.NullTime
-}
-
-type Sectore struct {
-	Codigo    int32
-	Zona      string
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt sql.NullTime
-}
-
-type Subgrupo struct {
-	Codigo    int32
-	Subcodigo int32
-	Nombre    sql.NullString
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt sql.NullTime
-}
-
-type Subsectore struct {
-	Codigo    int32
-	Subcodigo int32
-	Subsector string
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt sql.NullTime
-}
-
 type Usuario struct {
-	Codigo       string
-	Username     string
-	Email        string
-	Password     sql.NullString
-	Status       string
-	Desactivo    bool
-	CierreSesion bool
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
-	DeletedAt    sql.NullTime
+	ID         string
+	Username   string
+	Password   sql.NullString
+	VendedorID sql.NullString
+	ClienteID  sql.NullString
+	Role       UsuarioRole
+	Desactivo  bool
+	UltSinc    time.Time
+	Version    string
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+	DeletedAt  sql.NullTime
+}
+
+type Vendedor struct {
+	ID            string
+	Codigo        string
+	Nombre        string
+	Telefono1     string
+	Telefono2     string
+	TelefonoMovil string
+	Status        int16
+	Supervpor     string
+	Sector        sql.NullInt32
+	Subcodigo     int32
+	Email         string
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
+	DeletedAt     sql.NullTime
 }

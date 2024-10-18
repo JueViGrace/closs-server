@@ -11,17 +11,6 @@ CREATE TABLE IF NOT EXISTS ke_dataconex (
   deleted_at TIMESTAMP DEFAULT NULL
 );
 
-CREATE TABLE IF NOT EXISTS listbanc (
-  id CHAR(36) NOT NULL PRIMARY KEY,
-  codbanco SMALLINT NOT NULL UNIQUE,
-  nombanco VARCHAR(59) NOT NULL DEFAULT '',
-  cuentanac CHAR(1) NOT NULL DEFAULT '0',
-  inactiva BOOLEAN NOT NULL DEFAULT 0,
-  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  deleted_at TIMESTAMP DEFAULT NULL
-);
-
 CREATE TABLE IF NOT EXISTS ke_wcnf_conf (
   id CHAR(36) NOT NULL PRIMARY KEY,
   cnfg_idconfig char(30) NOT NULL,
@@ -31,7 +20,7 @@ CREATE TABLE IF NOT EXISTS ke_wcnf_conf (
   cnfg_valsino BOOLEAN NOT NULL DEFAULT 0,
   cnfg_valtxt TEXT NOT NULL,
   cnfg_lentxt SMALLINT NOT NULL DEFAULT 0,
-  cnfg_valfch date NOT NULL DEFAULT '0001-01-01',
+  cnfg_valfch date NOT NULL DEFAULT '1000-01-01',
   cnfg_activa BOOLEAN NOT NULL DEFAULT 0,
   cnfg_etiq TEXT NOT NULL,
   cnfg_ttip TEXT NOT NULL,
@@ -40,40 +29,6 @@ CREATE TABLE IF NOT EXISTS ke_wcnf_conf (
   updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
   deleted_at TIMESTAMP DEFAULT NULL,
   CONSTRAINT UC_wcnf_idconfig UNIQUE (cnfg_idconfig, username)
-);
-
-CREATE TABLE IF NOT EXISTS grupos (
-  id CHAR(36) NOT NULL PRIMARY KEY,
-  codigo INT NOT NULL UNIQUE,
-  nombre VARCHAR(80) DEFAULT '',
-  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  deleted_at TIMESTAMP DEFAULT NULL
-);
-
-CREATE TABLE IF NOT EXISTS subgrupos (
-  grupo_id CHAR(36) NOT NULL PRIMARY KEY,
-  codigo INT NOT NULL,
-  subcodigo INT NOT NULL,
-  nombre varchar(80) DEFAULT '',
-  CONSTRAINT UC_codigo_subgrupos UNIQUE (codigo, subcodigo)
-);
-
-CREATE TABLE IF NOT EXISTS sectores (
-  id CHAR(36) NOT NULL PRIMARY KEY,
-  codigo INT NOT NULL UNIQUE,
-  zona varchar(50) NOT NULL DEFAULT '',
-  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  deleted_at TIMESTAMP DEFAULT NULL
-);
-
-CREATE TABLE IF NOT EXISTS subsectores (
-  sector_id CHAR(36) NOT NULL PRIMARY KEY,
-  codigo INT NOT NULL,
-  subcodigo INT NOT NULL,
-  nombre varchar(50) NOT NULL DEFAULT '',
-  CONSTRAINT UC_codigo_subgrupos UNIQUE (codigo, subcodigo)
 );
 
 CREATE TABLE IF NOT EXISTS articulo (
@@ -109,7 +64,7 @@ CREATE TABLE IF NOT EXISTS articulo (
   util1 DECIMAL(8,4) NOT NULL DEFAULT 0.00,
   util2 DECIMAL(8,4) NOT NULL DEFAULT 0.00,
   util3 DECIMAL(8,4) NOT NULL DEFAULT 0.00,
-  fchultcomp DATE NOT NULL DEFAULT '0001-01-01',
+  fchultcomp DATE NOT NULL DEFAULT '1000-01-01',
   qtyultcomp INT NOT NULL DEFAULT 0,
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -118,31 +73,48 @@ CREATE TABLE IF NOT EXISTS articulo (
 
 CREATE TABLE IF NOT EXISTS usuario (
   id CHAR(36) NOT NULL PRIMARY KEY,
-  codigo varchar(8) NOT NULL DEFAULT '',
   username varchar(30) NOT NULL UNIQUE DEFAULT '',
-  email TEXT NOT NULL,
   password varchar(20) DEFAULT NULL,
-  nombre VARCHAR(54) DEFAULT '',
-  telefonos VARCHAR(100) DEFAULT '',
-  telefono_movil VARCHAR(100) DEFAULT '',
-  direccion VARCHAR(200) DEFAULT '',
-  sector INT DEFAULT 0,
-  subcodigo INT NOT NULL DEFAULT 0,
-  supervpor VARCHAR(8) NOT NULL DEFAULT '',
-  status CHAR(1) NOT NULL DEFAULT '1',
+  vendedor_id CHAR(36),
+  cliente_id CHAR(36),
+  role ENUM('cliente', 'vendedor', 'gerente', 'administrador') NOT NULL DEFAULT 'cliente',
   desactivo BOOLEAN NOT NULL DEFAULT 0,
-  cierre_sesion BOOLEAN NOT NULL DEFAULT 0,
-  comisiones BOOLEAN NOT NULL DEFAULT 0,
   ult_sinc TIMESTAMP NOT NULL DEFAULT NOW(),
-  version varchar(30)  NOT NULL DEFAULT '0.0.0'
+  version varchar(30)  NOT NULL DEFAULT '0.0.0',
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
   deleted_at TIMESTAMP DEFAULT NULL
 );
 
-CREATE TABLE IF NOT EXISTS cliempre (
+CREATE TABLE ke_nivgcia (
   id CHAR(36) NOT NULL PRIMARY KEY,
-  codigo VARCHAR(20) NOT NULL,
+  kng_codgcia varchar(8) NOT NULL DEFAULT '',
+  kng_codcoord varchar(8) NOT NULL DEFAULT '',
+  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  deleted_at TIMESTAMP DEFAULT NULL
+);
+
+CREATE TABLE IF NOT EXISTS vendedor ( 
+  id CHAR(36) NOT NULL PRIMARY KEY,
+  codigo VARCHAR(8) NOT NULL UNIQUE DEFAULT '',
+  nombre VARCHAR(60) NOT NULL DEFAULT '',
+  telefono_1 VARCHAR(30) NOT NULL DEFAULT '',
+  telefono_2 VARCHAR(30) NOT NULL DEFAULT '',
+  telefono_movil VARCHAR(100) NOT NULL DEFAULT '',
+  status SMALLINT NOT NULL DEFAULT 0,
+  supervpor VARCHAR(8) NOT NULL DEFAULT 0,
+  sector INT DEFAULT 0,
+  subcodigo INT NOT NULL DEFAULT 0,
+  email TEXT NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  deleted_at TIMESTAMP DEFAULT NULL
+);
+
+CREATE TABLE IF NOT EXISTS cliente (
+  id CHAR(36) NOT NULL PRIMARY KEY,
+  codigo VARCHAR(20) NOT NULL UNIQUE,
   nombre VARCHAR(100) NOT NULL DEFAULT '',
   direccion VARCHAR(200) DEFAULT '',
   telefonos VARCHAR(150) DEFAULT '',
@@ -158,7 +130,7 @@ CREATE TABLE IF NOT EXISTS cliempre (
   kne_mtomin DECIMAL(8,4) NOT NULL DEFAULT 0.00,
   noemifac BOOLEAN NOT NULL DEFAULT 0,
   noeminota BOOLEAN NOT NULL DEFAULT 0,
-  fchultvta DATE NOT NULL DEFAULT '0001-01-01',
+  fchultvta DATE NOT NULL DEFAULT '1000-01-01',
   mtoultvta DECIMAL(8,4) NOT NULL DEFAULT 0.00,
   prcdpagdia DECIMAL(8,4) NOT NULL DEFAULT 0.00,
   promdiasp DECIMAL(8,4) NOT NULL DEFAULT 0.00,
@@ -169,7 +141,6 @@ CREATE TABLE IF NOT EXISTS cliempre (
   diasultvta DECIMAL(8,4) NOT NULL DEFAULT 0.00,
   promdiasvta DECIMAL(8,4) NOT NULL DEFAULT 0.00,
   limcred DECIMAL(8,4) NOT NULL DEFAULT 0.00,
-  fchcrea DATE NOT NULL DEFAULT '0001-01-01',
   dolarflete BOOLEAN NOT NULL DEFAULT 0,
   nodolarflete BOOLEAN NOT NULL DEFAULT 0,
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -198,7 +169,7 @@ CREATE TABLE IF NOT EXISTS ke_estadc01 (
   rlom_montovtas DECIMAL(8, 4) NOT NULL DEFAULT 0.00,
   rlom_prcvtas DECIMAL(8, 4) NOT NULL DEFAULT 0.00,
   rlom_prcvisit DECIMAL(8, 4) NOT NULL DEFAULT 0.00,
-  fecha_estad date NOT NULL DEFAULT '0001-01-01',
+  fecha_estad date NOT NULL DEFAULT '1000-01-01',
   ppgdol_totneto DECIMAL(8, 4) NOT NULL DEFAULT 0.00,
   devdol_totneto DECIMAL(8, 4) NOT NULL DEFAULT 0.00,
   defdol_totneto DECIMAL(8, 4) NOT NULL DEFAULT 0.00,
@@ -212,8 +183,7 @@ CREATE TABLE IF NOT EXISTS ke_estadc01 (
 
 CREATE TABLE IF NOT EXISTS ke_opti (
   id CHAR(36) NOT NULL PRIMARY KEY,
-  cliente_id CHAR(36) NOT NULL,
-  kti_ndoc VARCHAR(17) NOT NULL,
+  kti_ndoc VARCHAR(17) NOT NULL UNIQUE,
   kti_tdoc VARCHAR(3) NOT NULL DEFAULT '',
   kti_codcli VARCHAR(20) NOT NULL DEFAULT '',
   kti_nombrecli VARCHAR(100) NOT NULL DEFAULT ' ',
@@ -224,7 +194,7 @@ CREATE TABLE IF NOT EXISTS ke_opti (
   kti_totneto DECIMAL(8,4) NOT NULL DEFAULT 0.00,
   kti_status CHAR(1) NOT NULL DEFAULT '0',
   kti_nroped VARCHAR(8) NOT NULL DEFAULT '',
-  kti_fchdoc DATETIME NOT NULL DEFAULT '0001-01-01 01:01:01',
+  kti_fchdoc DATETIME NOT NULL DEFAULT '1000-01-01 00:00:00',
   kti_negesp BOOLEAN NOT NULL DEFAULT 0,
   ke_pedstatus CHAR(2) NOT NULL DEFAULT '',
   dolarflete BOOLEAN NOT NULL DEFAULT 0,
@@ -256,7 +226,6 @@ CREATE TABLE IF NOT EXISTS ke_opmv (
 
 CREATE TABLE IF NOT EXISTS ke_doccti (
   id CHAR(36) NOT NULL PRIMARY KEY,
-  cliente_id CHAR(36) NOT NULL,
   agencia VARCHAR(3) NOT NULL DEFAULT '',
   tipodoc VARCHAR(3) NOT NULL DEFAULT '',
   documento VARCHAR(8) NOT NULL UNIQUE,
@@ -266,9 +235,9 @@ CREATE TABLE IF NOT EXISTS ke_doccti (
   contribesp BOOLEAN NOT NULL DEFAULT 0,
   ruta_parme BOOLEAN NOT NULL DEFAULT 0,
   tipoprecio CHAR(1) NOT NULL DEFAULT '1',
-  emision DATE NOT NULL DEFAULT '0001-01-01',
-  recepcion DATE NOT NULL DEFAULT '0001-01-01',
-  vence DATE NOT NULL DEFAULT '0001-01-01',
+  emision DATE NOT NULL DEFAULT '1000-01-01',
+  recepcion DATE NOT NULL DEFAULT '1000-01-01',
+  vence DATE NOT NULL DEFAULT '1000-01-01',
   diascred DECIMAL(8, 4) NOT NULL DEFAULT 0.00,
   estatusdoc CHAR(1) NOT NULL DEFAULT '0',
   dtotneto DECIMAL(8,4) NOT NULL DEFAULT 0.00,
@@ -291,7 +260,7 @@ CREATE TABLE IF NOT EXISTS ke_doccti (
   bsretencioniva DECIMAL(8, 4) NOT NULL DEFAULT 0.00,
   tasadoc DECIMAL(8, 4) NOT NULL DEFAULT 0.00,
   mtodcto DECIMAL(8, 4) NOT NULL DEFAULT 0.00,
-  fchvencedcto DATE NOT NULL DEFAULT '0001-01-01',
+  fchvencedcto DATE NOT NULL DEFAULT '1000-01-01',
   tienedcto BOOLEAN NOT NULL DEFAULT 0,
   cbsret DECIMAL(8, 4) NOT NULL DEFAULT 0.00,
   cdret DECIMAL(8, 4) NOT NULL DEFAULT 0.00,
@@ -343,7 +312,7 @@ CREATE TABLE IF NOT EXISTS ke_doclmv (
   dmontototal DECIMAL(8, 4) NOT NULL DEFAULT 0.00,
   timpueprc DECIMAL(8, 4) NOT NULL DEFAULT 0.00,
   unidevuelt INT NOT NULL DEFAULT 0,
-  fechadoc DATE NOT NULL DEFAULT '0001-01-01',
+  fechadoc DATE NOT NULL DEFAULT '1000-01-01',
   vendedor VARCHAR(8) NOT NULL DEFAULT '',
   codcoord VARCHAR(8) NOT NULL DEFAULT '',
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -355,19 +324,15 @@ CREATE TABLE IF NOT EXISTS ke_doclmv (
 
 -- +goose Down
 DROP TABLE ke_dataconex;
-DROP TABLE listbanc;
 DROP TABLE ke_wcnf_conf;
-DROP TABLE grupos;
-DROP TABLE subgrupos;
-DROP TABLE sectores;
-DROP TABLE subsectores;
 DROP TABLE articulo;
 DROP TABLE usuario;
-DROP TABLE datos_usuario;
-DROP TABLE cliempre;
+DROP TABLE vendedor;
+DROP TABLE cliente;
 DROP TABLE ke_estadc01;
 DROP TABLE ke_opti;
 DROP TABLE ke_opmv;
 DROP TABLE ke_doccti;
 DROP TABLE ke_doclmv;
+DROP TABLE ke_nivgcia;
 

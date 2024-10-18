@@ -31,7 +31,7 @@ SET ked_codigo = ?,
     updated_at = NOW()
 WHERE ked_codigo = ?;
 
--- name: DeleteCompany :exec
+-- name: SoftDeleteCompany :exec
 UPDATE ke_dataconex
 SET ked_status = 0,
     deleted_at = NOW()

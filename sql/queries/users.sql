@@ -12,52 +12,47 @@ where id = ?
 -- name: InsertUser :exec
 insert into usuario (
     id,
-    codigo,
     username,
-    email,
     password,
-    nombre,
-    telefonos,
-    telefono_movil,
-    direccion,
-    sector,
-    subcodigo,
-    supervpor,
-    status,
+    vendedor_id,
+    cliente_id,
+    role,
     desactivo,
-    cierre_sesion,
-    comisiones,
     ult_sinc,
     version,
     created_at,
     updated_at
 )
-values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW());
+values (
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    NOW(),
+    NOW()
+);
 
 -- name: UpdateUser :exec
-UPDATE usuario
-set codigo = ?,
-    username = ?,
-    email = ?,
-    password = ?,
-    nombre = ?,
-    telefonos = ?,
-    telefono_movil = ?,
-    direccion = ?,
-    sector = ?,
-    subcodigo = ?,
-    supervpor = ?,
-    status = ?,
-    desactivo = ?,
-    cierre_sesion = ?,
-    comisiones = ?,
+update usuario
+set desactivo = ?,
     ult_sinc = ?,
     version = ?,
     updated_at = NOW()
 where id = ?;
--- name: SoftDeleteUser :exec
--- name: GetUsersByManager :many
--- name: GetUserBySalesman :one
--- name: GetUserById :one
 
+-- name: SoftDeleteUser :exec
+update usuario 
+set deleted_at = NOW()
+where id = ?;
+
+-- name: GetUserById :one
+select *
+from usuario
+where id = ? and deleted_at is null
+;
 
