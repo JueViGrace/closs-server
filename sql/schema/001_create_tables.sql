@@ -24,11 +24,11 @@ CREATE TABLE IF NOT EXISTS ke_wcnf_conf (
   cnfg_activa BOOLEAN NOT NULL DEFAULT 0,
   cnfg_etiq TEXT NOT NULL,
   cnfg_ttip TEXT NOT NULL,
-  username varchar(30) NOT NULL,
+  user_id CHAR(36) NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
   deleted_at TIMESTAMP DEFAULT NULL,
-  CONSTRAINT UC_wcnf_idconfig UNIQUE (cnfg_idconfig, username)
+  CONSTRAINT UC_wcnf_idconfig UNIQUE (cnfg_idconfig, user_id)
 );
 
 CREATE TABLE IF NOT EXISTS articulo (
@@ -75,8 +75,6 @@ CREATE TABLE IF NOT EXISTS usuario (
   id CHAR(36) NOT NULL PRIMARY KEY,
   username varchar(30) NOT NULL UNIQUE DEFAULT '',
   password varchar(20) DEFAULT NULL,
-  vendedor_id CHAR(36),
-  cliente_id CHAR(36),
   role ENUM('cliente', 'vendedor', 'gerente', 'administrador') NOT NULL DEFAULT 'cliente',
   desactivo BOOLEAN NOT NULL DEFAULT 0,
   ult_sinc TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -97,6 +95,7 @@ CREATE TABLE ke_nivgcia (
 
 CREATE TABLE IF NOT EXISTS vendedor ( 
   id CHAR(36) NOT NULL PRIMARY KEY,
+  user_id CHAR(36) DEFAULT NULL,
   codigo VARCHAR(8) NOT NULL UNIQUE DEFAULT '',
   nombre VARCHAR(60) NOT NULL DEFAULT '',
   telefono_1 VARCHAR(30) NOT NULL DEFAULT '',
@@ -114,6 +113,7 @@ CREATE TABLE IF NOT EXISTS vendedor (
 
 CREATE TABLE IF NOT EXISTS cliente (
   id CHAR(36) NOT NULL PRIMARY KEY,
+  user_id CHAR(36) DEFAULT NULL,
   codigo VARCHAR(20) NOT NULL UNIQUE,
   nombre VARCHAR(100) NOT NULL DEFAULT '',
   direccion VARCHAR(200) DEFAULT '',

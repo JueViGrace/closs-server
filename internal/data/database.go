@@ -11,7 +11,6 @@ import (
 
 	"github.com/JueViGrace/clo-backend/internal/db"
 	_ "github.com/go-sql-driver/mysql"
-	_ "github.com/joho/godotenv/autoload"
 )
 
 type Storage interface {

@@ -15,7 +15,7 @@ from articulo
 where codigo = ?
 ;
 
--- name: InsertProduct :exec
+-- name: CreateProduct :exec
 insert into articulo (
 id,
 codigo,
@@ -95,8 +95,7 @@ values (
 
 -- name: UpdateProduct :exec
 update articulo
-set codigo = ?,
-    grupo = ?,
+set grupo = ?,
     subgrupo = ?,
     nombre = ?,
     referencia = ?,

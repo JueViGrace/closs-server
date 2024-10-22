@@ -178,6 +178,162 @@ func (q *Queries) AdminGetProducts(ctx context.Context) ([]Articulo, error) {
 	return items, nil
 }
 
+const createProduct = `-- name: CreateProduct :exec
+insert into articulo (
+id,
+codigo,
+grupo,
+subgrupo,
+nombre,
+referencia,
+marca,
+unidad,
+existencia,
+precio1,
+precio2,
+precio3,
+precio4,
+precio5,
+precio6,
+precio7,
+discont,
+vta_max,
+vta_min,
+dctotope,
+enpreventa,
+comprometido,
+vta_minenx,
+vta_solofac,
+vta_solone,
+codbarras,
+detalles,
+cantbulto,
+costo_prom,
+util1,
+util2,
+util3,
+fchultcomp,
+qtyultcomp,
+created_at,
+updated_at
+)
+values (
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    NOW(),
+    NOW()
+)
+`
+
+type CreateProductParams struct {
+	ID           string
+	Codigo       string
+	Grupo        int32
+	Subgrupo     int32
+	Nombre       string
+	Referencia   string
+	Marca        string
+	Unidad       string
+	Existencia   int32
+	Precio1      string
+	Precio2      string
+	Precio3      string
+	Precio4      string
+	Precio5      string
+	Precio6      string
+	Precio7      string
+	Discont      bool
+	VtaMax       int32
+	VtaMin       int32
+	Dctotope     string
+	Enpreventa   bool
+	Comprometido int32
+	VtaMinenx    int32
+	VtaSolofac   bool
+	VtaSolone    bool
+	Codbarras    string
+	Detalles     string
+	Cantbulto    int32
+	CostoProm    string
+	Util1        string
+	Util2        string
+	Util3        string
+	Fchultcomp   time.Time
+	Qtyultcomp   int32
+}
+
+func (q *Queries) CreateProduct(ctx context.Context, arg CreateProductParams) error {
+	_, err := q.db.ExecContext(ctx, createProduct,
+		arg.ID,
+		arg.Codigo,
+		arg.Grupo,
+		arg.Subgrupo,
+		arg.Nombre,
+		arg.Referencia,
+		arg.Marca,
+		arg.Unidad,
+		arg.Existencia,
+		arg.Precio1,
+		arg.Precio2,
+		arg.Precio3,
+		arg.Precio4,
+		arg.Precio5,
+		arg.Precio6,
+		arg.Precio7,
+		arg.Discont,
+		arg.VtaMax,
+		arg.VtaMin,
+		arg.Dctotope,
+		arg.Enpreventa,
+		arg.Comprometido,
+		arg.VtaMinenx,
+		arg.VtaSolofac,
+		arg.VtaSolone,
+		arg.Codbarras,
+		arg.Detalles,
+		arg.Cantbulto,
+		arg.CostoProm,
+		arg.Util1,
+		arg.Util2,
+		arg.Util3,
+		arg.Fchultcomp,
+		arg.Qtyultcomp,
+	)
+	return err
+}
+
 const getAllProducts = `-- name: GetAllProducts :many
 select id, codigo, grupo, subgrupo, nombre, referencia, marca, unidad, existencia, precio1, precio2, precio3, precio4, precio5, precio6, precio7, discont, vta_max, vta_min, dctotope, enpreventa, comprometido, vta_minenx, vta_solofac, vta_solone, codbarras, detalles, cantbulto, costo_prom, util1, util2, util3, fchultcomp, qtyultcomp, created_at, updated_at, deleted_at
 from articulo
@@ -347,162 +503,6 @@ func (q *Queries) GetProductById(ctx context.Context, id string) (Articulo, erro
 	return i, err
 }
 
-const insertProduct = `-- name: InsertProduct :exec
-insert into articulo (
-id,
-codigo,
-grupo,
-subgrupo,
-nombre,
-referencia,
-marca,
-unidad,
-existencia,
-precio1,
-precio2,
-precio3,
-precio4,
-precio5,
-precio6,
-precio7,
-discont,
-vta_max,
-vta_min,
-dctotope,
-enpreventa,
-comprometido,
-vta_minenx,
-vta_solofac,
-vta_solone,
-codbarras,
-detalles,
-cantbulto,
-costo_prom,
-util1,
-util2,
-util3,
-fchultcomp,
-qtyultcomp,
-created_at,
-updated_at
-)
-values (
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    NOW(),
-    NOW()
-)
-`
-
-type InsertProductParams struct {
-	ID           string
-	Codigo       string
-	Grupo        int32
-	Subgrupo     int32
-	Nombre       string
-	Referencia   string
-	Marca        string
-	Unidad       string
-	Existencia   int32
-	Precio1      string
-	Precio2      string
-	Precio3      string
-	Precio4      string
-	Precio5      string
-	Precio6      string
-	Precio7      string
-	Discont      bool
-	VtaMax       int32
-	VtaMin       int32
-	Dctotope     string
-	Enpreventa   bool
-	Comprometido int32
-	VtaMinenx    int32
-	VtaSolofac   bool
-	VtaSolone    bool
-	Codbarras    string
-	Detalles     string
-	Cantbulto    int32
-	CostoProm    string
-	Util1        string
-	Util2        string
-	Util3        string
-	Fchultcomp   time.Time
-	Qtyultcomp   int32
-}
-
-func (q *Queries) InsertProduct(ctx context.Context, arg InsertProductParams) error {
-	_, err := q.db.ExecContext(ctx, insertProduct,
-		arg.ID,
-		arg.Codigo,
-		arg.Grupo,
-		arg.Subgrupo,
-		arg.Nombre,
-		arg.Referencia,
-		arg.Marca,
-		arg.Unidad,
-		arg.Existencia,
-		arg.Precio1,
-		arg.Precio2,
-		arg.Precio3,
-		arg.Precio4,
-		arg.Precio5,
-		arg.Precio6,
-		arg.Precio7,
-		arg.Discont,
-		arg.VtaMax,
-		arg.VtaMin,
-		arg.Dctotope,
-		arg.Enpreventa,
-		arg.Comprometido,
-		arg.VtaMinenx,
-		arg.VtaSolofac,
-		arg.VtaSolone,
-		arg.Codbarras,
-		arg.Detalles,
-		arg.Cantbulto,
-		arg.CostoProm,
-		arg.Util1,
-		arg.Util2,
-		arg.Util3,
-		arg.Fchultcomp,
-		arg.Qtyultcomp,
-	)
-	return err
-}
-
 const softDeleteProduct = `-- name: SoftDeleteProduct :exec
 update articulo
 set deleted_at = NOW()
@@ -516,8 +516,7 @@ func (q *Queries) SoftDeleteProduct(ctx context.Context, id string) error {
 
 const updateProduct = `-- name: UpdateProduct :exec
 update articulo
-set codigo = ?,
-    grupo = ?,
+set grupo = ?,
     subgrupo = ?,
     nombre = ?,
     referencia = ?,
@@ -554,7 +553,6 @@ where id = ?
 `
 
 type UpdateProductParams struct {
-	Codigo       string
 	Grupo        int32
 	Subgrupo     int32
 	Nombre       string
@@ -592,7 +590,6 @@ type UpdateProductParams struct {
 
 func (q *Queries) UpdateProduct(ctx context.Context, arg UpdateProductParams) error {
 	_, err := q.db.ExecContext(ctx, updateProduct,
-		arg.Codigo,
 		arg.Grupo,
 		arg.Subgrupo,
 		arg.Nombre,

@@ -1,15 +1,15 @@
--- name: AdminGetConfigurations :many
+-- name: AdminGetConfigus :many
 select *
 from ke_wcnf_conf
 ;
 
--- name: AdminGetConfigurationById :one
+-- name: AdminGetConfigById :one
 select *
 from ke_wcnf_conf
 where id = ?
 ;
 
--- name: InsertConfiguration :exec
+-- name: CreateConfig :exec
 INSERT INTO ke_wcnf_conf (
     id,
     cnfg_idconfig,
@@ -23,16 +23,15 @@ INSERT INTO ke_wcnf_conf (
     cnfg_activa,
     cnfg_etiq,
     cnfg_ttip,
-    username,
+    user_id,
     created_at,
     updated_at
 )
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW());
 
--- name: UpdateConfiguration :exec
+-- name: UpdateConfig :exec
 UPDATE ke_wcnf_conf
-SET cnfg_idconfig = ?,
-    cnfg_clase = ?,
+SET cnfg_clase = ?,
     cnfg_tipo = ?,
     cnfg_valnum = ?,
     cnfg_valsino = ?,
@@ -42,24 +41,23 @@ SET cnfg_idconfig = ?,
     cnfg_activa = ?,
     cnfg_etiq = ?,
     cnfg_ttip = ?,
-    username = ?,
     updated_at = NOW() 
 WHERE id = ?;
 
--- name: SoftDeleteConfiguration :exec
+-- name: SoftDeleteConfig :exec
 UPDATE ke_wcnf_conf
 SET deleted_at = NOW()
 WHERE id = ?;
 
--- name: GetConfigurationsByUser :many
+-- name: GetConfigByUser :many
 select *
 from ke_wcnf_conf
-where username = ? and deleted_at is null
+where user_id = ? and deleted_at is null
 ;
 
--- name: GetUserConfigurationById :one
+-- name: GetUserConfigById :one
 select *
 from ke_wcnf_conf
-where id = ? and username = ? and deleted_at is null
+where id = ? and user_id = ? and deleted_at is null
 ;
 

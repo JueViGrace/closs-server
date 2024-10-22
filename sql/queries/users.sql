@@ -9,13 +9,11 @@ from usuario
 where id = ?
 ;
 
--- name: InsertUser :exec
+-- name: CreateUser :exec
 insert into usuario (
     id,
     username,
     password,
-    vendedor_id,
-    cliente_id,
     role,
     desactivo,
     ult_sinc,
@@ -24,8 +22,6 @@ insert into usuario (
     updated_at
 )
 values (
-    ?,
-    ?,
     ?,
     ?,
     ?,

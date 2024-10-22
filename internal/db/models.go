@@ -97,6 +97,7 @@ type Articulo struct {
 
 type Cliente struct {
 	ID              string
+	UserID          sql.NullString
 	Codigo          string
 	Nombre          string
 	Direccion       sql.NullString
@@ -335,29 +336,28 @@ type KeWcnfConf struct {
 	CnfgActiva   bool
 	CnfgEtiq     string
 	CnfgTtip     string
-	Username     string
+	UserID       string
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
 	DeletedAt    sql.NullTime
 }
 
 type Usuario struct {
-	ID         string
-	Username   string
-	Password   sql.NullString
-	VendedorID sql.NullString
-	ClienteID  sql.NullString
-	Role       UsuarioRole
-	Desactivo  bool
-	UltSinc    time.Time
-	Version    string
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
-	DeletedAt  sql.NullTime
+	ID        string
+	Username  string
+	Password  sql.NullString
+	Role      UsuarioRole
+	Desactivo bool
+	UltSinc   time.Time
+	Version   string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt sql.NullTime
 }
 
 type Vendedor struct {
 	ID            string
+	UserID        sql.NullString
 	Codigo        string
 	Nombre        string
 	Telefono1     string

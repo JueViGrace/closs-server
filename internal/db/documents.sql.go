@@ -860,6 +860,382 @@ func (q *Queries) AdminGetDocumentsWithLines(ctx context.Context) ([]AdminGetDoc
 	return items, nil
 }
 
+const createDocument = `-- name: CreateDocument :exec
+insert into ke_doccti (
+    id,
+    agencia,
+    tipodoc,
+    documento,
+    tipodocv,
+    codcliente,
+    nombrecli,
+    contribesp,
+    ruta_parme,
+    tipoprecio,
+    emision,
+    recepcion,
+    vence,
+    diascred,
+    estatusdoc,
+    dtotneto,
+    dtotimpuest,
+    dtotalfinal,
+    dtotpagos,
+    dtotdescuen,
+    dFlete,
+    dtotdev,
+    dvndmtototal,
+    dretencion,
+    dretencioniva,
+    vendedor,
+    codcoord,
+    aceptadev,
+    kti_negesp,
+    bsiva,
+    bsflete,
+    bsretencion,
+    bsretencioniva,
+    tasadoc,
+    mtodcto,
+    fchvencedcto,
+    tienedcto,
+    cbsret,
+    cdret,
+    cbsretiva,
+    cdretiva,
+    cbsrparme,
+    cdrparme,
+    cbsretflete,
+    cdretflete,
+    bsmtoiva,
+    bsmtofte,
+    retmun_mto,
+    dolarflete,
+    bsretflete,
+    dretflete,
+    dretmun_mto,
+    retivaoblig,
+    edoentrega,
+    dmtoiva,
+    prcdctoaplic,
+    montodctodol,
+    montodctobs,
+    created_at,
+    updated_at
+)
+values (
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    NOW(),
+    NOW()
+)
+`
+
+type CreateDocumentParams struct {
+	ID             string
+	Agencia        string
+	Tipodoc        string
+	Documento      string
+	Tipodocv       string
+	Codcliente     string
+	Nombrecli      string
+	Contribesp     bool
+	RutaParme      bool
+	Tipoprecio     string
+	Emision        time.Time
+	Recepcion      time.Time
+	Vence          time.Time
+	Diascred       string
+	Estatusdoc     string
+	Dtotneto       string
+	Dtotimpuest    string
+	Dtotalfinal    string
+	Dtotpagos      string
+	Dtotdescuen    string
+	Dflete         string
+	Dtotdev        string
+	Dvndmtototal   string
+	Dretencion     string
+	Dretencioniva  string
+	Vendedor       string
+	Codcoord       string
+	Aceptadev      bool
+	KtiNegesp      bool
+	Bsiva          string
+	Bsflete        string
+	Bsretencion    string
+	Bsretencioniva string
+	Tasadoc        string
+	Mtodcto        string
+	Fchvencedcto   time.Time
+	Tienedcto      bool
+	Cbsret         string
+	Cdret          string
+	Cbsretiva      string
+	Cdretiva       string
+	Cbsrparme      string
+	Cdrparme       string
+	Cbsretflete    string
+	Cdretflete     string
+	Bsmtoiva       string
+	Bsmtofte       string
+	RetmunMto      string
+	Dolarflete     bool
+	Bsretflete     string
+	Dretflete      string
+	DretmunMto     string
+	Retivaoblig    bool
+	Edoentrega     bool
+	Dmtoiva        string
+	Prcdctoaplic   string
+	Montodctodol   string
+	Montodctobs    string
+}
+
+func (q *Queries) CreateDocument(ctx context.Context, arg CreateDocumentParams) error {
+	_, err := q.db.ExecContext(ctx, createDocument,
+		arg.ID,
+		arg.Agencia,
+		arg.Tipodoc,
+		arg.Documento,
+		arg.Tipodocv,
+		arg.Codcliente,
+		arg.Nombrecli,
+		arg.Contribesp,
+		arg.RutaParme,
+		arg.Tipoprecio,
+		arg.Emision,
+		arg.Recepcion,
+		arg.Vence,
+		arg.Diascred,
+		arg.Estatusdoc,
+		arg.Dtotneto,
+		arg.Dtotimpuest,
+		arg.Dtotalfinal,
+		arg.Dtotpagos,
+		arg.Dtotdescuen,
+		arg.Dflete,
+		arg.Dtotdev,
+		arg.Dvndmtototal,
+		arg.Dretencion,
+		arg.Dretencioniva,
+		arg.Vendedor,
+		arg.Codcoord,
+		arg.Aceptadev,
+		arg.KtiNegesp,
+		arg.Bsiva,
+		arg.Bsflete,
+		arg.Bsretencion,
+		arg.Bsretencioniva,
+		arg.Tasadoc,
+		arg.Mtodcto,
+		arg.Fchvencedcto,
+		arg.Tienedcto,
+		arg.Cbsret,
+		arg.Cdret,
+		arg.Cbsretiva,
+		arg.Cdretiva,
+		arg.Cbsrparme,
+		arg.Cdrparme,
+		arg.Cbsretflete,
+		arg.Cdretflete,
+		arg.Bsmtoiva,
+		arg.Bsmtofte,
+		arg.RetmunMto,
+		arg.Dolarflete,
+		arg.Bsretflete,
+		arg.Dretflete,
+		arg.DretmunMto,
+		arg.Retivaoblig,
+		arg.Edoentrega,
+		arg.Dmtoiva,
+		arg.Prcdctoaplic,
+		arg.Montodctodol,
+		arg.Montodctobs,
+	)
+	return err
+}
+
+const createDocumentLines = `-- name: CreateDocumentLines :exec
+insert into ke_doclmv (
+    doc_id,
+    articulo_id,
+    agencia,
+    tipodoc,
+    documento,
+    tipodocv,
+    grupo,
+    subgrupo,
+    origen,
+    codigo,
+    codhijo,
+    pid,
+    nombre,
+    cantidad,
+    cntdevuelt,
+    vndcntdevuelt,
+    dvndmtototal,
+    dpreciofin,
+    dpreciounit,
+    dmontoneto,
+    dmontototal,
+    timpueprc,
+    unidevuelt,
+    fechadoc,
+    vendedor,
+    codcoord,
+    created_at,
+    updated_at
+)
+values(
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    NOW(),
+    NOW()
+)
+`
+
+type CreateDocumentLinesParams struct {
+	DocID         string
+	ArticuloID    string
+	Agencia       string
+	Tipodoc       string
+	Documento     string
+	Tipodocv      string
+	Grupo         int32
+	Subgrupo      int32
+	Origen        string
+	Codigo        string
+	Codhijo       string
+	Pid           string
+	Nombre        string
+	Cantidad      int32
+	Cntdevuelt    int32
+	Vndcntdevuelt string
+	Dvndmtototal  string
+	Dpreciofin    string
+	Dpreciounit   string
+	Dmontoneto    string
+	Dmontototal   string
+	Timpueprc     string
+	Unidevuelt    int32
+	Fechadoc      time.Time
+	Vendedor      string
+	Codcoord      string
+}
+
+func (q *Queries) CreateDocumentLines(ctx context.Context, arg CreateDocumentLinesParams) error {
+	_, err := q.db.ExecContext(ctx, createDocumentLines,
+		arg.DocID,
+		arg.ArticuloID,
+		arg.Agencia,
+		arg.Tipodoc,
+		arg.Documento,
+		arg.Tipodocv,
+		arg.Grupo,
+		arg.Subgrupo,
+		arg.Origen,
+		arg.Codigo,
+		arg.Codhijo,
+		arg.Pid,
+		arg.Nombre,
+		arg.Cantidad,
+		arg.Cntdevuelt,
+		arg.Vndcntdevuelt,
+		arg.Dvndmtototal,
+		arg.Dpreciofin,
+		arg.Dpreciounit,
+		arg.Dmontoneto,
+		arg.Dmontototal,
+		arg.Timpueprc,
+		arg.Unidevuelt,
+		arg.Fechadoc,
+		arg.Vendedor,
+		arg.Codcoord,
+	)
+	return err
+}
+
 const getDocumentByCode = `-- name: GetDocumentByCode :one
 select id, agencia, tipodoc, documento, tipodocv, codcliente, nombrecli, contribesp, ruta_parme, tipoprecio, emision, recepcion, vence, diascred, estatusdoc, dtotneto, dtotimpuest, dtotalfinal, dtotpagos, dtotdescuen, dflete, dtotdev, dvndmtototal, dretencion, dretencioniva, vendedor, codcoord, aceptadev, kti_negesp, bsiva, bsflete, bsretencion, bsretencioniva, tasadoc, mtodcto, fchvencedcto, tienedcto, cbsret, cdret, cbsretiva, cdretiva, cbsrparme, cdrparme, cbsretflete, cdretflete, bsmtoiva, bsmtofte, retmun_mto, dolarflete, bsretflete, dretflete, dretmun_mto, retivaoblig, edoentrega, dmtoiva, prcdctoaplic, montodctodol, montodctobs, created_at, updated_at, deleted_at
 from ke_doccti
@@ -1407,7 +1783,7 @@ func (q *Queries) GetDocumentWithLinesById(ctx context.Context, id string) (GetD
 }
 
 const getDocumentsByManager = `-- name: GetDocumentsByManager :many
-select ke_doccti.id, agencia, tipodoc, documento, tipodocv, codcliente, nombrecli, contribesp, ruta_parme, tipoprecio, emision, recepcion, vence, diascred, estatusdoc, dtotneto, dtotimpuest, dtotalfinal, dtotpagos, dtotdescuen, dflete, dtotdev, dvndmtototal, dretencion, dretencioniva, vendedor, codcoord, aceptadev, kti_negesp, bsiva, bsflete, bsretencion, bsretencioniva, tasadoc, mtodcto, fchvencedcto, tienedcto, cbsret, cdret, cbsretiva, cdretiva, cbsrparme, cdrparme, cbsretflete, cdretflete, bsmtoiva, bsmtofte, retmun_mto, dolarflete, bsretflete, dretflete, dretmun_mto, retivaoblig, edoentrega, dmtoiva, prcdctoaplic, montodctodol, montodctobs, ke_doccti.created_at, ke_doccti.updated_at, ke_doccti.deleted_at, vendedor.id, codigo, nombre, telefono_1, telefono_2, telefono_movil, status, supervpor, sector, subcodigo, email, vendedor.created_at, vendedor.updated_at, vendedor.deleted_at
+select ke_doccti.id, agencia, tipodoc, documento, tipodocv, codcliente, nombrecli, contribesp, ruta_parme, tipoprecio, emision, recepcion, vence, diascred, estatusdoc, dtotneto, dtotimpuest, dtotalfinal, dtotpagos, dtotdescuen, dflete, dtotdev, dvndmtototal, dretencion, dretencioniva, vendedor, codcoord, aceptadev, kti_negesp, bsiva, bsflete, bsretencion, bsretencioniva, tasadoc, mtodcto, fchvencedcto, tienedcto, cbsret, cdret, cbsretiva, cdretiva, cbsrparme, cdrparme, cbsretflete, cdretflete, bsmtoiva, bsmtofte, retmun_mto, dolarflete, bsretflete, dretflete, dretmun_mto, retivaoblig, edoentrega, dmtoiva, prcdctoaplic, montodctodol, montodctobs, ke_doccti.created_at, ke_doccti.updated_at, ke_doccti.deleted_at, vendedor.id, user_id, codigo, nombre, telefono_1, telefono_2, telefono_movil, status, supervpor, sector, subcodigo, email, vendedor.created_at, vendedor.updated_at, vendedor.deleted_at
 from ke_doccti
 left join vendedor on vendedor.codigo = ke_doccti.vendedor
 where
@@ -1478,6 +1854,7 @@ type GetDocumentsByManagerRow struct {
 	UpdatedAt      time.Time
 	DeletedAt      sql.NullTime
 	ID_2           sql.NullString
+	UserID         sql.NullString
 	Codigo         sql.NullString
 	Nombre         sql.NullString
 	Telefono1      sql.NullString
@@ -1565,6 +1942,7 @@ func (q *Queries) GetDocumentsByManager(ctx context.Context, kngCodgcia string) 
 			&i.UpdatedAt,
 			&i.DeletedAt,
 			&i.ID_2,
+			&i.UserID,
 			&i.Codigo,
 			&i.Nombre,
 			&i.Telefono1,
@@ -1684,7 +2062,7 @@ func (q *Queries) GetDocumentsBySalesman(ctx context.Context, vendedor string) (
 }
 
 const getDocumentsWithLinesByManager = `-- name: GetDocumentsWithLinesByManager :many
-select ke_doccti.id, ke_doccti.agencia, ke_doccti.tipodoc, ke_doccti.documento, ke_doccti.tipodocv, codcliente, nombrecli, contribesp, ruta_parme, tipoprecio, emision, recepcion, vence, diascred, estatusdoc, dtotneto, dtotimpuest, dtotalfinal, dtotpagos, dtotdescuen, dflete, dtotdev, ke_doccti.dvndmtototal, dretencion, dretencioniva, ke_doccti.vendedor, ke_doccti.codcoord, aceptadev, kti_negesp, bsiva, bsflete, bsretencion, bsretencioniva, tasadoc, mtodcto, fchvencedcto, tienedcto, cbsret, cdret, cbsretiva, cdretiva, cbsrparme, cdrparme, cbsretflete, cdretflete, bsmtoiva, bsmtofte, retmun_mto, dolarflete, bsretflete, dretflete, dretmun_mto, retivaoblig, edoentrega, dmtoiva, prcdctoaplic, montodctodol, montodctobs, ke_doccti.created_at, ke_doccti.updated_at, ke_doccti.deleted_at, doc_id, articulo_id, ke_doclmv.agencia, ke_doclmv.tipodoc, ke_doclmv.documento, ke_doclmv.tipodocv, grupo, subgrupo, origen, ke_doclmv.codigo, codhijo, pid, ke_doclmv.nombre, cantidad, cntdevuelt, vndcntdevuelt, ke_doclmv.dvndmtototal, dpreciofin, dpreciounit, dmontoneto, dmontototal, timpueprc, unidevuelt, fechadoc, ke_doclmv.vendedor, ke_doclmv.codcoord, ke_doclmv.created_at, ke_doclmv.updated_at, ke_doclmv.deleted_at, vendedor.id, vendedor.codigo, vendedor.nombre, telefono_1, telefono_2, telefono_movil, status, supervpor, sector, subcodigo, email, vendedor.created_at, vendedor.updated_at, vendedor.deleted_at
+select ke_doccti.id, ke_doccti.agencia, ke_doccti.tipodoc, ke_doccti.documento, ke_doccti.tipodocv, codcliente, nombrecli, contribesp, ruta_parme, tipoprecio, emision, recepcion, vence, diascred, estatusdoc, dtotneto, dtotimpuest, dtotalfinal, dtotpagos, dtotdescuen, dflete, dtotdev, ke_doccti.dvndmtototal, dretencion, dretencioniva, ke_doccti.vendedor, ke_doccti.codcoord, aceptadev, kti_negesp, bsiva, bsflete, bsretencion, bsretencioniva, tasadoc, mtodcto, fchvencedcto, tienedcto, cbsret, cdret, cbsretiva, cdretiva, cbsrparme, cdrparme, cbsretflete, cdretflete, bsmtoiva, bsmtofte, retmun_mto, dolarflete, bsretflete, dretflete, dretmun_mto, retivaoblig, edoentrega, dmtoiva, prcdctoaplic, montodctodol, montodctobs, ke_doccti.created_at, ke_doccti.updated_at, ke_doccti.deleted_at, doc_id, articulo_id, ke_doclmv.agencia, ke_doclmv.tipodoc, ke_doclmv.documento, ke_doclmv.tipodocv, grupo, subgrupo, origen, ke_doclmv.codigo, codhijo, pid, ke_doclmv.nombre, cantidad, cntdevuelt, vndcntdevuelt, ke_doclmv.dvndmtototal, dpreciofin, dpreciounit, dmontoneto, dmontototal, timpueprc, unidevuelt, fechadoc, ke_doclmv.vendedor, ke_doclmv.codcoord, ke_doclmv.created_at, ke_doclmv.updated_at, ke_doclmv.deleted_at, vendedor.id, user_id, vendedor.codigo, vendedor.nombre, telefono_1, telefono_2, telefono_movil, status, supervpor, sector, subcodigo, email, vendedor.created_at, vendedor.updated_at, vendedor.deleted_at
 from ke_doccti
 left join ke_doclmv on ke_doccti.id = ke_doclmv.doc_id
 left join vendedor on vendedor.codigo = ke_doccti.vendedor
@@ -1785,6 +2163,7 @@ type GetDocumentsWithLinesByManagerRow struct {
 	UpdatedAt_2    sql.NullTime
 	DeletedAt_2    sql.NullTime
 	ID_2           sql.NullString
+	UserID         sql.NullString
 	Codigo_2       sql.NullString
 	Nombre_2       sql.NullString
 	Telefono1      sql.NullString
@@ -1901,6 +2280,7 @@ func (q *Queries) GetDocumentsWithLinesByManager(ctx context.Context, kngCodgcia
 			&i.UpdatedAt_2,
 			&i.DeletedAt_2,
 			&i.ID_2,
+			&i.UserID,
 			&i.Codigo_2,
 			&i.Nombre_2,
 			&i.Telefono1,
@@ -2142,382 +2522,6 @@ func (q *Queries) GetDocumentsWithLinesBySalesman(ctx context.Context, vendedor 
 	return items, nil
 }
 
-const insertDocument = `-- name: InsertDocument :exec
-insert into ke_doccti (
-    id,
-    agencia,
-    tipodoc,
-    documento,
-    tipodocv,
-    codcliente,
-    nombrecli,
-    contribesp,
-    ruta_parme,
-    tipoprecio,
-    emision,
-    recepcion,
-    vence,
-    diascred,
-    estatusdoc,
-    dtotneto,
-    dtotimpuest,
-    dtotalfinal,
-    dtotpagos,
-    dtotdescuen,
-    dFlete,
-    dtotdev,
-    dvndmtototal,
-    dretencion,
-    dretencioniva,
-    vendedor,
-    codcoord,
-    aceptadev,
-    kti_negesp,
-    bsiva,
-    bsflete,
-    bsretencion,
-    bsretencioniva,
-    tasadoc,
-    mtodcto,
-    fchvencedcto,
-    tienedcto,
-    cbsret,
-    cdret,
-    cbsretiva,
-    cdretiva,
-    cbsrparme,
-    cdrparme,
-    cbsretflete,
-    cdretflete,
-    bsmtoiva,
-    bsmtofte,
-    retmun_mto,
-    dolarflete,
-    bsretflete,
-    dretflete,
-    dretmun_mto,
-    retivaoblig,
-    edoentrega,
-    dmtoiva,
-    prcdctoaplic,
-    montodctodol,
-    montodctobs,
-    created_at,
-    updated_at
-)
-values (
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    NOW(),
-    NOW()
-)
-`
-
-type InsertDocumentParams struct {
-	ID             string
-	Agencia        string
-	Tipodoc        string
-	Documento      string
-	Tipodocv       string
-	Codcliente     string
-	Nombrecli      string
-	Contribesp     bool
-	RutaParme      bool
-	Tipoprecio     string
-	Emision        time.Time
-	Recepcion      time.Time
-	Vence          time.Time
-	Diascred       string
-	Estatusdoc     string
-	Dtotneto       string
-	Dtotimpuest    string
-	Dtotalfinal    string
-	Dtotpagos      string
-	Dtotdescuen    string
-	Dflete         string
-	Dtotdev        string
-	Dvndmtototal   string
-	Dretencion     string
-	Dretencioniva  string
-	Vendedor       string
-	Codcoord       string
-	Aceptadev      bool
-	KtiNegesp      bool
-	Bsiva          string
-	Bsflete        string
-	Bsretencion    string
-	Bsretencioniva string
-	Tasadoc        string
-	Mtodcto        string
-	Fchvencedcto   time.Time
-	Tienedcto      bool
-	Cbsret         string
-	Cdret          string
-	Cbsretiva      string
-	Cdretiva       string
-	Cbsrparme      string
-	Cdrparme       string
-	Cbsretflete    string
-	Cdretflete     string
-	Bsmtoiva       string
-	Bsmtofte       string
-	RetmunMto      string
-	Dolarflete     bool
-	Bsretflete     string
-	Dretflete      string
-	DretmunMto     string
-	Retivaoblig    bool
-	Edoentrega     bool
-	Dmtoiva        string
-	Prcdctoaplic   string
-	Montodctodol   string
-	Montodctobs    string
-}
-
-func (q *Queries) InsertDocument(ctx context.Context, arg InsertDocumentParams) error {
-	_, err := q.db.ExecContext(ctx, insertDocument,
-		arg.ID,
-		arg.Agencia,
-		arg.Tipodoc,
-		arg.Documento,
-		arg.Tipodocv,
-		arg.Codcliente,
-		arg.Nombrecli,
-		arg.Contribesp,
-		arg.RutaParme,
-		arg.Tipoprecio,
-		arg.Emision,
-		arg.Recepcion,
-		arg.Vence,
-		arg.Diascred,
-		arg.Estatusdoc,
-		arg.Dtotneto,
-		arg.Dtotimpuest,
-		arg.Dtotalfinal,
-		arg.Dtotpagos,
-		arg.Dtotdescuen,
-		arg.Dflete,
-		arg.Dtotdev,
-		arg.Dvndmtototal,
-		arg.Dretencion,
-		arg.Dretencioniva,
-		arg.Vendedor,
-		arg.Codcoord,
-		arg.Aceptadev,
-		arg.KtiNegesp,
-		arg.Bsiva,
-		arg.Bsflete,
-		arg.Bsretencion,
-		arg.Bsretencioniva,
-		arg.Tasadoc,
-		arg.Mtodcto,
-		arg.Fchvencedcto,
-		arg.Tienedcto,
-		arg.Cbsret,
-		arg.Cdret,
-		arg.Cbsretiva,
-		arg.Cdretiva,
-		arg.Cbsrparme,
-		arg.Cdrparme,
-		arg.Cbsretflete,
-		arg.Cdretflete,
-		arg.Bsmtoiva,
-		arg.Bsmtofte,
-		arg.RetmunMto,
-		arg.Dolarflete,
-		arg.Bsretflete,
-		arg.Dretflete,
-		arg.DretmunMto,
-		arg.Retivaoblig,
-		arg.Edoentrega,
-		arg.Dmtoiva,
-		arg.Prcdctoaplic,
-		arg.Montodctodol,
-		arg.Montodctobs,
-	)
-	return err
-}
-
-const insertDocumentLines = `-- name: InsertDocumentLines :exec
-insert into ke_doclmv (
-    doc_id,
-    articulo_id,
-    agencia,
-    tipodoc,
-    documento,
-    tipodocv,
-    grupo,
-    subgrupo,
-    origen,
-    codigo,
-    codhijo,
-    pid,
-    nombre,
-    cantidad,
-    cntdevuelt,
-    vndcntdevuelt,
-    dvndmtototal,
-    dpreciofin,
-    dpreciounit,
-    dmontoneto,
-    dmontototal,
-    timpueprc,
-    unidevuelt,
-    fechadoc,
-    vendedor,
-    codcoord,
-    created_at,
-    updated_at
-)
-values(
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    NOW(),
-    NOW()
-)
-`
-
-type InsertDocumentLinesParams struct {
-	DocID         string
-	ArticuloID    string
-	Agencia       string
-	Tipodoc       string
-	Documento     string
-	Tipodocv      string
-	Grupo         int32
-	Subgrupo      int32
-	Origen        string
-	Codigo        string
-	Codhijo       string
-	Pid           string
-	Nombre        string
-	Cantidad      int32
-	Cntdevuelt    int32
-	Vndcntdevuelt string
-	Dvndmtototal  string
-	Dpreciofin    string
-	Dpreciounit   string
-	Dmontoneto    string
-	Dmontototal   string
-	Timpueprc     string
-	Unidevuelt    int32
-	Fechadoc      time.Time
-	Vendedor      string
-	Codcoord      string
-}
-
-func (q *Queries) InsertDocumentLines(ctx context.Context, arg InsertDocumentLinesParams) error {
-	_, err := q.db.ExecContext(ctx, insertDocumentLines,
-		arg.DocID,
-		arg.ArticuloID,
-		arg.Agencia,
-		arg.Tipodoc,
-		arg.Documento,
-		arg.Tipodocv,
-		arg.Grupo,
-		arg.Subgrupo,
-		arg.Origen,
-		arg.Codigo,
-		arg.Codhijo,
-		arg.Pid,
-		arg.Nombre,
-		arg.Cantidad,
-		arg.Cntdevuelt,
-		arg.Vndcntdevuelt,
-		arg.Dvndmtototal,
-		arg.Dpreciofin,
-		arg.Dpreciounit,
-		arg.Dmontoneto,
-		arg.Dmontototal,
-		arg.Timpueprc,
-		arg.Unidevuelt,
-		arg.Fechadoc,
-		arg.Vendedor,
-		arg.Codcoord,
-	)
-	return err
-}
-
 const softDeleteDocument = `-- name: SoftDeleteDocument :exec
 update ke_doccti
 set deleted_at = NOW()
@@ -2750,7 +2754,7 @@ set agencia = ?,
     vendedor = ?,
     codcoord = ?,
     updated_at = ?
-WHERE doc_id = ?
+WHERE doc_id = ? and articulo_id = ?
 `
 
 type UpdateDocumentLinesParams struct {
@@ -2778,6 +2782,7 @@ type UpdateDocumentLinesParams struct {
 	Codcoord      string
 	UpdatedAt     time.Time
 	DocID         string
+	ArticuloID    string
 }
 
 func (q *Queries) UpdateDocumentLines(ctx context.Context, arg UpdateDocumentLinesParams) error {
@@ -2806,6 +2811,7 @@ func (q *Queries) UpdateDocumentLines(ctx context.Context, arg UpdateDocumentLin
 		arg.Codcoord,
 		arg.UpdatedAt,
 		arg.DocID,
+		arg.ArticuloID,
 	)
 	return err
 }

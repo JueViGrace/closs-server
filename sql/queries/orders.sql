@@ -35,7 +35,7 @@ left join ke_opmv on ke_opti.id = ke_opmv.pedido_id
 where ke_opti.kti_ndoc = ?
 ;
 
--- name: InserOrder :exec
+-- name: CreateOrder :exec
 insert into ke_opti (
 id,
 kti_ndoc,
@@ -81,7 +81,7 @@ values(
     NOW()
 );
 
--- name: InsertOrderLines :exec
+-- name: CreateOrderLines :exec
 insert into ke_opmv (
     pedido_id,
     articulo_id,
@@ -115,8 +115,7 @@ values (
 
 -- name: UpdateOrder :exec
 update ke_opti
-set kti_ndoc = ?,
-    kti_tdoc = ?,
+set kti_tdoc = ?,
     kti_codcli = ?,
     kti_nombrecli = ?,
     kti_codven = ?,
@@ -138,16 +137,14 @@ WHERE id = ?;
 -- name: UpdateOrderLines :exec
 update ke_opmv
 set kti_tdoc = ?,
-    kti_ndoc = ?,
     kti_tipprec = ?,
-    kmv_codart = ?,
     kmv_nombre = ?,
     kmv_cant = ?,
     kmv_artprec = ?,
     kmv_stot = ?,
     kmv_dctolin = ?,
     updated_at = NOW()
-WHERE pedido_id = ?;
+WHERE pedido_id = ? and articulo_id = ?;
 
 -- name: SoftDeleteOrder :exec
 update ke_opmv

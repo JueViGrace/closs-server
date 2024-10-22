@@ -72,6 +72,7 @@ func (q *Queries) AdminGetCompanyById(ctx context.Context, id string) (KeDatacon
 
 const createCompany = `-- name: CreateCompany :exec
 INSERT INTO ke_dataconex (
+        id,
         ked_codigo,
         ked_nombre,
         ked_status,
@@ -80,10 +81,11 @@ INSERT INTO ke_dataconex (
         created_at,
         updated_at
     )
-VALUES (?, ?, ?, ?, ?, NOW(), NOW())
+VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())
 `
 
 type CreateCompanyParams struct {
+	ID        string
 	KedCodigo string
 	KedNombre string
 	KedStatus bool
@@ -93,6 +95,7 @@ type CreateCompanyParams struct {
 
 func (q *Queries) CreateCompany(ctx context.Context, arg CreateCompanyParams) error {
 	_, err := q.db.ExecContext(ctx, createCompany,
+		arg.ID,
 		arg.KedCodigo,
 		arg.KedNombre,
 		arg.KedStatus,
@@ -129,42 +132,39 @@ const softDeleteCompany = `-- name: SoftDeleteCompany :exec
 UPDATE ke_dataconex
 SET ked_status = 0,
     deleted_at = NOW()
-WHERE ked_codigo = ?
+WHERE id = ?
 `
 
-func (q *Queries) SoftDeleteCompany(ctx context.Context, kedCodigo string) error {
-	_, err := q.db.ExecContext(ctx, softDeleteCompany, kedCodigo)
+func (q *Queries) SoftDeleteCompany(ctx context.Context, id string) error {
+	_, err := q.db.ExecContext(ctx, softDeleteCompany, id)
 	return err
 }
 
 const updateCompany = `-- name: UpdateCompany :exec
 UPDATE ke_dataconex
-SET ked_codigo = ?,
-    ked_nombre = ?,
+SET ked_nombre = ?,
     ked_status = ?, 
     ked_enlace = ?,
     ked_agen = ?,
     updated_at = NOW()
-WHERE ked_codigo = ?
+WHERE id = ?
 `
 
 type UpdateCompanyParams struct {
-	KedCodigo   string
-	KedNombre   string
-	KedStatus   bool
-	KedEnlace   string
-	KedAgen     string
-	KedCodigo_2 string
+	KedNombre string
+	KedStatus bool
+	KedEnlace string
+	KedAgen   string
+	ID        string
 }
 
 func (q *Queries) UpdateCompany(ctx context.Context, arg UpdateCompanyParams) error {
 	_, err := q.db.ExecContext(ctx, updateCompany,
-		arg.KedCodigo,
 		arg.KedNombre,
 		arg.KedStatus,
 		arg.KedEnlace,
 		arg.KedAgen,
-		arg.KedCodigo_2,
+		arg.ID,
 	)
 	return err
 }

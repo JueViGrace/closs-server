@@ -12,7 +12,14 @@ func (a *api) RegisterRoutes() {
 	a.HealthRoute()
 	a.MonitorRoute()
 
+	a.ConfigRoutes()
 	a.AuthRoutes()
+	a.UserRoutes()
+	a.CompanyRoutes()
+	a.ProductRoutes()
+	a.CustomerRoutes()
+	a.SalesmanRoutes()
+	a.OrderRoutes()
 	a.DocumentRoutes()
 }
 

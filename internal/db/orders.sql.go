@@ -410,6 +410,162 @@ func (q *Queries) AdminGetOrdersWithLines(ctx context.Context) ([]AdminGetOrders
 	return items, nil
 }
 
+const createOrder = `-- name: CreateOrder :exec
+insert into ke_opti (
+id,
+kti_ndoc,
+kti_tdoc,
+kti_codcli,
+kti_nombrecli,
+kti_codven,
+kti_docsol,
+kti_condicion,
+kti_tipprec,
+kti_totneto,
+kti_status,
+kti_nroped,
+kti_fchdoc,
+kti_negesp,
+ke_pedstatus,
+dolarflete,
+complemento,
+nro_complemento,
+created_at,
+updated_at
+)
+values(
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    NOW(),
+    NOW()
+)
+`
+
+type CreateOrderParams struct {
+	ID             string
+	KtiNdoc        string
+	KtiTdoc        string
+	KtiCodcli      string
+	KtiNombrecli   string
+	KtiCodven      string
+	KtiDocsol      string
+	KtiCondicion   string
+	KtiTipprec     string
+	KtiTotneto     string
+	KtiStatus      string
+	KtiNroped      string
+	KtiFchdoc      time.Time
+	KtiNegesp      bool
+	KePedstatus    string
+	Dolarflete     bool
+	Complemento    bool
+	NroComplemento string
+}
+
+func (q *Queries) CreateOrder(ctx context.Context, arg CreateOrderParams) error {
+	_, err := q.db.ExecContext(ctx, createOrder,
+		arg.ID,
+		arg.KtiNdoc,
+		arg.KtiTdoc,
+		arg.KtiCodcli,
+		arg.KtiNombrecli,
+		arg.KtiCodven,
+		arg.KtiDocsol,
+		arg.KtiCondicion,
+		arg.KtiTipprec,
+		arg.KtiTotneto,
+		arg.KtiStatus,
+		arg.KtiNroped,
+		arg.KtiFchdoc,
+		arg.KtiNegesp,
+		arg.KePedstatus,
+		arg.Dolarflete,
+		arg.Complemento,
+		arg.NroComplemento,
+	)
+	return err
+}
+
+const createOrderLines = `-- name: CreateOrderLines :exec
+insert into ke_opmv (
+    pedido_id,
+    articulo_id,
+    kti_tdoc,
+    kti_ndoc,
+    kti_tipprec,
+    kmv_codart,
+    kmv_nombre,
+    kmv_cant,
+    kmv_artprec,
+    kmv_stot,
+    kmv_dctolin,
+    created_at,
+    updated_at
+)
+values (
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    NOW(),
+    NOW()
+)
+`
+
+type CreateOrderLinesParams struct {
+	PedidoID   string
+	ArticuloID string
+	KtiTdoc    string
+	KtiNdoc    string
+	KtiTipprec string
+	KmvCodart  string
+	KmvNombre  string
+	KmvCant    int32
+	KmvArtprec string
+	KmvStot    string
+	KmvDctolin string
+}
+
+func (q *Queries) CreateOrderLines(ctx context.Context, arg CreateOrderLinesParams) error {
+	_, err := q.db.ExecContext(ctx, createOrderLines,
+		arg.PedidoID,
+		arg.ArticuloID,
+		arg.KtiTdoc,
+		arg.KtiNdoc,
+		arg.KtiTipprec,
+		arg.KmvCodart,
+		arg.KmvNombre,
+		arg.KmvCant,
+		arg.KmvArtprec,
+		arg.KmvStot,
+		arg.KmvDctolin,
+	)
+	return err
+}
+
 const getOrderByCode = `-- name: GetOrderByCode :one
 select id, kti_ndoc, kti_tdoc, kti_codcli, kti_nombrecli, kti_codven, kti_docsol, kti_condicion, kti_tipprec, kti_totneto, kti_status, kti_nroped, kti_fchdoc, kti_negesp, ke_pedstatus, dolarflete, complemento, nro_complemento, created_at, updated_at, deleted_at
 from ke_opti
@@ -657,7 +813,7 @@ func (q *Queries) GetOrderWithLinesById(ctx context.Context, id string) (GetOrde
 }
 
 const getOrdersByManager = `-- name: GetOrdersByManager :many
-select ke_opti.id, kti_ndoc, kti_tdoc, kti_codcli, kti_nombrecli, kti_codven, kti_docsol, kti_condicion, kti_tipprec, kti_totneto, kti_status, kti_nroped, kti_fchdoc, kti_negesp, ke_pedstatus, dolarflete, complemento, nro_complemento, ke_opti.created_at, ke_opti.updated_at, ke_opti.deleted_at, vendedor.id, codigo, nombre, telefono_1, telefono_2, telefono_movil, status, supervpor, sector, subcodigo, email, vendedor.created_at, vendedor.updated_at, vendedor.deleted_at
+select ke_opti.id, kti_ndoc, kti_tdoc, kti_codcli, kti_nombrecli, kti_codven, kti_docsol, kti_condicion, kti_tipprec, kti_totneto, kti_status, kti_nroped, kti_fchdoc, kti_negesp, ke_pedstatus, dolarflete, complemento, nro_complemento, ke_opti.created_at, ke_opti.updated_at, ke_opti.deleted_at, vendedor.id, user_id, codigo, nombre, telefono_1, telefono_2, telefono_movil, status, supervpor, sector, subcodigo, email, vendedor.created_at, vendedor.updated_at, vendedor.deleted_at
 from ke_opti
 left join vendedor on ke_opti.kti_codven = vendedor.codigo
 where
@@ -688,6 +844,7 @@ type GetOrdersByManagerRow struct {
 	UpdatedAt      time.Time
 	DeletedAt      sql.NullTime
 	ID_2           sql.NullString
+	UserID         sql.NullString
 	Codigo         sql.NullString
 	Nombre         sql.NullString
 	Telefono1      sql.NullString
@@ -735,6 +892,7 @@ func (q *Queries) GetOrdersByManager(ctx context.Context, kngCodgcia string) ([]
 			&i.UpdatedAt,
 			&i.DeletedAt,
 			&i.ID_2,
+			&i.UserID,
 			&i.Codigo,
 			&i.Nombre,
 			&i.Telefono1,
@@ -814,7 +972,7 @@ func (q *Queries) GetOrdersBySalesman(ctx context.Context, ktiCodven string) ([]
 }
 
 const getOrdersWithLinesByManager = `-- name: GetOrdersWithLinesByManager :many
-select ke_opti.id, ke_opti.kti_ndoc, ke_opti.kti_tdoc, kti_codcli, kti_nombrecli, kti_codven, kti_docsol, kti_condicion, ke_opti.kti_tipprec, kti_totneto, kti_status, kti_nroped, kti_fchdoc, kti_negesp, ke_pedstatus, dolarflete, complemento, nro_complemento, ke_opti.created_at, ke_opti.updated_at, ke_opti.deleted_at, pedido_id, articulo_id, ke_opmv.kti_tdoc, ke_opmv.kti_ndoc, ke_opmv.kti_tipprec, kmv_codart, kmv_nombre, kmv_cant, kmv_artprec, kmv_stot, kmv_dctolin, ke_opmv.created_at, ke_opmv.updated_at, ke_opmv.deleted_at, vendedor.id, codigo, nombre, telefono_1, telefono_2, telefono_movil, status, supervpor, sector, subcodigo, email, vendedor.created_at, vendedor.updated_at, vendedor.deleted_at
+select ke_opti.id, ke_opti.kti_ndoc, ke_opti.kti_tdoc, kti_codcli, kti_nombrecli, kti_codven, kti_docsol, kti_condicion, ke_opti.kti_tipprec, kti_totneto, kti_status, kti_nroped, kti_fchdoc, kti_negesp, ke_pedstatus, dolarflete, complemento, nro_complemento, ke_opti.created_at, ke_opti.updated_at, ke_opti.deleted_at, pedido_id, articulo_id, ke_opmv.kti_tdoc, ke_opmv.kti_ndoc, ke_opmv.kti_tipprec, kmv_codart, kmv_nombre, kmv_cant, kmv_artprec, kmv_stot, kmv_dctolin, ke_opmv.created_at, ke_opmv.updated_at, ke_opmv.deleted_at, vendedor.id, user_id, codigo, nombre, telefono_1, telefono_2, telefono_movil, status, supervpor, sector, subcodigo, email, vendedor.created_at, vendedor.updated_at, vendedor.deleted_at
 from ke_opti
 left join ke_opmv on ke_opti.id = ke_opmv.pedido_id
 left join vendedor on ke_opti.kti_codven = vendedor.codigo
@@ -860,6 +1018,7 @@ type GetOrdersWithLinesByManagerRow struct {
 	UpdatedAt_2    sql.NullTime
 	DeletedAt_2    sql.NullTime
 	ID_2           sql.NullString
+	UserID         sql.NullString
 	Codigo         sql.NullString
 	Nombre         sql.NullString
 	Telefono1      sql.NullString
@@ -921,6 +1080,7 @@ func (q *Queries) GetOrdersWithLinesByManager(ctx context.Context, kngCodgcia st
 			&i.UpdatedAt_2,
 			&i.DeletedAt_2,
 			&i.ID_2,
+			&i.UserID,
 			&i.Codigo,
 			&i.Nombre,
 			&i.Telefono1,
@@ -1052,162 +1212,6 @@ func (q *Queries) GetOrdersWithLinesBySalesman(ctx context.Context, ktiCodven st
 	return items, nil
 }
 
-const inserOrder = `-- name: InserOrder :exec
-insert into ke_opti (
-id,
-kti_ndoc,
-kti_tdoc,
-kti_codcli,
-kti_nombrecli,
-kti_codven,
-kti_docsol,
-kti_condicion,
-kti_tipprec,
-kti_totneto,
-kti_status,
-kti_nroped,
-kti_fchdoc,
-kti_negesp,
-ke_pedstatus,
-dolarflete,
-complemento,
-nro_complemento,
-created_at,
-updated_at
-)
-values(
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    NOW(),
-    NOW()
-)
-`
-
-type InserOrderParams struct {
-	ID             string
-	KtiNdoc        string
-	KtiTdoc        string
-	KtiCodcli      string
-	KtiNombrecli   string
-	KtiCodven      string
-	KtiDocsol      string
-	KtiCondicion   string
-	KtiTipprec     string
-	KtiTotneto     string
-	KtiStatus      string
-	KtiNroped      string
-	KtiFchdoc      time.Time
-	KtiNegesp      bool
-	KePedstatus    string
-	Dolarflete     bool
-	Complemento    bool
-	NroComplemento string
-}
-
-func (q *Queries) InserOrder(ctx context.Context, arg InserOrderParams) error {
-	_, err := q.db.ExecContext(ctx, inserOrder,
-		arg.ID,
-		arg.KtiNdoc,
-		arg.KtiTdoc,
-		arg.KtiCodcli,
-		arg.KtiNombrecli,
-		arg.KtiCodven,
-		arg.KtiDocsol,
-		arg.KtiCondicion,
-		arg.KtiTipprec,
-		arg.KtiTotneto,
-		arg.KtiStatus,
-		arg.KtiNroped,
-		arg.KtiFchdoc,
-		arg.KtiNegesp,
-		arg.KePedstatus,
-		arg.Dolarflete,
-		arg.Complemento,
-		arg.NroComplemento,
-	)
-	return err
-}
-
-const insertOrderLines = `-- name: InsertOrderLines :exec
-insert into ke_opmv (
-    pedido_id,
-    articulo_id,
-    kti_tdoc,
-    kti_ndoc,
-    kti_tipprec,
-    kmv_codart,
-    kmv_nombre,
-    kmv_cant,
-    kmv_artprec,
-    kmv_stot,
-    kmv_dctolin,
-    created_at,
-    updated_at
-)
-values (
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    NOW(),
-    NOW()
-)
-`
-
-type InsertOrderLinesParams struct {
-	PedidoID   string
-	ArticuloID string
-	KtiTdoc    string
-	KtiNdoc    string
-	KtiTipprec string
-	KmvCodart  string
-	KmvNombre  string
-	KmvCant    int32
-	KmvArtprec string
-	KmvStot    string
-	KmvDctolin string
-}
-
-func (q *Queries) InsertOrderLines(ctx context.Context, arg InsertOrderLinesParams) error {
-	_, err := q.db.ExecContext(ctx, insertOrderLines,
-		arg.PedidoID,
-		arg.ArticuloID,
-		arg.KtiTdoc,
-		arg.KtiNdoc,
-		arg.KtiTipprec,
-		arg.KmvCodart,
-		arg.KmvNombre,
-		arg.KmvCant,
-		arg.KmvArtprec,
-		arg.KmvStot,
-		arg.KmvDctolin,
-	)
-	return err
-}
-
 const softDeleteOrder = `-- name: SoftDeleteOrder :exec
 update ke_opmv
 set deleted_at = NOW()
@@ -1232,8 +1236,7 @@ func (q *Queries) SoftDeleteOrderLines(ctx context.Context, pedidoID string) err
 
 const updateOrder = `-- name: UpdateOrder :exec
 update ke_opti
-set kti_ndoc = ?,
-    kti_tdoc = ?,
+set kti_tdoc = ?,
     kti_codcli = ?,
     kti_nombrecli = ?,
     kti_codven = ?,
@@ -1254,7 +1257,6 @@ WHERE id = ?
 `
 
 type UpdateOrderParams struct {
-	KtiNdoc        string
 	KtiTdoc        string
 	KtiCodcli      string
 	KtiNombrecli   string
@@ -1276,7 +1278,6 @@ type UpdateOrderParams struct {
 
 func (q *Queries) UpdateOrder(ctx context.Context, arg UpdateOrderParams) error {
 	_, err := q.db.ExecContext(ctx, updateOrder,
-		arg.KtiNdoc,
 		arg.KtiTdoc,
 		arg.KtiCodcli,
 		arg.KtiNombrecli,
@@ -1301,43 +1302,39 @@ func (q *Queries) UpdateOrder(ctx context.Context, arg UpdateOrderParams) error 
 const updateOrderLines = `-- name: UpdateOrderLines :exec
 update ke_opmv
 set kti_tdoc = ?,
-    kti_ndoc = ?,
     kti_tipprec = ?,
-    kmv_codart = ?,
     kmv_nombre = ?,
     kmv_cant = ?,
     kmv_artprec = ?,
     kmv_stot = ?,
     kmv_dctolin = ?,
     updated_at = NOW()
-WHERE pedido_id = ?
+WHERE pedido_id = ? and articulo_id = ?
 `
 
 type UpdateOrderLinesParams struct {
 	KtiTdoc    string
-	KtiNdoc    string
 	KtiTipprec string
-	KmvCodart  string
 	KmvNombre  string
 	KmvCant    int32
 	KmvArtprec string
 	KmvStot    string
 	KmvDctolin string
 	PedidoID   string
+	ArticuloID string
 }
 
 func (q *Queries) UpdateOrderLines(ctx context.Context, arg UpdateOrderLinesParams) error {
 	_, err := q.db.ExecContext(ctx, updateOrderLines,
 		arg.KtiTdoc,
-		arg.KtiNdoc,
 		arg.KtiTipprec,
-		arg.KmvCodart,
 		arg.KmvNombre,
 		arg.KmvCant,
 		arg.KmvArtprec,
 		arg.KmvStot,
 		arg.KmvDctolin,
 		arg.PedidoID,
+		arg.ArticuloID,
 	)
 	return err
 }

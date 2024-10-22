@@ -8,7 +8,8 @@ func (a *api) DocumentRoutes() {
 	docHandler := handlers.NewDocumentHandler(a.db.DocumentStore())
 
 	docGroup.Get("/", docHandler.GetDocuments)
-	docGroup.Get("/:code", docHandler.GetDocumentsBySalesman)
-	docGroup.Get("/all", docHandler.GetDocumentsWithLines)
-	docGroup.Get("/all/:code", docHandler.GetDocumentsWithLinesBySalesman)
+	docGroup.Get("/:id")
+	docGroup.Post("/")
+	docGroup.Patch("/:id")
+	docGroup.Delete("/:id")
 }

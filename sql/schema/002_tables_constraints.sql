@@ -1,16 +1,19 @@
 -- +goose Up
-ALTER TABLE usuario
-ADD CONSTRAINT FK_vendedor_id
-FOREIGN KEY (vendedor_id) REFERENCES vendedor(id)
-ON UPDATE CASCADE,
-ADD CONSTRAINT FK_cliente_id
-FOREIGN KEY (cliente_id) REFERENCES cliente(id)
+ALTER TABLE ke_wcnf_conf
+ADD CONSTRAINT FK_cnf_user
+FOREIGN KEY (user_id) REFERENCES usuario(id)
 ON UPDATE CASCADE;
 
 ALTER TABLE vendedor
+ADD CONSTRAINT FK_user_vendedor
+FOREIGN KEY (user_id) REFERENCES usuario(id)
+ON UPDATE CASCADE,
 ADD CONSTRAINT UC_vendedor_email UNIQUE (email(255));
 
 ALTER TABLE cliente
+ADD CONSTRAINT FK_user_cliente
+FOREIGN KEY (user_id) REFERENCES usuario(id)
+ON UPDATE CASCADE,
 ADD CONSTRAINT UC_cliente_email UNIQUE (email(255));
 
 ALTER TABLE ke_nivgcia
@@ -35,9 +38,14 @@ ON UPDATE CASCADE,
 ADD CONSTRAINT UC_doc_codart UNIQUE (documento, codigo);
 
 -- +goose Down
-ALTER TABLE usuario
-DROP FOREIGN KEY FK_vendedor_id,
-DROP FOREIGN KEY FK_cliente_id;
+ALTER TABLE ke_wcnf_conf
+DROP FOREIGN KEY FK_cnf_user;
+
+ALTER TABLE vendedor
+DROP FOREIGN KEY FK_user_vendedor,
+
+ALTER TABLE cliente
+DROP FOREIGN KEY FK_user_cliente;
 
 ALTER TABLE ke_opmv
 DROP FOREIGN KEY FK_pedido_id,

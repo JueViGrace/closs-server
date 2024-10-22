@@ -15,7 +15,7 @@ from ke_estadc01
 where vendedor = ?
 ;
 
--- name: InsertStatistic :exec
+-- name: CreateStatistic :exec
 insert into ke_estadc01(
     id,
     codcoord,

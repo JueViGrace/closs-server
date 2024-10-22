@@ -8,4 +8,6 @@ func (a *api) AuthRoutes() {
 
 	authGroup.Post("/signIn", authHandler.SignIn)
 	authGroup.Post("/signUp", authHandler.SignUp)
+	authGroup.Post("/recover/password")
+	authGroup.Post("/recover/username")
 }

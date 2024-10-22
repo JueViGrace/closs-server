@@ -35,7 +35,7 @@ left join ke_doclmv on ke_doccti.id = ke_doclmv.doc_id
 where ke_doccti.documento = ?
 ;
 
--- name: InsertDocument :exec
+-- name: CreateDocument :exec
 insert into ke_doccti (
     id,
     agencia,
@@ -161,7 +161,7 @@ values (
     NOW()
 );
 
--- name: InsertDocumentLines :exec
+-- name: CreateDocumentLines :exec
 insert into ke_doclmv (
     doc_id,
     articulo_id,
@@ -309,7 +309,7 @@ set agencia = ?,
     vendedor = ?,
     codcoord = ?,
     updated_at = ?
-WHERE doc_id = ?;
+WHERE doc_id = ? and articulo_id = ?;
 
 -- name: SoftDeleteDocument :exec
 update ke_doccti

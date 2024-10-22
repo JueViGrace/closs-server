@@ -11,6 +11,7 @@ where id = ?
 
 -- name: CreateCompany :exec
 INSERT INTO ke_dataconex (
+        id,
         ked_codigo,
         ked_nombre,
         ked_status,
@@ -19,23 +20,22 @@ INSERT INTO ke_dataconex (
         created_at,
         updated_at
     )
-VALUES (?, ?, ?, ?, ?, NOW(), NOW());
+VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW());
 
 -- name: UpdateCompany :exec
 UPDATE ke_dataconex
-SET ked_codigo = ?,
-    ked_nombre = ?,
+SET ked_nombre = ?,
     ked_status = ?, 
     ked_enlace = ?,
     ked_agen = ?,
     updated_at = NOW()
-WHERE ked_codigo = ?;
+WHERE id = ?;
 
 -- name: SoftDeleteCompany :exec
 UPDATE ke_dataconex
 SET ked_status = 0,
     deleted_at = NOW()
-WHERE ked_codigo = ?;
+WHERE id = ?;
 
 -- name: GetCompanyByCode :one
 select *

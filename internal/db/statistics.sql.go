@@ -189,6 +189,134 @@ func (q *Queries) AdminGetStatisticsBySaleman(ctx context.Context, vendedor stri
 	return items, nil
 }
 
+const createStatistic = `-- name: CreateStatistic :exec
+insert into ke_estadc01(
+    id,
+    codcoord,
+    nomcoord,
+    vendedor,
+    nombrevend,
+    cntpedidos,
+    mtopedidos,
+    cntfacturas,
+    mtofacturas,
+    metavend,
+    prcmeta,
+    cntclientes,
+    clivisit,
+    prcvisitas,
+    lom_montovtas,
+    lom_prcvtas,
+    lom_prcvisit,
+    rlom_montovtas,
+    rlom_prcvtas,
+    rlom_prcvisit,
+    fecha_estad,
+    ppgdol_totneto,
+    devdol_totneto,
+    defdol_totneto,
+    totdolcob,
+    cntrecl,
+    mtorecl,
+    created_at,
+    updated_at
+)
+values (
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    ?,
+    NOW(),
+    NOW()
+)
+`
+
+type CreateStatisticParams struct {
+	ID            string
+	Codcoord      string
+	Nomcoord      string
+	Vendedor      string
+	Nombrevend    string
+	Cntpedidos    int32
+	Mtopedidos    string
+	Cntfacturas   int32
+	Mtofacturas   string
+	Metavend      string
+	Prcmeta       string
+	Cntclientes   int32
+	Clivisit      int32
+	Prcvisitas    string
+	LomMontovtas  string
+	LomPrcvtas    string
+	LomPrcvisit   string
+	RlomMontovtas string
+	RlomPrcvtas   string
+	RlomPrcvisit  string
+	FechaEstad    time.Time
+	PpgdolTotneto string
+	DevdolTotneto string
+	DefdolTotneto string
+	Totdolcob     string
+	Cntrecl       string
+	Mtorecl       string
+}
+
+func (q *Queries) CreateStatistic(ctx context.Context, arg CreateStatisticParams) error {
+	_, err := q.db.ExecContext(ctx, createStatistic,
+		arg.ID,
+		arg.Codcoord,
+		arg.Nomcoord,
+		arg.Vendedor,
+		arg.Nombrevend,
+		arg.Cntpedidos,
+		arg.Mtopedidos,
+		arg.Cntfacturas,
+		arg.Mtofacturas,
+		arg.Metavend,
+		arg.Prcmeta,
+		arg.Cntclientes,
+		arg.Clivisit,
+		arg.Prcvisitas,
+		arg.LomMontovtas,
+		arg.LomPrcvtas,
+		arg.LomPrcvisit,
+		arg.RlomMontovtas,
+		arg.RlomPrcvtas,
+		arg.RlomPrcvisit,
+		arg.FechaEstad,
+		arg.PpgdolTotneto,
+		arg.DevdolTotneto,
+		arg.DefdolTotneto,
+		arg.Totdolcob,
+		arg.Cntrecl,
+		arg.Mtorecl,
+	)
+	return err
+}
+
 const getStatisticsById = `-- name: GetStatisticsById :one
 select id, codcoord, nomcoord, vendedor, nombrevend, cntpedidos, mtopedidos, cntfacturas, mtofacturas, metavend, prcmeta, cntclientes, clivisit, prcvisitas, lom_montovtas, lom_prcvtas, lom_prcvisit, rlom_montovtas, rlom_prcvtas, rlom_prcvisit, fecha_estad, ppgdol_totneto, devdol_totneto, defdol_totneto, totdolcob, cntrecl, mtorecl, created_at, updated_at, deleted_at
 from ke_estadc01
@@ -353,134 +481,6 @@ func (q *Queries) GetStatisticsBySalesman(ctx context.Context, vendedor string) 
 		return nil, err
 	}
 	return items, nil
-}
-
-const insertStatistic = `-- name: InsertStatistic :exec
-insert into ke_estadc01(
-    id,
-    codcoord,
-    nomcoord,
-    vendedor,
-    nombrevend,
-    cntpedidos,
-    mtopedidos,
-    cntfacturas,
-    mtofacturas,
-    metavend,
-    prcmeta,
-    cntclientes,
-    clivisit,
-    prcvisitas,
-    lom_montovtas,
-    lom_prcvtas,
-    lom_prcvisit,
-    rlom_montovtas,
-    rlom_prcvtas,
-    rlom_prcvisit,
-    fecha_estad,
-    ppgdol_totneto,
-    devdol_totneto,
-    defdol_totneto,
-    totdolcob,
-    cntrecl,
-    mtorecl,
-    created_at,
-    updated_at
-)
-values (
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    ?,
-    NOW(),
-    NOW()
-)
-`
-
-type InsertStatisticParams struct {
-	ID            string
-	Codcoord      string
-	Nomcoord      string
-	Vendedor      string
-	Nombrevend    string
-	Cntpedidos    int32
-	Mtopedidos    string
-	Cntfacturas   int32
-	Mtofacturas   string
-	Metavend      string
-	Prcmeta       string
-	Cntclientes   int32
-	Clivisit      int32
-	Prcvisitas    string
-	LomMontovtas  string
-	LomPrcvtas    string
-	LomPrcvisit   string
-	RlomMontovtas string
-	RlomPrcvtas   string
-	RlomPrcvisit  string
-	FechaEstad    time.Time
-	PpgdolTotneto string
-	DevdolTotneto string
-	DefdolTotneto string
-	Totdolcob     string
-	Cntrecl       string
-	Mtorecl       string
-}
-
-func (q *Queries) InsertStatistic(ctx context.Context, arg InsertStatisticParams) error {
-	_, err := q.db.ExecContext(ctx, insertStatistic,
-		arg.ID,
-		arg.Codcoord,
-		arg.Nomcoord,
-		arg.Vendedor,
-		arg.Nombrevend,
-		arg.Cntpedidos,
-		arg.Mtopedidos,
-		arg.Cntfacturas,
-		arg.Mtofacturas,
-		arg.Metavend,
-		arg.Prcmeta,
-		arg.Cntclientes,
-		arg.Clivisit,
-		arg.Prcvisitas,
-		arg.LomMontovtas,
-		arg.LomPrcvtas,
-		arg.LomPrcvisit,
-		arg.RlomMontovtas,
-		arg.RlomPrcvtas,
-		arg.RlomPrcvisit,
-		arg.FechaEstad,
-		arg.PpgdolTotneto,
-		arg.DevdolTotneto,
-		arg.DefdolTotneto,
-		arg.Totdolcob,
-		arg.Cntrecl,
-		arg.Mtorecl,
-	)
-	return err
 }
 
 const softDeleteStatistic = `-- name: SoftDeleteStatistic :exec

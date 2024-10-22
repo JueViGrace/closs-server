@@ -9,7 +9,7 @@ from cliente
 where id = ?
 ;
 
--- name: InsertCustomer :exec
+-- name: CreateCustomer :exec
 INSERT INTO cliente (
     id,
     codigo,

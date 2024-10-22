@@ -12,7 +12,7 @@ import (
 )
 
 const adminGetUserById = `-- name: AdminGetUserById :many
-select id, username, password, vendedor_id, cliente_id, role, desactivo, ult_sinc, version, created_at, updated_at, deleted_at
+select id, username, password, role, desactivo, ult_sinc, version, created_at, updated_at, deleted_at
 from usuario
 where id = ?
 `
@@ -30,8 +30,6 @@ func (q *Queries) AdminGetUserById(ctx context.Context, id string) ([]Usuario, e
 			&i.ID,
 			&i.Username,
 			&i.Password,
-			&i.VendedorID,
-			&i.ClienteID,
 			&i.Role,
 			&i.Desactivo,
 			&i.UltSinc,
@@ -54,7 +52,7 @@ func (q *Queries) AdminGetUserById(ctx context.Context, id string) ([]Usuario, e
 }
 
 const adminGetUsers = `-- name: AdminGetUsers :many
-select id, username, password, vendedor_id, cliente_id, role, desactivo, ult_sinc, version, created_at, updated_at, deleted_at
+select id, username, password, role, desactivo, ult_sinc, version, created_at, updated_at, deleted_at
 from usuario
 `
 
@@ -71,8 +69,6 @@ func (q *Queries) AdminGetUsers(ctx context.Context) ([]Usuario, error) {
 			&i.ID,
 			&i.Username,
 			&i.Password,
-			&i.VendedorID,
-			&i.ClienteID,
 			&i.Role,
 			&i.Desactivo,
 			&i.UltSinc,
@@ -94,39 +90,11 @@ func (q *Queries) AdminGetUsers(ctx context.Context) ([]Usuario, error) {
 	return items, nil
 }
 
-const getUserById = `-- name: GetUserById :one
-select id, username, password, vendedor_id, cliente_id, role, desactivo, ult_sinc, version, created_at, updated_at, deleted_at
-from usuario
-where id = ? and deleted_at is null
-`
-
-func (q *Queries) GetUserById(ctx context.Context, id string) (Usuario, error) {
-	row := q.db.QueryRowContext(ctx, getUserById, id)
-	var i Usuario
-	err := row.Scan(
-		&i.ID,
-		&i.Username,
-		&i.Password,
-		&i.VendedorID,
-		&i.ClienteID,
-		&i.Role,
-		&i.Desactivo,
-		&i.UltSinc,
-		&i.Version,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-		&i.DeletedAt,
-	)
-	return i, err
-}
-
-const insertUser = `-- name: InsertUser :exec
+const createUser = `-- name: CreateUser :exec
 insert into usuario (
     id,
     username,
     password,
-    vendedor_id,
-    cliente_id,
     role,
     desactivo,
     ult_sinc,
@@ -142,38 +110,56 @@ values (
     ?,
     ?,
     ?,
-    ?,
-    ?,
     NOW(),
     NOW()
 )
 `
 
-type InsertUserParams struct {
-	ID         string
-	Username   string
-	Password   sql.NullString
-	VendedorID sql.NullString
-	ClienteID  sql.NullString
-	Role       UsuarioRole
-	Desactivo  bool
-	UltSinc    time.Time
-	Version    string
+type CreateUserParams struct {
+	ID        string
+	Username  string
+	Password  sql.NullString
+	Role      UsuarioRole
+	Desactivo bool
+	UltSinc   time.Time
+	Version   string
 }
 
-func (q *Queries) InsertUser(ctx context.Context, arg InsertUserParams) error {
-	_, err := q.db.ExecContext(ctx, insertUser,
+func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) error {
+	_, err := q.db.ExecContext(ctx, createUser,
 		arg.ID,
 		arg.Username,
 		arg.Password,
-		arg.VendedorID,
-		arg.ClienteID,
 		arg.Role,
 		arg.Desactivo,
 		arg.UltSinc,
 		arg.Version,
 	)
 	return err
+}
+
+const getUserById = `-- name: GetUserById :one
+select id, username, password, role, desactivo, ult_sinc, version, created_at, updated_at, deleted_at
+from usuario
+where id = ? and deleted_at is null
+`
+
+func (q *Queries) GetUserById(ctx context.Context, id string) (Usuario, error) {
+	row := q.db.QueryRowContext(ctx, getUserById, id)
+	var i Usuario
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.Password,
+		&i.Role,
+		&i.Desactivo,
+		&i.UltSinc,
+		&i.Version,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DeletedAt,
+	)
+	return i, err
 }
 
 const softDeleteUser = `-- name: SoftDeleteUser :exec
