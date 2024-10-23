@@ -8,51 +8,51 @@ import (
 )
 
 type Config struct {
-	ID           uuid.UUID
-	CnfgIdconfig string
-	CnfgClase    string
-	CnfgTipo     string
-	CnfgValnum   string
-	CnfgValsino  bool
-	CnfgValtxt   string
-	CnfgLentxt   int16
-	CnfgValfch   time.Time
-	CnfgActiva   bool
-	CnfgEtiq     string
-	CnfgTtip     string
-	UserID       string
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
-	DeletedAt    time.Time
+	ID           uuid.UUID `json:"id"`
+	CnfgIdconfig string    `json:"cnfg_idconfig"`
+	CnfgClase    string    `json:"cnfg_clase"`
+	CnfgTipo     string    `json:"cnfg_tipo"`
+	CnfgValnum   string    `json:"cnfg_valnum"`
+	CnfgValsino  bool      `json:"cnfg_valsino"`
+	CnfgValtxt   string    `json:"cnfg_valtxt"`
+	CnfgLentxt   int16     `json:"cnfg_lentxt"`
+	CnfgValfch   time.Time `json:"cnfg_valfch"`
+	CnfgActiva   bool      `json:"cnfg_activa"`
+	CnfgEtiq     string    `json:"cnfg_etiq"`
+	CnfgTtip     string    `json:"cnfg_ttip"`
+	UserID       string    `json:"user_id"`
+	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
+	DeletedAt    time.Time `json:"deleted_at"`
 }
 
 type CreateConfigRequest struct {
-	CnfgIdconfig string
-	CnfgClase    string
-	CnfgTipo     string
-	CnfgValnum   string
-	CnfgValsino  bool
-	CnfgValtxt   string
-	CnfgLentxt   int16
-	CnfgValfch   time.Time
-	CnfgActiva   bool
-	CnfgEtiq     string
-	CnfgTtip     string
-	UserID       string
+	CnfgIdconfig string    `json:"cnfg_idconfig"`
+	CnfgClase    string    `json:"cnfg_clase"`
+	CnfgTipo     string    `json:"cnfg_tipo"`
+	CnfgValnum   string    `json:"cnfg_valnum"`
+	CnfgValsino  bool      `json:"cnfg_valsino"`
+	CnfgValtxt   string    `json:"cnfg_valtxt"`
+	CnfgLentxt   int16     `json:"cnfg_lentxt"`
+	CnfgValfch   time.Time `json:"cnfg_valfch"`
+	CnfgActiva   bool      `json:"cnfg_activa"`
+	CnfgEtiq     string    `json:"cnfg_etiq"`
+	CnfgTtip     string    `json:"cnfg_ttip"`
+	UserID       string    `json:"user_id"`
 }
 
 type UpdateConfigRequest struct {
-	CnfgClase   string
-	CnfgTipo    string
-	CnfgValnum  string
-	CnfgValsino bool
-	CnfgValtxt  string
-	CnfgLentxt  int16
-	CnfgValfch  time.Time
-	CnfgActiva  bool
-	CnfgEtiq    string
-	CnfgTtip    string
-	ID          uuid.UUID
+	CnfgClase   string    `json:"cnfg_clase"`
+	CnfgTipo    string    `json:"cnfg_tipo"`
+	CnfgValnum  string    `json:"cnfg_valnum"`
+	CnfgValsino bool      `json:"cnfg_valsino"`
+	CnfgValtxt  string    `json:"cnfg_valtxt"`
+	CnfgLentxt  int16     `json:"cnfg_lentxt"`
+	CnfgValfch  time.Time `json:"cnfg_valfch"`
+	CnfgActiva  bool      `json:"cnfg_activa"`
+	CnfgEtiq    string    `json:"cnfg_etiq"`
+	CnfgTtip    string    `json:"cnfg_ttip"`
+	ID          uuid.UUID `json:"id"`
 }
 
 func DbConfigToConfig(cfg *db.KeWcnfConf) (*Config, error) {

@@ -1,11 +1,14 @@
 package api
 
-func (a *api) OrderRoutes() {
-	orderGroup := a.Group("/api/orders")
+import "github.com/JueViGrace/clo-backend/internal/handlers"
 
-	orderGroup.Get("/")
-	orderGroup.Get("/:id")
-	orderGroup.Post("/")
-	orderGroup.Patch("/:id")
-	orderGroup.Delete("/:id")
+func (a *api) OrderRoutes() {
+	g := a.Group("/api/orders")
+	h := handlers.NewOrderHandler(a.db.OrderStore())
+
+	g.Get("/", h.GetOrders)
+	g.Get("/:id", h.GetOrder)
+	g.Post("/", h.CreateOrder)
+	g.Patch("/", h.UpdateOrder)
+	g.Delete("/:id", h.DeleteOrder)
 }

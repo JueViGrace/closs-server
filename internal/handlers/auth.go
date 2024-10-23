@@ -9,6 +9,7 @@ import (
 type AuthHandler interface {
 	SignUp(c *fiber.Ctx) error
 	SignIn(c *fiber.Ctx) error
+	RecoverPassword(c *fiber.Ctx) error
 }
 
 type authHandler struct {
@@ -28,5 +29,10 @@ func (h *authHandler) SignIn(c *fiber.Ctx) error {
 
 func (h *authHandler) SignUp(c *fiber.Ctx) error {
 	res := types.RespondOk("Sign up handler", "Success")
+	return c.Status(res.Status).JSON(res)
+}
+
+func (h *authHandler) RecoverPassword(c *fiber.Ctx) error {
+	res := types.RespondOk("RecoverPassword handler", "Success")
 	return c.Status(res.Status).JSON(res)
 }

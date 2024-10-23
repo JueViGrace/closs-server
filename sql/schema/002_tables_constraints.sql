@@ -42,7 +42,7 @@ ALTER TABLE ke_wcnf_conf
 DROP FOREIGN KEY FK_cnf_user;
 
 ALTER TABLE vendedor
-DROP FOREIGN KEY FK_user_vendedor,
+DROP FOREIGN KEY FK_user_vendedor;
 
 ALTER TABLE cliente
 DROP FOREIGN KEY FK_user_cliente;

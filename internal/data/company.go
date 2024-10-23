@@ -4,15 +4,16 @@ import (
 	"context"
 
 	"github.com/JueViGrace/clo-backend/internal/db"
+	"github.com/JueViGrace/clo-backend/internal/types"
 	"github.com/google/uuid"
 )
 
 type CompanyStore interface {
-	GetCompanies()
-	GetCompany(id uuid.UUID)
-	CreateCompany()
-	UpdateCompany(id uuid.UUID)
-	DeleteCompany(id uuid.UUID)
+	GetCompanies() ([]*types.Company, error)
+	GetCompany(id uuid.UUID) (*types.Company, error)
+	CreateCompany(r *types.CreateCompanyRequest) (string, error)
+	UpdateCompany(r *types.UpdateCompanyRequest) (string, error)
+	DeleteCompany(id uuid.UUID) error
 }
 
 func (s *storage) CompanyStore() CompanyStore {
@@ -31,17 +32,22 @@ func NewCompanyStore(ctx context.Context, db *db.Queries) CompanyStore {
 	}
 }
 
-func (s *companyStore) GetCompanies() {
+func (s *companyStore) GetCompanies() ([]*types.Company, error) {
+	return nil, nil
 }
 
-func (s *companyStore) GetCompany(id uuid.UUID) {
+func (s *companyStore) GetCompany(id uuid.UUID) (*types.Company, error) {
+	return nil, nil
 }
 
-func (s *companyStore) CreateCompany() {
+func (s *companyStore) CreateCompany(r *types.CreateCompanyRequest) (string, error) {
+	return "", nil
 }
 
-func (s *companyStore) UpdateCompany(id uuid.UUID) {
+func (s *companyStore) UpdateCompany(r *types.UpdateCompanyRequest) (string, error) {
+	return "", nil
 }
 
-func (s *companyStore) DeleteCompany(id uuid.UUID) {
+func (s *companyStore) DeleteCompany(id uuid.UUID) error {
+	return nil
 }

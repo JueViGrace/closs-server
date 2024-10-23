@@ -1,11 +1,14 @@
 package api
 
-func (a *api) ConfigRoutes() {
-	configGroup := a.Group("/api/config")
+import "github.com/JueViGrace/clo-backend/internal/handlers"
 
-	configGroup.Get("/")
-	configGroup.Get("/:id")
-	configGroup.Post("/")
-	configGroup.Patch("/:id")
-	configGroup.Delete("/:id")
+func (a *api) ConfigRoutes() {
+	g := a.Group("/api/config")
+	h := handlers.NewConfigHandler(a.db.ConfigStore())
+
+	g.Get("/", h.GetConfigs)
+	g.Get("/:id", h.GetConfig)
+	g.Post("/", h.CreateConfig)
+	g.Patch("/", h.UpdateConfig)
+	g.Delete("/:id", h.DeleteConfig)
 }

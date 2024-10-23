@@ -1,10 +1,13 @@
 package api
 
-func (a *api) UserRoutes() {
-	userGroup := a.Group("/api/users")
+import "github.com/JueViGrace/clo-backend/internal/handlers"
 
-	userGroup.Get("/")
-	userGroup.Get("/:id")
-	userGroup.Patch("/:id")
-	userGroup.Delete("/:id")
+func (a *api) UserRoutes() {
+	g := a.Group("/api/users")
+	h := handlers.NewUserHandler(a.db.UserStore())
+
+	g.Get("/", h.GetUsers)
+	g.Get("/:id", h.GetUser)
+	g.Patch("/:id", h.UpdateUser)
+	g.Delete("/:id", h.DeleteUser)
 }

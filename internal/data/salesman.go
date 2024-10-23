@@ -4,15 +4,16 @@ import (
 	"context"
 
 	"github.com/JueViGrace/clo-backend/internal/db"
+	"github.com/JueViGrace/clo-backend/internal/types"
 	"github.com/google/uuid"
 )
 
 type SalesmanStore interface {
-	GetSalesmen()
-	GetSalesman(id uuid.UUID)
-	CreateSalesman()
-	UpdateSalesman(id uuid.UUID)
-	DeleteSalesman(id uuid.UUID)
+	GetSalesmen() ([]*types.Salesman, error)
+	GetSalesman(id uuid.UUID) (*types.Salesman, error)
+	CreateSalesman(r *types.CreateSalesmanRequest) (string, error)
+	UpdateSalesman(r *types.UpdateSalesmanRequest) (string, error)
+	DeleteSalesman(id uuid.UUID) error
 }
 
 func (s *storage) SalesmanStore() SalesmanStore {
@@ -31,17 +32,22 @@ func NewSalesmanStore(ctx context.Context, db *db.Queries) SalesmanStore {
 	}
 }
 
-func (s *salesmanStore) GetSalesmen() {
+func (s *salesmanStore) GetSalesmen() ([]*types.Salesman, error) {
+	return nil, nil
 }
 
-func (s *salesmanStore) GetSalesman(id uuid.UUID) {
+func (s *salesmanStore) GetSalesman(id uuid.UUID) (*types.Salesman, error) {
+	return nil, nil
 }
 
-func (s *salesmanStore) CreateSalesman() {
+func (s *salesmanStore) CreateSalesman(r *types.CreateSalesmanRequest) (string, error) {
+	return "", nil
 }
 
-func (s *salesmanStore) UpdateSalesman(id uuid.UUID) {
+func (s *salesmanStore) UpdateSalesman(r *types.UpdateSalesmanRequest) (string, error) {
+	return "", nil
 }
 
-func (s *salesmanStore) DeleteSalesman(id uuid.UUID) {
+func (s *salesmanStore) DeleteSalesman(id uuid.UUID) error {
+	return nil
 }

@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/JueViGrace/clo-backend/internal/db"
+	"github.com/google/uuid"
 )
 
 type DocumentWithLines struct {
@@ -12,6 +13,7 @@ type DocumentWithLines struct {
 }
 
 type Document struct {
+	ID             uuid.UUID `json:"id"`
 	Agencia        string    `json:"agencia"`
 	Tipodoc        string    `json:"tipodoc"`
 	Documento      string    `json:"documento"`
@@ -75,6 +77,8 @@ type Document struct {
 }
 
 type DocumentLine struct {
+	DocID         uuid.UUID `json:"doc_id"`
+	ArticuloID    uuid.UUID `json:"articulo_id"`
 	Agencia       string    `json:"agencia"`
 	Tipodoc       string    `json:"tipodoc"`
 	Documento     string    `json:"documento"`
@@ -104,8 +108,107 @@ type DocumentLine struct {
 	DeletedAt     time.Time `json:"-"`
 }
 
-func DbKeDoccToDocument(kd *db.KeDoccti) *Document {
+type CreateDocumentRequest struct {
+	Agencia        string    `json:"agencia"`
+	Tipodoc        string    `json:"tipodoc"`
+	Documento      string    `json:"documento"`
+	Tipodocv       string    `json:"tipodocv"`
+	Codcliente     string    `json:"codcliente"`
+	Nombrecli      string    `json:"nombrecli"`
+	Contribesp     bool      `json:"contribesp"`
+	RutaParme      bool      `json:"ruta_parme"`
+	Tipoprecio     string    `json:"tipoprecio"`
+	Emision        time.Time `json:"emision"`
+	Recepcion      time.Time `json:"recepcion"`
+	Vence          time.Time `json:"vence"`
+	Diascred       string    `json:"diascred"`
+	Estatusdoc     string    `json:"estatusdoc"`
+	Dtotneto       string    `json:"dtotneto"`
+	Dtotimpuest    string    `json:"dtotimpuest"`
+	Dtotalfinal    string    `json:"dtotalfinal"`
+	Dtotpagos      string    `json:"dtotpagos"`
+	Dtotdescuen    string    `json:"dtotdescuen"`
+	Dflete         string    `json:"dFlete"`
+	Dtotdev        string    `json:"dtotdev"`
+	Dvndmtototal   string    `json:"dvndmtototal"`
+	Dretencion     string    `json:"dretencion"`
+	Dretencioniva  string    `json:"dretencioniva"`
+	Vendedor       string    `json:"vendedor"`
+	Codcoord       string    `json:"codcoord"`
+	Aceptadev      bool      `json:"aceptadev"`
+	KtiNegesp      bool      `json:"kti_negesp"`
+	Bsiva          string    `json:"bsiva"`
+	Bsflete        string    `json:"bsflete"`
+	Bsretencion    string    `json:"bsretencion"`
+	Bsretencioniva string    `json:"bsretencioniva"`
+	Tasadoc        string    `json:"tasadoc"`
+	Mtodcto        string    `json:"mtodcto"`
+	Fchvencedcto   time.Time `json:"fchvencedcto"`
+	Tienedcto      bool      `json:"tienedcto"`
+	Cbsret         string    `json:"cbsret"`
+	Cdret          string    `json:"cdret"`
+	Cbsretiva      string    `json:"cbsretiva"`
+	Cdretiva       string    `json:"cdretiva"`
+	Cbsrparme      string    `json:"cbsrparme"`
+	Cdrparme       string    `json:"cdrparme"`
+	Cbsretflete    string    `json:"cbsretflete"`
+	Cdretflete     string    `json:"cdretflete"`
+	Bsmtoiva       string    `json:"bsmtoiva"`
+	Bsmtofte       string    `json:"bsmtofte"`
+	RetmunMto      string    `json:"retmun_mto"`
+	Dolarflete     bool      `json:"dolarflete"`
+	Bsretflete     string    `json:"bsretflete"`
+	Dretflete      string    `json:"dretflete"`
+	DretmunMto     string    `json:"dretmun_mto"`
+	Retivaoblig    bool      `json:"retivaoblig"`
+	Edoentrega     bool      `json:"edoentrega"`
+	Dmtoiva        string    `json:"dmtoiva"`
+	Prcdctoaplic   string    `json:"prcdctoaplic"`
+	Montodctodol   string    `json:"montodctodol"`
+	Montodctobs    string    `json:"montodctobs"`
+}
+
+type CreateDocumentLineRequest struct {
+	DocID         uuid.UUID `json:"doc_id"`
+	ArticuloID    uuid.UUID `json:"articulo_id"`
+	Agencia       string    `json:"agencia"`
+	Tipodoc       string    `json:"tipodoc"`
+	Documento     string    `json:"documento"`
+	Tipodocv      string    `json:"tipodocv"`
+	Grupo         int32     `json:"grupo"`
+	Subgrupo      int32     `json:"subgrupo"`
+	Origen        string    `json:"origen"`
+	Codigo        string    `json:"codigo"`
+	Codhijo       string    `json:"codhijo"`
+	Pid           string    `json:"pid"`
+	Nombre        string    `json:"nombre"`
+	Cantidad      int32     `json:"cantidad"`
+	Cntdevuelt    int32     `json:"cntdevuelt"`
+	Vndcntdevuelt string    `json:"vndcntdevuelt"`
+	Dvndmtototal  string    `json:"dvndmtototal"`
+	Dpreciofin    string    `json:"dpreciofin"`
+	Dpreciounit   string    `json:"dpreciounit"`
+	Dmontoneto    string    `json:"dmontoneto"`
+	Dmontototal   string    `json:"dmontototal"`
+	Timpueprc     string    `json:"timpueprc"`
+	Unidevuelt    int32     `json:"unidevuelt"`
+	Fechadoc      time.Time `json:"fechadoc"`
+	Vendedor      string    `json:"vendedor"`
+	Codcoord      string    `json:"codcoord"`
+}
+
+type UpdateDocumentRequest struct{}
+
+type UpdateDocumentLineRequest struct{}
+
+func DbKeDoccToDocument(kd *db.KeDoccti) (*Document, error) {
+	id, err := uuid.Parse(kd.ID)
+	if err != nil {
+		return nil, err
+	}
+
 	return &Document{
+		ID:             id,
 		Agencia:        kd.Agencia,
 		Tipodoc:        kd.Tipodoc,
 		Documento:      kd.Documento,
@@ -166,7 +269,7 @@ func DbKeDoccToDocument(kd *db.KeDoccti) *Document {
 		CreatedAt:      kd.CreatedAt,
 		UpdatedAt:      kd.UpdatedAt,
 		DeletedAt:      kd.DeletedAt.Time,
-	}
+	}, nil
 }
 
 func DocMapToDocWithLines(key *Document, value *[]DocumentLine) *DocumentWithLines {

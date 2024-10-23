@@ -1,12 +1,15 @@
 package api
 
-func (a *api) CompanyRoutes() {
-	companyGroup := a.Group("/api/company")
+import "github.com/JueViGrace/clo-backend/internal/handlers"
 
-	companyGroup.Post("/validate")
-	companyGroup.Get("/")
-	companyGroup.Get("/:id")
-	companyGroup.Post("/")
-	companyGroup.Patch("/:id")
-	companyGroup.Delete("/:id")
+func (a *api) CompanyRoutes() {
+	g := a.Group("/api/company")
+	h := handlers.NewCompanyHandler(a.db.CompanyStore())
+
+	// g.Post("/validate")
+	g.Get("/", h.GetCompanies)
+	g.Get("/:id", h.GetCompany)
+	g.Post("/", h.CreateCompany)
+	g.Patch("/", h.UpdateCompany)
+	g.Delete("/:id", h.DeleteCompany)
 }

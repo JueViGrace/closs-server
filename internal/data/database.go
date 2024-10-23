@@ -18,7 +18,15 @@ type Storage interface {
 	Close() error
 
 	AuthStore() AuthStore
+	CompanyStore() CompanyStore
+	ConfigStore() ConfigStore
+	CustomerStore() CustomerStore
 	DocumentStore() DocumentStore
+	OrderStore() OrderStore
+	ProductStore() ProductStore
+	SalesmanStore() SalesmanStore
+	StatisticStore() StatisticStore
+	UserStore() UserStore
 }
 
 type storage struct {

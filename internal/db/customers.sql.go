@@ -197,13 +197,13 @@ type CreateCustomerParams struct {
 	ID              string
 	Codigo          string
 	Nombre          string
-	Direccion       sql.NullString
-	Telefonos       sql.NullString
-	Perscont        sql.NullString
-	Vendedor        sql.NullString
+	Direccion       string
+	Telefonos       string
+	Perscont        string
+	Vendedor        string
 	Contribespecial bool
 	Status          int16
-	Sector          sql.NullInt32
+	Sector          int32
 	Subcodigo       int32
 	Precio          int16
 	Email           string
@@ -324,13 +324,13 @@ type GetCustomersByManagerRow struct {
 	UserID          sql.NullString
 	Codigo          string
 	Nombre          string
-	Direccion       sql.NullString
-	Telefonos       sql.NullString
-	Perscont        sql.NullString
-	Vendedor        sql.NullString
+	Direccion       string
+	Telefonos       string
+	Perscont        string
+	Vendedor        string
 	Contribespecial bool
 	Status          int16
-	Sector          sql.NullInt32
+	Sector          int32
 	Subcodigo       int32
 	Precio          int16
 	Email           string
@@ -363,7 +363,7 @@ type GetCustomersByManagerRow struct {
 	TelefonoMovil   string
 	Status_2        int16
 	Supervpor       string
-	Sector_2        sql.NullInt32
+	Sector_2        int32
 	Subcodigo_2     int32
 	Email_2         string
 	CreatedAt_2     time.Time
@@ -450,7 +450,7 @@ from cliente
 where vendedor = ? and deleted_at is null
 `
 
-func (q *Queries) GetCustomersBySalesman(ctx context.Context, vendedor sql.NullString) ([]Cliente, error) {
+func (q *Queries) GetCustomersBySalesman(ctx context.Context, vendedor string) ([]Cliente, error) {
 	rows, err := q.db.QueryContext(ctx, getCustomersBySalesman, vendedor)
 	if err != nil {
 		return nil, err
@@ -557,13 +557,13 @@ WHERE id = ?
 type UpdateCustomerParams struct {
 	Codigo          string
 	Nombre          string
-	Direccion       sql.NullString
-	Telefonos       sql.NullString
-	Perscont        sql.NullString
-	Vendedor        sql.NullString
+	Direccion       string
+	Telefonos       string
+	Perscont        string
+	Vendedor        string
 	Contribespecial bool
 	Status          int16
-	Sector          sql.NullInt32
+	Sector          int32
 	Subcodigo       int32
 	Precio          int16
 	Email           string

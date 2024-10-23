@@ -1,11 +1,14 @@
 package api
 
-func (a *api) SalesmanRoutes() {
-	salesmanGroup := a.Group("/api/salesman")
+import "github.com/JueViGrace/clo-backend/internal/handlers"
 
-	salesmanGroup.Get("/")
-	salesmanGroup.Get("/:id")
-	salesmanGroup.Post("/")
-	salesmanGroup.Patch("/:id")
-	salesmanGroup.Delete("/:id")
+func (a *api) SalesmanRoutes() {
+	g := a.Group("/api/salesman")
+    h := handlers.NewSalesmanHandler(a.db.SalesmanStore())
+
+	g.Get("/", h.GetSalesmen)
+	g.Get("/:id", h.GetSalesman)
+	g.Post("/", h.CreateSalesman)
+	g.Patch("/", h.UpdateSalesman)
+	g.Delete("/:id", h.DeleteSalesman)
 }

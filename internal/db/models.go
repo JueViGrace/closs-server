@@ -100,13 +100,13 @@ type Cliente struct {
 	UserID          sql.NullString
 	Codigo          string
 	Nombre          string
-	Direccion       sql.NullString
-	Telefonos       sql.NullString
-	Perscont        sql.NullString
-	Vendedor        sql.NullString
+	Direccion       string
+	Telefonos       string
+	Perscont        string
+	Vendedor        string
 	Contribespecial bool
 	Status          int16
-	Sector          sql.NullInt32
+	Sector          int32
 	Subcodigo       int32
 	Precio          int16
 	Email           string
@@ -345,7 +345,7 @@ type KeWcnfConf struct {
 type Usuario struct {
 	ID        string
 	Username  string
-	Password  sql.NullString
+	Password  string
 	Role      UsuarioRole
 	Desactivo bool
 	UltSinc   time.Time
@@ -365,7 +365,7 @@ type Vendedor struct {
 	TelefonoMovil string
 	Status        int16
 	Supervpor     string
-	Sector        sql.NullInt32
+	Sector        int32
 	Subcodigo     int32
 	Email         string
 	CreatedAt     time.Time

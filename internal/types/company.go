@@ -8,31 +8,31 @@ import (
 )
 
 type Company struct {
-	ID        uuid.UUID
-	KedCodigo string
-	KedNombre string
-	KedStatus bool
-	KedEnlace string
-	KedAgen   string
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt time.Time
+	ID        uuid.UUID `json:"id"`
+	KedCodigo string    `json:"ked_codigo"`
+	KedNombre string    `json:"ked_nombre"`
+	KedStatus bool      `json:"ked_status"`
+	KedEnlace string    `json:"ked_enlace"`
+	KedAgen   string    `json:"ked_agen"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	DeletedAt time.Time `json:"deleted_at"`
 }
 
 type CreateCompanyRequest struct {
-	KedCodigo string
-	KedNombre string
-	KedStatus bool
-	KedEnlace string
-	KedAgen   string
+	KedCodigo string `json:"ked_codigo"`
+	KedNombre string `json:"ked_nombre"`
+	KedStatus bool   `json:"ked_status"`
+	KedEnlace string `json:"ked_enlace"`
+	KedAgen   string `json:"ked_agen"`
 }
 
 type UpdateCompanyRequest struct {
-	KedNombre string
-	KedStatus bool
-	KedEnlace string
-	KedAgen   string
-	ID        uuid.UUID
+	KedNombre string    `json:"ked_nombre"`
+	KedStatus bool      `json:"ked_status"`
+	KedEnlace string    `json:"ked_enlace"`
+	KedAgen   string    `json:"ked_agen"`
+	ID        uuid.UUID `json:"id"`
 }
 
 func DbComanyToCompany(com *db.KeDataconex) (*Company, error) {

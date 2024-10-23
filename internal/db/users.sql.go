@@ -7,7 +7,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 	"time"
 )
 
@@ -118,7 +117,7 @@ values (
 type CreateUserParams struct {
 	ID        string
 	Username  string
-	Password  sql.NullString
+	Password  string
 	Role      UsuarioRole
 	Desactivo bool
 	UltSinc   time.Time

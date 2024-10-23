@@ -1,11 +1,14 @@
 package api
 
-func (a *api) CustomerRoutes() {
-	customerGroup := a.Group("/api/customers")
+import "github.com/JueViGrace/clo-backend/internal/handlers"
 
-	customerGroup.Get("/")
-	customerGroup.Get("/:id")
-	customerGroup.Post("/")
-	customerGroup.Patch("/:id")
-	customerGroup.Delete("/:id")
+func (a *api) CustomerRoutes() {
+	g := a.Group("/api/customers")
+	h := handlers.NewCustomerHandler(a.db.CustomerStore())
+
+	g.Get("/", h.GetCustomers)
+	g.Get("/:id", h.GetCustomer)
+	g.Post("/", h.CreateCustomer)
+	g.Patch("/", h.UpdateCustomer)
+	g.Delete("/:id", h.DeleteCustomer)
 }

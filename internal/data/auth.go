@@ -9,6 +9,7 @@ import (
 type AuthStore interface {
 	SignIn(r types.SignInRequest) (string, error)
 	SignUp(r types.SignUpRequest) (string, error)
+	RecoverPassword(username string) (string, error)
 }
 
 func (s *storage) AuthStore() AuthStore {
@@ -25,10 +26,14 @@ func NewAuthStore(ctx context.Context) AuthStore {
 	}
 }
 
-func (as *authStore) SignIn(r types.SignInRequest) (string, error) {
+func (s *authStore) SignIn(r types.SignInRequest) (string, error) {
 	return "", nil
 }
 
-func (as *authStore) SignUp(r types.SignUpRequest) (string, error) {
+func (s *authStore) SignUp(r types.SignUpRequest) (string, error) {
+	return "", nil
+}
+
+func (s *authStore) RecoverPassword(username string) (string, error) {
 	return "", nil
 }

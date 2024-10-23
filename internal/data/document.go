@@ -39,7 +39,11 @@ func (s *documentStore) GetDocuments() ([]*types.Document, error) {
 	}
 
 	for _, dbDoc := range dbDocs {
-		docs = append(docs, types.DbKeDoccToDocument(&dbDoc))
+		doc, err := types.DbKeDoccToDocument(&dbDoc)
+		if err != nil {
+			return nil, err
+		}
+		docs = append(docs, doc)
 	}
 
 	return docs, nil
@@ -54,7 +58,11 @@ func (s *documentStore) GetDocumentsBySalesman(code string) ([]*types.Document, 
 	}
 
 	for _, dbDoc := range dbDocs {
-		docs = append(docs, types.DbKeDoccToDocument(&dbDoc))
+		doc, err := types.DbKeDoccToDocument(&dbDoc)
+		if err != nil {
+			return nil, err
+		}
+		docs = append(docs, doc)
 	}
 
 	return docs, nil

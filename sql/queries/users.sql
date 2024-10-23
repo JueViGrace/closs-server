@@ -35,8 +35,7 @@ values (
 
 -- name: UpdateUser :exec
 update usuario
-set desactivo = ?,
-    ult_sinc = ?,
+set ult_sinc = ?,
     version = ?,
     updated_at = NOW()
 where id = ?;

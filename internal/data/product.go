@@ -4,15 +4,16 @@ import (
 	"context"
 
 	"github.com/JueViGrace/clo-backend/internal/db"
+	"github.com/JueViGrace/clo-backend/internal/types"
 	"github.com/google/uuid"
 )
 
 type ProductStore interface {
-	GetProducts()
-	GetProduct(id uuid.UUID)
-	CreateProduct()
-	UpdateProduct(id uuid.UUID)
-	DeleteProduct(id uuid.UUID)
+	GetProducts() ([]*types.Product, error)
+	GetProduct(id uuid.UUID) (*types.Product, error)
+	CreateProduct(r *types.CreateProductRequest) (string, error)
+	UpdateProduct(r *types.UpdateProductRequest) (string, error)
+	DeleteProduct(id uuid.UUID) error
 }
 
 func (s *storage) ProductStore() ProductStore {
@@ -31,17 +32,22 @@ func NewProductStore(ctx context.Context, db *db.Queries) ProductStore {
 	}
 }
 
-func (s *productStore) GetProducts() {
+func (s *productStore) GetProducts() ([]*types.Product, error) {
+	return nil, nil
 }
 
-func (s *productStore) GetProduct(id uuid.UUID) {
+func (s *productStore) GetProduct(id uuid.UUID) (*types.Product, error) {
+	return nil, nil
 }
 
-func (s *productStore) CreateProduct() {
+func (s *productStore) CreateProduct(r *types.CreateProductRequest) (string, error) {
+	return "", nil
 }
 
-func (s *productStore) UpdateProduct(id uuid.UUID) {
+func (s *productStore) UpdateProduct(r *types.UpdateProductRequest) (string, error) {
+	return "", nil
 }
 
-func (s *productStore) DeleteProduct(id uuid.UUID) {
+func (s *productStore) DeleteProduct(id uuid.UUID) error {
+	return nil
 }

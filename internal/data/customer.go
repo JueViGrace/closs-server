@@ -4,15 +4,16 @@ import (
 	"context"
 
 	"github.com/JueViGrace/clo-backend/internal/db"
+	"github.com/JueViGrace/clo-backend/internal/types"
 	"github.com/google/uuid"
 )
 
 type CustomerStore interface {
-	GetCustomers()
-	GetCustomer(id uuid.UUID)
-	CreateCustomer()
-	UpdateCustomer(id uuid.UUID)
-	DeleteCustomer(id uuid.UUID)
+	GetCustomers() ([]*types.Customer, error)
+	GetCustomer(id uuid.UUID) (*types.Customer, error)
+	CreateCustomer(r *types.CreateCustomerRequest) (string, error)
+	UpdateCustomer(r *types.UpdateCustomerRequest) (string, error)
+	DeleteCustomer(id uuid.UUID) error
 }
 
 func (s *storage) CustomerStore() CustomerStore {
@@ -31,18 +32,22 @@ func NewCustomerStore(ctx context.Context, db *db.Queries) CustomerStore {
 	}
 }
 
-func (s *customerStore) GetCustomers() {
+func (s *customerStore) GetCustomers() ([]*types.Customer, error) {
+	return nil, nil
 }
 
-func (s *customerStore) GetCustomer(id uuid.UUID) {
+func (s *customerStore) GetCustomer(id uuid.UUID) (*types.Customer, error) {
+	return nil, nil
 }
 
-func (s *customerStore) CreateCustomer() {
+func (s *customerStore) CreateCustomer(r *types.CreateCustomerRequest) (string, error) {
+	return "", nil
 }
 
-func (s *customerStore) UpdateCustomer(id uuid.UUID) {
+func (s *customerStore) UpdateCustomer(r *types.UpdateCustomerRequest) (string, error) {
+	return "", nil
 }
 
-func (s *customerStore) DeleteCustomer(id uuid.UUID) {
+func (s *customerStore) DeleteCustomer(id uuid.UUID) error {
+	return nil
 }
-
