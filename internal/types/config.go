@@ -55,29 +55,29 @@ type UpdateConfigRequest struct {
 	ID          uuid.UUID `json:"id"`
 }
 
-func DbConfigToConfig(cfg *db.KeWcnfConf) (*Config, error) {
-	id, err := uuid.Parse(cfg.ID)
+func DbConfigToConfig(db *db.KeWcnfConf) (*Config, error) {
+	id, err := uuid.Parse(db.ID)
 	if err != nil {
 		return nil, err
 	}
 
 	return &Config{
 		ID:           id,
-		CnfgIdconfig: cfg.CnfgIdconfig,
-		CnfgClase:    cfg.CnfgClase,
-		CnfgTipo:     cfg.CnfgTipo,
-		CnfgValnum:   cfg.CnfgValnum,
-		CnfgValsino:  cfg.CnfgValsino,
-		CnfgValtxt:   cfg.CnfgValtxt,
-		CnfgLentxt:   cfg.CnfgLentxt,
-		CnfgValfch:   cfg.CnfgValfch,
-		CnfgActiva:   cfg.CnfgActiva,
-		CnfgEtiq:     cfg.CnfgEtiq,
-		CnfgTtip:     cfg.CnfgTtip,
-		UserID:       cfg.UserID,
-		CreatedAt:    cfg.CreatedAt,
-		UpdatedAt:    cfg.UpdatedAt,
-		DeletedAt:    cfg.DeletedAt.Time,
+		CnfgIdconfig: db.CnfgIdconfig,
+		CnfgClase:    db.CnfgClase,
+		CnfgTipo:     db.CnfgTipo,
+		CnfgValnum:   db.CnfgValnum,
+		CnfgValsino:  db.CnfgValsino,
+		CnfgValtxt:   db.CnfgValtxt,
+		CnfgLentxt:   db.CnfgLentxt,
+		CnfgValfch:   db.CnfgValfch,
+		CnfgActiva:   db.CnfgActiva,
+		CnfgEtiq:     db.CnfgEtiq,
+		CnfgTtip:     db.CnfgTtip,
+		UserID:       db.UserID,
+		CreatedAt:    db.CreatedAt,
+		UpdatedAt:    db.UpdatedAt,
+		DeletedAt:    db.DeletedAt.Time,
 	}, nil
 }
 

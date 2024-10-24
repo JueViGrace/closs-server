@@ -1,4 +1,4 @@
--- name: AdminGetAllCompanies :many
+-- name: AdminGetCompanies :many
 select *
 from ke_dataconex
 ;

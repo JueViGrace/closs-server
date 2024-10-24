@@ -35,22 +35,22 @@ const (
 	RoleAdmin    Role = "administrador"
 )
 
-func DbUserToUser(u *db.Usuario) (*User, error) {
-	id, err := uuid.Parse(u.ID)
+func DbUserToUser(db *db.Usuario) (*User, error) {
+	id, err := uuid.Parse(db.ID)
 	if err != nil {
 		return nil, err
 	}
 	return &User{
 		ID:        id,
-		Username:  u.Username,
-		Password:  u.Password,
-		Role:      Role(u.Role),
-		Desactivo: u.Desactivo,
-		UltSinc:   u.UltSinc,
-		Version:   u.Version,
-		CreatedAt: u.CreatedAt,
-		UpdatedAt: u.UpdatedAt,
-		DeletedAt: u.DeletedAt.Time,
+		Username:  db.Username,
+		Password:  db.Password,
+		Role:      Role(db.Role),
+		Desactivo: db.Desactivo,
+		UltSinc:   db.UltSinc,
+		Version:   db.Version,
+		CreatedAt: db.CreatedAt,
+		UpdatedAt: db.UpdatedAt,
+		DeletedAt: db.DeletedAt.Time,
 	}, nil
 }
 

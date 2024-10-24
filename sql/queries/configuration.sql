@@ -1,4 +1,4 @@
--- name: AdminGetConfigus :many
+-- name: AdminGetConfigs :many
 select *
 from ke_wcnf_conf
 ;

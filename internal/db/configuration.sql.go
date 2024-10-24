@@ -40,13 +40,13 @@ func (q *Queries) AdminGetConfigById(ctx context.Context, id string) (KeWcnfConf
 	return i, err
 }
 
-const adminGetConfigus = `-- name: AdminGetConfigus :many
+const adminGetConfigs = `-- name: AdminGetConfigs :many
 select id, cnfg_idconfig, cnfg_clase, cnfg_tipo, cnfg_valnum, cnfg_valsino, cnfg_valtxt, cnfg_lentxt, cnfg_valfch, cnfg_activa, cnfg_etiq, cnfg_ttip, user_id, created_at, updated_at, deleted_at
 from ke_wcnf_conf
 `
 
-func (q *Queries) AdminGetConfigus(ctx context.Context) ([]KeWcnfConf, error) {
-	rows, err := q.db.QueryContext(ctx, adminGetConfigus)
+func (q *Queries) AdminGetConfigs(ctx context.Context) ([]KeWcnfConf, error) {
+	rows, err := q.db.QueryContext(ctx, adminGetConfigs)
 	if err != nil {
 		return nil, err
 	}

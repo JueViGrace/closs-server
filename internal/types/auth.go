@@ -19,6 +19,10 @@ type SignUpRequest struct {
 	Version  string `json:"version"`
 }
 
+type RecoverPasswordResquest struct {
+	Username string `json:"username"`
+}
+
 func CreateUserToDb(r *SignUpRequest) (*db.CreateUserParams, error) {
 	id, err := uuid.NewV6()
 	if err != nil {

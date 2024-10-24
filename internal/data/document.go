@@ -8,10 +8,10 @@ import (
 )
 
 type DocumentStore interface {
-	GetDocuments() ([]*types.Document, error)
-	GetDocumentsBySalesman(code string) ([]*types.Document, error)
-	GetDocumentsWithLines() ([]*types.DocumentWithLines, error)
-	GetDocumentsWithLinesBySalesman(code string) ([]*types.DocumentWithLines, error)
+	GetDocuments() (documents []*types.Document, err error)
+	GetDocumentsBySalesman(code string) (documents []*types.Document, err error)
+	GetDocumentsWithLines() (documents []*types.DocumentWithLines, err error)
+	GetDocumentsWithLinesBySalesman(code string) (documents []*types.DocumentWithLines, err error)
 }
 
 func (s *storage) DocumentStore() DocumentStore {

@@ -109,16 +109,16 @@ type UpdateCustomerRequest struct {
 	ID              uuid.UUID `json:"id"`
 }
 
-func DbCustomerToCustomer(cus *db.Cliente) (*Customer, error) {
+func DbCustomerToCustomer(db *db.Cliente) (*Customer, error) {
 	userId := new(uuid.UUID)
 
-	id, err := uuid.Parse(cus.ID)
+	id, err := uuid.Parse(db.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	if cus.UserID.Valid {
-		*userId, err = uuid.Parse(cus.UserID.String)
+	if db.UserID.Valid {
+		*userId, err = uuid.Parse(db.UserID.String)
 		if err != nil {
 			return nil, err
 		}
@@ -127,48 +127,48 @@ func DbCustomerToCustomer(cus *db.Cliente) (*Customer, error) {
 	return &Customer{
 		ID:              id,
 		UserID:          *userId,
-		Codigo:          cus.Codigo,
-		Nombre:          cus.Nombre,
-		Direccion:       cus.Direccion,
-		Telefonos:       cus.Telefonos,
-		Perscont:        cus.Perscont,
-		Vendedor:        cus.Vendedor,
-		Contribespecial: cus.Contribespecial,
-		Status:          cus.Status,
-		Sector:          cus.Sector,
-		Subcodigo:       cus.Subcodigo,
-		Precio:          cus.Precio,
-		Email:           cus.Email,
-		KneActiva:       cus.KneActiva,
-		KneMtomin:       cus.KneMtomin,
-		Noemifac:        cus.Noemifac,
-		Noeminota:       cus.Noeminota,
-		Fchultvta:       cus.Fchultvta,
-		Mtoultvta:       cus.Mtoultvta,
-		Prcdpagdia:      cus.Prcdpagdia,
-		Promdiasp:       cus.Promdiasp,
-		Riesgocrd:       cus.Riesgocrd,
-		Cantdocs:        cus.Cantdocs,
-		Totmtodocs:      cus.Totmtodocs,
-		Prommtodoc:      cus.Prommtodoc,
-		Diasultvta:      cus.Diasultvta,
-		Promdiasvta:     cus.Promdiasvta,
-		Limcred:         cus.Limcred,
-		Dolarflete:      cus.Dolarflete,
-		Nodolarflete:    cus.Nodolarflete,
-		CreatedAt:       cus.CreatedAt,
-		UpdatedAt:       cus.UpdatedAt,
-		DeletedAt:       cus.DeletedAt.Time,
+		Codigo:          db.Codigo,
+		Nombre:          db.Nombre,
+		Direccion:       db.Direccion,
+		Telefonos:       db.Telefonos,
+		Perscont:        db.Perscont,
+		Vendedor:        db.Vendedor,
+		Contribespecial: db.Contribespecial,
+		Status:          db.Status,
+		Sector:          db.Sector,
+		Subcodigo:       db.Subcodigo,
+		Precio:          db.Precio,
+		Email:           db.Email,
+		KneActiva:       db.KneActiva,
+		KneMtomin:       db.KneMtomin,
+		Noemifac:        db.Noemifac,
+		Noeminota:       db.Noeminota,
+		Fchultvta:       db.Fchultvta,
+		Mtoultvta:       db.Mtoultvta,
+		Prcdpagdia:      db.Prcdpagdia,
+		Promdiasp:       db.Promdiasp,
+		Riesgocrd:       db.Riesgocrd,
+		Cantdocs:        db.Cantdocs,
+		Totmtodocs:      db.Totmtodocs,
+		Prommtodoc:      db.Prommtodoc,
+		Diasultvta:      db.Diasultvta,
+		Promdiasvta:     db.Promdiasvta,
+		Limcred:         db.Limcred,
+		Dolarflete:      db.Dolarflete,
+		Nodolarflete:    db.Nodolarflete,
+		CreatedAt:       db.CreatedAt,
+		UpdatedAt:       db.UpdatedAt,
+		DeletedAt:       db.DeletedAt.Time,
 	}, nil
 }
 
-func CreateCustomerToDb(r *CreateCustomerRequest) (*db.Cliente, error) {
+func CreateCustomerToDb(r *CreateCustomerRequest) (*db.CreateCustomerParams, error) {
 	id, err := uuid.NewV7()
 	if err != nil {
 		return nil, err
 	}
 
-	return &db.Cliente{
+	return &db.CreateCustomerParams{
 		ID:              id.String(),
 		Codigo:          r.Codigo,
 		Nombre:          r.Nombre,

@@ -174,26 +174,19 @@ func (q *Queries) SoftDeleteUser(ctx context.Context, id string) error {
 
 const updateUser = `-- name: UpdateUser :exec
 update usuario
-set desactivo = ?,
-    ult_sinc = ?,
+set ult_sinc = ?,
     version = ?,
     updated_at = NOW()
 where id = ?
 `
 
 type UpdateUserParams struct {
-	Desactivo bool
-	UltSinc   time.Time
-	Version   string
-	ID        string
+	UltSinc time.Time
+	Version string
+	ID      string
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) error {
-	_, err := q.db.ExecContext(ctx, updateUser,
-		arg.Desactivo,
-		arg.UltSinc,
-		arg.Version,
-		arg.ID,
-	)
+	_, err := q.db.ExecContext(ctx, updateUser, arg.UltSinc, arg.Version, arg.ID)
 	return err
 }

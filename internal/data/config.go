@@ -9,11 +9,12 @@ import (
 )
 
 type ConfigStore interface {
-	GetCofigs() ([]*types.Config, error)
-	GetConfig(id uuid.UUID) (*types.Config, error)
-	CreateConfig(r *types.CreateConfigRequest) (string, error)
-	UpdateConfig(r *types.UpdateConfigRequest) (string, error)
-	DeleteConfig(id uuid.UUID) error
+	AdminGetCofigs() (configs []*types.Config, err error)
+	AdminGetConfigById(id *uuid.UUID) (config *types.Config, err error)
+	CreateConfig(r *types.CreateConfigRequest) (msg string, err error)
+	UpdateConfig(r *types.UpdateConfigRequest) (msg string, err error)
+	DeleteConfig(id *uuid.UUID) (err error)
+	GetConfigByUser(userId *uuid.UUID) (configs []*types.Config, err error)
 }
 
 func (s *storage) ConfigStore() ConfigStore {
@@ -32,22 +33,91 @@ func NewConfigStore(ctx context.Context, db *db.Queries) ConfigStore {
 	}
 }
 
-func (s *configStore) GetCofigs() ([]*types.Config, error) {
-	return nil, nil
+func (s *configStore) AdminGetCofigs() ([]*types.Config, error) {
+	configs := make([]*types.Config, 0)
+
+	dbConfigs, err := s.db.AdminGetConfigs(s.ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, dbConfig := range dbConfigs {
+		config, err := types.DbConfigToConfig(&dbConfig)
+		if err != nil {
+			return nil, err
+		}
+		configs = append(configs, config)
+	}
+
+	return configs, nil
 }
 
-func (s *configStore) GetConfig(id uuid.UUID) (*types.Config, error) {
-	return nil, nil
+func (s *configStore) AdminGetConfigById(id *uuid.UUID) (*types.Config, error) {
+	config := new(types.Config)
+
+	dbConfig, err := s.db.AdminGetConfigById(s.ctx, id.String())
+	if err != nil {
+		return nil, err
+	}
+
+	config, err = types.DbConfigToConfig(&dbConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	return config, nil
 }
 
 func (s *configStore) CreateConfig(r *types.CreateConfigRequest) (string, error) {
-	return "", nil
+	cr, err := types.CreateConfigToDb(r)
+	if err != nil {
+		return "", err
+	}
+
+	err = s.db.CreateConfig(s.ctx, *cr)
+	if err != nil {
+		return "", err
+	}
+
+	return "Created!", nil
 }
 
 func (s *configStore) UpdateConfig(r *types.UpdateConfigRequest) (string, error) {
-	return "", nil
+	ur := types.UpdateConfigToDb(r)
+
+	err := s.db.UpdateConfig(s.ctx, *ur)
+	if err != nil {
+		return "", err
+	}
+
+	return "Updated!", nil
 }
 
-func (s *configStore) DeleteConfig(id uuid.UUID) error {
+func (s *configStore) DeleteConfig(id *uuid.UUID) error {
+	err := s.db.SoftDeleteConfig(s.ctx, id.String())
+	if err != nil {
+		return err
+	}
+
 	return nil
+}
+
+func (s *configStore) GetConfigByUser(userId *uuid.UUID) ([]*types.Config, error) {
+	configs := make([]*types.Config, 0)
+
+	dbConfigs, err := s.db.GetConfigByUser(s.ctx, userId.String())
+	if err != nil {
+		return nil, err
+	}
+
+	for _, dbConfig := range dbConfigs {
+		config, err := types.DbConfigToConfig(&dbConfig)
+		if err != nil {
+			return nil, err
+		}
+
+		configs = append(configs, config)
+	}
+
+	return configs, nil
 }

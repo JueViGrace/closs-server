@@ -9,13 +9,13 @@ import (
 	"context"
 )
 
-const adminGetAllCompanies = `-- name: AdminGetAllCompanies :many
+const adminGetCompanies = `-- name: AdminGetCompanies :many
 select id, ked_codigo, ked_nombre, ked_status, ked_enlace, ked_agen, created_at, updated_at, deleted_at
 from ke_dataconex
 `
 
-func (q *Queries) AdminGetAllCompanies(ctx context.Context) ([]KeDataconex, error) {
-	rows, err := q.db.QueryContext(ctx, adminGetAllCompanies)
+func (q *Queries) AdminGetCompanies(ctx context.Context) ([]KeDataconex, error) {
+	rows, err := q.db.QueryContext(ctx, adminGetCompanies)
 	if err != nil {
 		return nil, err
 	}

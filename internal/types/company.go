@@ -35,22 +35,22 @@ type UpdateCompanyRequest struct {
 	ID        uuid.UUID `json:"id"`
 }
 
-func DbComanyToCompany(com *db.KeDataconex) (*Company, error) {
-	id, err := uuid.Parse(com.ID)
+func DbComanyToCompany(db *db.KeDataconex) (*Company, error) {
+	id, err := uuid.Parse(db.ID)
 	if err != nil {
 		return nil, err
 	}
 
 	return &Company{
 		ID:        id,
-		KedCodigo: com.KedCodigo,
-		KedNombre: com.KedNombre,
-		KedStatus: com.KedStatus,
-		KedEnlace: com.KedEnlace,
-		KedAgen:   com.KedAgen,
-		CreatedAt: com.CreatedAt,
-		UpdatedAt: com.UpdatedAt,
-		DeletedAt: com.DeletedAt.Time,
+		KedCodigo: db.KedCodigo,
+		KedNombre: db.KedNombre,
+		KedStatus: db.KedStatus,
+		KedEnlace: db.KedEnlace,
+		KedAgen:   db.KedAgen,
+		CreatedAt: db.CreatedAt,
+		UpdatedAt: db.UpdatedAt,
+		DeletedAt: db.DeletedAt.Time,
 	}, nil
 }
 
