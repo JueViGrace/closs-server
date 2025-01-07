@@ -13,7 +13,6 @@ type DocumentWithLines struct {
 }
 
 type Document struct {
-	ID             uuid.UUID `json:"id"`
 	Agencia        string    `json:"agencia"`
 	Tipodoc        string    `json:"tipodoc"`
 	Documento      string    `json:"documento"`
@@ -73,12 +72,9 @@ type Document struct {
 	Montodctobs    string    `json:"montodctobs"`
 	CreatedAt      time.Time `json:"created_at"`
 	UpdatedAt      time.Time `json:"updated_at"`
-	DeletedAt      time.Time `json:"-"`
 }
 
 type DocumentLine struct {
-	DocID         uuid.UUID `json:"doc_id"`
-	ArticuloID    uuid.UUID `json:"articulo_id"`
 	Agencia       string    `json:"agencia"`
 	Tipodoc       string    `json:"tipodoc"`
 	Documento     string    `json:"documento"`
@@ -105,7 +101,6 @@ type DocumentLine struct {
 	Codcoord      string    `json:"codcoord"`
 	CreatedAt     time.Time `json:"created_at"`
 	UpdatedAt     time.Time `json:"updated_at"`
-	DeletedAt     time.Time `json:"-"`
 }
 
 type CreateDocumentRequest struct {
@@ -201,22 +196,16 @@ type UpdateDocumentRequest struct{}
 
 type UpdateDocumentLineRequest struct{}
 
-func DbKeDoccToDocument(db *db.KeDoccti) (*Document, error) {
-	id, err := uuid.Parse(db.ID)
-	if err != nil {
-		return nil, err
-	}
-
+func DbKeDoccToDocument(db *db.ClossDocument) *Document {
 	return &Document{
-		ID:             id,
 		Agencia:        db.Agencia,
 		Tipodoc:        db.Tipodoc,
 		Documento:      db.Documento,
 		Tipodocv:       db.Tipodocv,
 		Codcliente:     db.Codcliente,
 		Nombrecli:      db.Nombrecli,
-		Contribesp:     db.Contribesp,
-		RutaParme:      db.RutaParme,
+		Contribesp:     db.Contribesp == 1,
+		RutaParme:      db.RutaParme == 1,
 		Tipoprecio:     db.Tipoprecio,
 		Emision:        db.Emision,
 		Recepcion:      db.Recepcion,
@@ -268,8 +257,7 @@ func DbKeDoccToDocument(db *db.KeDoccti) (*Document, error) {
 		Montodctobs:    db.Montodctobs,
 		CreatedAt:      db.CreatedAt,
 		UpdatedAt:      db.UpdatedAt,
-		DeletedAt:      db.DeletedAt.Time,
-	}, nil
+	}
 }
 
 func DocMapToDocWithLines(key *Document, value *[]DocumentLine) *DocumentWithLines {

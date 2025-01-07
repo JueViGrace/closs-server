@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS closs_customer(
     prcdpagdia REAL NOT NULL DEFAULT 0.0,
     promdiasp REAL NOT NULL DEFAULT 0.0,
     riesgocrd REAL NOT NULL DEFAULT 0.0,
-    cantdocs REAL NOT NULL DEFAULT 0.0,
+    cantdocs INTEGER NOT NULL DEFAULT 0,
     totmtodocs REAL NOT NULL DEFAULT 0.0,
     prommtodoc REAL NOT NULL DEFAULT 0.0,
     diasultvta REAL NOT NULL DEFAULT 0.0,
@@ -357,5 +357,4 @@ DROP TABLE closs_salesman;
 DROP TABLE closs_salesman_statistic;
 DROP TABLE closs_session;
 DROP TABLE closs_user;
-
 

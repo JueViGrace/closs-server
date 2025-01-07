@@ -105,7 +105,7 @@ type CreateCustomerParams struct {
 	Prcdpagdia      float64
 	Promdiasp       float64
 	Riesgocrd       float64
-	Cantdocs        float64
+	Cantdocs        int64
 	Totmtodocs      float64
 	Prommtodoc      float64
 	Diasultvta      float64
@@ -489,7 +489,7 @@ type UpdateCustomerParams struct {
 	Prcdpagdia      float64
 	Promdiasp       float64
 	Riesgocrd       float64
-	Cantdocs        float64
+	Cantdocs        int64
 	Totmtodocs      float64
 	Prommtodoc      float64
 	Diasultvta      float64
