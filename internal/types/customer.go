@@ -8,8 +8,6 @@ import (
 )
 
 type Customer struct {
-	ID              uuid.UUID `json:"id"`
-	UserID          uuid.UUID `json:"user_id"`
 	Codigo          string    `json:"codigo"`
 	Nombre          string    `json:"nombre"`
 	Direccion       string    `json:"direccion"`
@@ -18,12 +16,12 @@ type Customer struct {
 	Vendedor        string    `json:"vendedor"`
 	Contribespecial bool      `json:"contribespecial"`
 	Status          int16     `json:"status"`
-	Sector          int32     `json:"sector"`
-	Subcodigo       int32     `json:"subcodigo"`
+	Sector          string    `json:"sector"`
+	Subsector       string    `json:"subcodigo"`
 	Precio          int16     `json:"precio"`
 	Email           string    `json:"email"`
 	KneActiva       bool      `json:"kne_activa"`
-	KneMtomin       string    `json:"kne_mtomin"`
+	KneMtomin       float64   `json:"kne_mtomin"`
 	Noemifac        bool      `json:"noemifac"`
 	Noeminota       bool      `json:"noeminota"`
 	Fchultvta       time.Time `json:"fchultvta"`
@@ -53,12 +51,12 @@ type CreateCustomerRequest struct {
 	Vendedor        string    `json:"vendedor"`
 	Contribespecial bool      `json:"contribespecial"`
 	Status          int16     `json:"status"`
-	Sector          int32     `json:"sector"`
-	Subcodigo       int32     `json:"subcodigo"`
+	Sector          string    `json:"sector"`
+	Subcodigo       string    `json:"subcodigo"`
 	Precio          int16     `json:"precio"`
 	Email           string    `json:"email"`
 	KneActiva       bool      `json:"kne_activa"`
-	KneMtomin       string    `json:"kne_mtomin"`
+	KneMtomin       float64   `json:"kne_mtomin"`
 	Noemifac        bool      `json:"noemifac"`
 	Noeminota       bool      `json:"noeminota"`
 	Fchultvta       time.Time `json:"fchultvta"`
@@ -85,12 +83,12 @@ type UpdateCustomerRequest struct {
 	Vendedor        string    `json:"vendedor"`
 	Contribespecial bool      `json:"contribespecial"`
 	Status          int16     `json:"status"`
-	Sector          int32     `json:"sector"`
-	Subcodigo       int32     `json:"subcodigo"`
+	Sector          string    `json:"sector"`
+	Subcodigo       string    `json:"subcodigo"`
 	Precio          int16     `json:"precio"`
 	Email           string    `json:"email"`
 	KneActiva       bool      `json:"kne_activa"`
-	KneMtomin       string    `json:"kne_mtomin"`
+	KneMtomin       float64   `json:"kne_mtomin"`
 	Noemifac        bool      `json:"noemifac"`
 	Noeminota       bool      `json:"noeminota"`
 	Fchultvta       time.Time `json:"fchultvta"`
@@ -109,40 +107,24 @@ type UpdateCustomerRequest struct {
 	ID              uuid.UUID `json:"id"`
 }
 
-func DbCustomerToCustomer(db *db.Cliente) (*Customer, error) {
-	userId := new(uuid.UUID)
-
-	id, err := uuid.Parse(db.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	if db.UserID.Valid {
-		*userId, err = uuid.Parse(db.UserID.String)
-		if err != nil {
-			return nil, err
-		}
-	}
-
+func DbCustomerToCustomer(db *db.ClossCustomer) *Customer {
 	return &Customer{
-		ID:              id,
-		UserID:          *userId,
 		Codigo:          db.Codigo,
 		Nombre:          db.Nombre,
 		Direccion:       db.Direccion,
 		Telefonos:       db.Telefonos,
 		Perscont:        db.Perscont,
 		Vendedor:        db.Vendedor,
-		Contribespecial: db.Contribespecial,
-		Status:          db.Status,
+		Contribespecial: db.Contribespecial == 1,
+		Status:          int16(db.Status),
 		Sector:          db.Sector,
-		Subcodigo:       db.Subcodigo,
-		Precio:          db.Precio,
+		Subsector:       db.Subsector,
+		Precio:          int16(db.Precio),
 		Email:           db.Email,
-		KneActiva:       db.KneActiva,
+		KneActiva:       db.KneActiva == 1,
 		KneMtomin:       db.KneMtomin,
-		Noemifac:        db.Noemifac,
-		Noeminota:       db.Noeminota,
+		Noemifac:        db.Noemifac == 1,
+		Noeminota:       db.Noeminota == 1,
 		Fchultvta:       db.Fchultvta,
 		Mtoultvta:       db.Mtoultvta,
 		Prcdpagdia:      db.Prcdpagdia,

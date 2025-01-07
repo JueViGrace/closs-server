@@ -9,29 +9,36 @@ import (
 )
 
 func (a *api) RegisterRoutes() {
-	a.HealthRoute()
-	a.MonitorRoute()
-
-	a.ConfigRoutes()
-	a.AuthRoutes()
-	a.UserRoutes()
-	a.CompanyRoutes()
-	a.ProductRoutes()
-	a.CustomerRoutes()
-	a.SalesmanRoutes()
-	a.OrderRoutes()
-	a.DocumentRoutes()
+	a.ApiRoutes()
+	a.WebRoutes()
 }
 
-func (a *api) HealthRoute() {
-	a.Get("/api/health", func(c *fiber.Ctx) error {
-		res := types.RespondOk(a.db.Health(), "Success")
-		return c.Status(res.Status).JSON(res)
+func (a *api) ApiRoutes() {
+	api := a.App.Group("/api")
+
+	api.Get("/health", a.HealthRoute)
+	api.Get("/metrics", monitor.New(monitor.Config{
+		Refresh: time.Duration(time.Second),
+	}))
+
+	a.AuthRoutes(api)
+	a.CompanyRoutes(api)
+	a.ConfigRoutes(api)
+	a.CustomerRoutes(api)
+	a.DocumentRoutes(api)
+	a.OrderRoutes(api)
+	a.ProductRoutes(api)
+	a.SalesmanRoutes(api)
+	a.UserRoutes(api)
+}
+
+func (a *api) WebRoutes() {
+	a.App.Get("/", func(c *fiber.Ctx) error {
+		return c.JSON("root")
 	})
 }
 
-func (a *api) MonitorRoute() {
-	a.Get("/api/metrics", monitor.New(monitor.Config{
-		Refresh: time.Duration(time.Second),
-	}))
+func (a *api) HealthRoute(c *fiber.Ctx) error {
+	res := types.RespondOk(a.db.Health(), "Success")
+	return c.Status(res.Status).JSON(res)
 }

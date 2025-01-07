@@ -1,14 +1,17 @@
 package api
 
-import "github.com/JueViGrace/clo-backend/internal/handlers"
+import (
+	"github.com/JueViGrace/clo-backend/internal/handlers"
+	"github.com/gofiber/fiber/v2"
+)
 
-func (a *api) ProductRoutes() {
-	g := a.Group("/api/products")
-	h := handlers.NewProductHandler(a.db.ProductStore())
+func (a *api) ProductRoutes(api fiber.Router) {
+	group := api.Group("/products")
+	handler := handlers.NewProductHandler(a.db.ProductStore())
 
-	g.Get("/", h.GetProducts)
-	g.Get("/:id", h.GetProduct)
-	g.Post("/", h.CreateProduct)
-	g.Patch("/", h.UpdateProduct)
-	g.Delete("/:id", h.DeleteProduct)
+	group.Get("/", handler.GetProducts)
+	group.Get("/:id", handler.GetProduct)
+	group.Post("/", handler.CreateProduct)
+	group.Patch("/", handler.UpdateProduct)
+	group.Delete("/:id", handler.DeleteProduct)
 }

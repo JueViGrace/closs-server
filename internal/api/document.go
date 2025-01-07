@@ -1,14 +1,13 @@
 package api
 
-import "github.com/JueViGrace/clo-backend/internal/handlers"
+import (
+	"github.com/JueViGrace/clo-backend/internal/handlers"
+	"github.com/gofiber/fiber/v2"
+)
 
-func (a *api) DocumentRoutes() {
-	g := a.Group("/api/documents")
-	h := handlers.NewDocumentHandler(a.db.DocumentStore())
+func (a *api) DocumentRoutes(api fiber.Router) {
+	group := api.Group("/documents")
+	handler := handlers.NewDocumentHandler(a.db.DocumentStore())
 
-	g.Get("/", h.GetDocuments)
-	// g.Get("/:id")
-	// g.Post("/")
-	// g.Patch("/:id")
-	// g.Delete("/:id")
+	group.Get("/", handler.GetDocuments)
 }

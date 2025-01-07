@@ -42,6 +42,10 @@ func (a *api) Init() (err error) {
 	a.RegisterRoutes()
 
 	err = a.Listen(fmt.Sprintf(":%d", port))
+	if err != nil {
+		a.db.Close()
+		return err
+	}
 
 	return
 }

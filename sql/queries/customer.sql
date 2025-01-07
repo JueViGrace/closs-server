@@ -1,19 +1,36 @@
--- name: AdminGetCustomers :many
+-- name: GetCustomers :many
 select *
-from cliente
+from closs_customer
 ;
 
--- name: AdminGetCustomerById :one
+-- name: GetCustomerByCode :one
 select *
-from cliente
-where id = ?
+from closs_customer
+where codigo = ?
 ;
 
--- name: CreateCustomer :exec
-INSERT INTO cliente (
-    id,
+-- name: GetCustomersByManager :many
+select closs_customer.*
+from closs_customer
+left join closs_salesman on closs_customer.vendedor = closs_salesman.codigo
+left join closs_managers on closs_salesman.supervpor = closs_managers.kng_codcoord
+where closs_managers.kng_codgcia =:manager
+order by
+    closs_salesman.supervpor asc, closs_customer.vendedor asc, closs_customer.nombre asc
+;
+
+-- name: GetCustomersBySalesman :many
+select *
+from closs_customer
+where closs_customer.vendedor =:code
+order by closs_customer.nombre asc
+;
+
+-- name: CreateCustomer :one
+INSERT INTO closs_customer (
     codigo,
     nombre,
+    email,
     direccion,
     telefonos,
     perscont,
@@ -21,9 +38,8 @@ INSERT INTO cliente (
     contribespecial,
     status,
     sector,
-    subcodigo,
+    subsector,
     precio,
-    email,
     kne_activa,
     kne_mtomin,
     noemifac,
@@ -39,6 +55,7 @@ INSERT INTO cliente (
     diasultvta,
     promdiasvta,
     limcred,
+    fchcrea,
     dolarflete,
     nodolarflete,
     created_at,
@@ -75,13 +92,13 @@ VALUES (
     ?,
     ?,
     ?,
-    NOW(),
-    NOW()
-);
+    ?,
+    ?
+)
+RETURNING *;
 
--- name: UpdateCustomer :exec
-UPDATE cliente
-SET codigo = ?,
+-- name: UpdateCustomer :one
+UPDATE closs_customer SET 
     nombre = ?,
     direccion = ?,
     telefonos = ?,
@@ -90,7 +107,7 @@ SET codigo = ?,
     contribespecial = ?,
     status = ?,
     sector = ?,
-    subcodigo = ?,
+    subsector = ?,
     precio = ?,
     email = ?,
     kne_activa = ?,
@@ -110,32 +127,7 @@ SET codigo = ?,
     limcred = ?,
     dolarflete = ?,
     nodolarflete = ?,
-    updated_at = NOW()
-WHERE id = ?;
-
--- name: SoftDeleteCustomer :exec
-UPDATE cliente
-SET deleted_at = NOW()
-WHERE id = ?;
-
--- name: GetCustomersByManager :many
-select *
-from cliente
-inner join vendedor on cliente.vendedor = vendedor.codigo
-where
-    vendedor.supervpor in (select kng_codcoord from ke_nivgcia where kng_codgcia = ?)
-    and deleted_at is null
-;
-
--- name: GetCustomersBySalesman :many
-select *
-from cliente
-where vendedor = ? and deleted_at is null
-;
-
--- name: GetCustomerById :one
-select *
-from cliente
-where id = ? and deleted_at is null
-;
+    updated_at = ?
+WHERE codigo = ?
+RETURNING *;
 

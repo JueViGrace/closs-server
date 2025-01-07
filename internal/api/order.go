@@ -1,14 +1,17 @@
 package api
 
-import "github.com/JueViGrace/clo-backend/internal/handlers"
+import (
+	"github.com/JueViGrace/clo-backend/internal/handlers"
+	"github.com/gofiber/fiber/v2"
+)
 
-func (a *api) OrderRoutes() {
-	g := a.Group("/api/orders")
-	h := handlers.NewOrderHandler(a.db.OrderStore())
+func (a *api) OrderRoutes(api fiber.Router) {
+	group := api.Group("/orders")
+	handler := handlers.NewOrderHandler(a.db.OrderStore())
 
-	g.Get("/", h.GetOrders)
-	g.Get("/:id", h.GetOrder)
-	g.Post("/", h.CreateOrder)
-	g.Patch("/", h.UpdateOrder)
-	g.Delete("/:id", h.DeleteOrder)
+	group.Get("/", handler.GetOrders)
+	group.Get("/:id", handler.GetOrder)
+	group.Post("/", handler.CreateOrder)
+	group.Patch("/", handler.UpdateOrder)
+	group.Delete("/:id", handler.DeleteOrder)
 }

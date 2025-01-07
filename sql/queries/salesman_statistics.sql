@@ -1,23 +1,24 @@
--- name: AdminGetStatistics :many
+-- name: GetStatistics :many
 select *
-from ke_estadc01
+from closs_salesman_statistic
 ;
 
--- name: AdminGetStatisticsById :many
-select *
-from ke_estadc01
-where id = ?
+-- name: GetStatisticsByManager :many
+select closs_salesman_statistic.*
+from closs_salesman_statistic
+left join
+    closs_managers on closs_salesman_statistic.codcoord = closs_managers.kng_codcoord
+where closs_managers.kng_codgcia = ?
 ;
 
--- name: AdminGetStatisticsBySaleman :many
+-- name: GetStatisticsByCode :many
 select *
-from ke_estadc01
+from closs_salesman_statistic
 where vendedor = ?
 ;
 
--- name: CreateStatistic :exec
-insert into ke_estadc01(
-    id,
+-- name: CreateStatistic :one
+insert into closs_salesman_statistic(
     codcoord,
     nomcoord,
     vendedor,
@@ -75,15 +76,14 @@ values (
     ?,
     ?,
     ?,
-    NOW(),
-    NOW()
-);
+    ?
+)
+RETURNING *;
 
--- name: UpdateStatistic :exec
-update ke_estadc01
-set codcoord = ?,
+-- name: UpdateStatistic :one
+update closs_salesman_statistic set 
+    codcoord = ?,
     nomcoord = ?,
-    vendedor = ?,
     nombrevend = ?,
     cntpedidos = ?,
     mtopedidos = ?,
@@ -107,31 +107,7 @@ set codcoord = ?,
     totdolcob = ?,
     cntrecl = ?,
     mtorecl = ?,
-    updated_at = NOW()
-where id = ?;
-
--- name: SoftDeleteStatistic :exec
-update ke_estadc01
-set deleted_at = NOW()
-where id = ?;
-
--- name: GetStatisticsByManager :many
-select *
-from ke_estadc01
-where
-    codcoord in (select kng_codcoord from ke_nivgcia where kng_codgcia = ?)
-    and deleted_at is null
-;
-
--- name: GetStatisticsBySalesman :many
-select *
-from ke_estadc01
-where vendedor = ? and deleted_at is null
-;
-
--- name: GetStatisticsById :one
-select *
-from ke_estadc01
-where id = ? and deleted_at is null
-;
+    updated_at = ?
+where vendedor = ?
+RETURNING *;
 

@@ -9,14 +9,14 @@ import (
 )
 
 type CustomerStore interface {
-	AdminGetCustomers() (customers []*types.Customer, err error)
-	AdminGetCustomer(id *uuid.UUID) (customer *types.Customer, err error)
+	AdminGetCustomers() (customers []*types.CustomerResponse, err error)
+	AdminGetCustomer(id *uuid.UUID) (customer *types.CustomerResponse, err error)
 	CreateCustomer(r *types.CreateCustomerRequest) (msg string, err error)
 	UpdateCustomer(r *types.UpdateCustomerRequest) (msg string, err error)
 	DeleteCustomer(id *uuid.UUID) (err error)
-	GetCustomersByManager(code string) (customers []*types.Customer, err error)
-	GetCustomersBySalesman(code string) (customers []*types.Customer, err error)
-	GetCustomerById(id *uuid.UUID) (customer *types.Customer, err error)
+	GetCustomersByManager(code string) (customers []*types.CustomerResponse, err error)
+	GetCustomersBySalesman(code string) (customers []*types.CustomerResponse, err error)
+	GetCustomerById(id *uuid.UUID) (customer *types.CustomerResponse, err error)
 }
 
 func (s *storage) CustomerStore() CustomerStore {
@@ -35,8 +35,8 @@ func NewCustomerStore(ctx context.Context, db *db.Queries) CustomerStore {
 	}
 }
 
-func (s *customerStore) AdminGetCustomers() ([]*types.Customer, error) {
-	customers := make([]*types.Customer, 0)
+func (s *customerStore) AdminGetCustomers() ([]*types.CustomerResponse, error) {
+	customers := make([]*types.CustomerResponse, 0)
 
 	dbCustomers, err := s.db.AdminGetCustomers(s.ctx)
 	if err != nil {
@@ -54,8 +54,8 @@ func (s *customerStore) AdminGetCustomers() ([]*types.Customer, error) {
 	return customers, nil
 }
 
-func (s *customerStore) AdminGetCustomer(id *uuid.UUID) (*types.Customer, error) {
-	customer := new(types.Customer)
+func (s *customerStore) AdminGetCustomer(id *uuid.UUID) (*types.CustomerResponse, error) {
+	customer := new(types.CustomerResponse)
 
 	dbCustomer, err := s.db.GetCustomerById(s.ctx, id.String())
 	if err != nil {
@@ -104,11 +104,11 @@ func (s *customerStore) DeleteCustomer(id *uuid.UUID) error {
 	return nil
 }
 
-func GetCustomersByManager(code string) ([]*types.Customer, error) {
+func GetCustomersByManager(code string) ([]*types.CustomerResponse, error) {
 }
 
-func GetCustomersBySalesman(code string) ([]*types.Customer, error) {
+func GetCustomersBySalesman(code string) ([]*types.CustomerResponse, error) {
 }
 
-func GetCustomerById(id *uuid.UUID) (*types.Customer, error) {
+func GetCustomerById(id *uuid.UUID) (*types.CustomerResponse, error) {
 }

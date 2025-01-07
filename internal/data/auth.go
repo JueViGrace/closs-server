@@ -8,9 +8,10 @@ import (
 )
 
 type AuthStore interface {
-	SignIn(r *types.SignInRequest) (token string, err error)
-	SignUp(r *types.SignUpRequest) (token string, err error)
-	RecoverPassword(r *types.RecoverPasswordResquest) (msg string, err error)
+	SignIn(r *types.SignInRequest) (*types.AuthResponse, error)
+	SignUp(r *types.SignUpRequest) (*types.AuthResponse, error)
+	Refresh(r *types.RefreshRequest) (*types.AuthResponse, error)
+	RecoverPassword(r *types.RecoverPasswordResquest) (*types.AuthResponse, error)
 }
 
 func (s *storage) AuthStore() AuthStore {

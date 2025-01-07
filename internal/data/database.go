@@ -10,7 +10,8 @@ import (
 	"time"
 
 	"github.com/JueViGrace/clo-backend/internal/db"
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/joho/godotenv/autoload"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type Storage interface {
@@ -36,11 +37,7 @@ type storage struct {
 }
 
 var (
-	database   = os.Getenv("DB_NAME")
-	password   = os.Getenv("DB_PASSWORD")
-	username   = os.Getenv("DB_USERNAME")
-	port       = os.Getenv("DB_PORT")
-	host       = os.Getenv("DB_HOST")
+	dbUrl      = os.Getenv("DB_URL")
 	ctx        = context.Background()
 	dbInstance *storage
 	queries    *db.Queries
@@ -51,8 +48,7 @@ func NewStorage() Storage {
 		return dbInstance
 	}
 
-	connStr := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", username, password, host, port, database)
-	conn, err := sql.Open("mysql", connStr)
+	conn, err := sql.Open("sqlite3", dbUrl)
 	if err != nil {
 		log.Fatal("Couldn't connect to database ", err)
 	}
@@ -128,6 +124,6 @@ func (s *storage) Health() map[string]string {
 // If the connection is successfully closed, it returns nil.
 // If an error occurs while closing the connection, it returns the error.
 func (s *storage) Close() error {
-	log.Printf("Disconnected from database: %s", database)
+	log.Printf("Disconnected from database: %s", dbUrl)
 	return s.db.Close()
 }

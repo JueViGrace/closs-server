@@ -1,15 +1,18 @@
 package api
 
-import "github.com/JueViGrace/clo-backend/internal/handlers"
+import (
+	"github.com/JueViGrace/clo-backend/internal/handlers"
+	"github.com/gofiber/fiber/v2"
+)
 
-func (a *api) CompanyRoutes() {
-	g := a.Group("/api/company")
-	h := handlers.NewCompanyHandler(a.db.CompanyStore())
+func (a *api) CompanyRoutes(api fiber.Router) {
+	group := api.Group("/company")
+	handler := handlers.NewCompanyHandler(a.db.CompanyStore())
 
 	// g.Post("/validate")
-	g.Get("/", h.GetCompanies)
-	g.Get("/:id", h.GetCompany)
-	g.Post("/", h.CreateCompany)
-	g.Patch("/", h.UpdateCompany)
-	g.Delete("/:id", h.DeleteCompany)
+	group.Get("/", handler.GetCompanies)
+	group.Get("/:id", handler.GetCompany)
+	group.Post("/", handler.CreateCompany)
+	group.Patch("/", handler.UpdateCompany)
+	group.Delete("/:id", handler.DeleteCompany)
 }

@@ -9,12 +9,12 @@ import (
 )
 
 type CompanyStore interface {
-	AdminGetCompanies() (companies []*types.Company, err error)
-	AdminGetCompanyById(id *uuid.UUID) (company *types.Company, err error)
+	AdminGetCompanies() (companies []*types.CompanyResponse, err error)
+	AdminGetCompanyById(id *uuid.UUID) (company *types.CompanyResponse, err error)
 	CreateCompany(r *types.CreateCompanyRequest) (msg string, err error)
 	UpdateCompany(r *types.UpdateCompanyRequest) (msg string, err error)
 	DeleteCompany(id *uuid.UUID) (err error)
-	GetCompanyByCode(code string) (company *types.Company, err error)
+	GetCompanyByCode(code string) (company *types.CompanyResponse, err error)
 }
 
 func (s *storage) CompanyStore() CompanyStore {
@@ -33,8 +33,8 @@ func NewCompanyStore(ctx context.Context, db *db.Queries) CompanyStore {
 	}
 }
 
-func (s *companyStore) AdminGetCompanies() ([]*types.Company, error) {
-	companies := make([]*types.Company, 0)
+func (s *companyStore) AdminGetCompanies() ([]*types.CompanyResponse, error) {
+	companies := make([]*types.CompanyResponse, 0)
 
 	dbCompanies, err := s.db.AdminGetCompanies(s.ctx)
 	if err != nil {
@@ -52,8 +52,8 @@ func (s *companyStore) AdminGetCompanies() ([]*types.Company, error) {
 	return companies, nil
 }
 
-func (s *companyStore) AdminGetCompanyById(id *uuid.UUID) (*types.Company, error) {
-	company := new(types.Company)
+func (s *companyStore) AdminGetCompanyById(id *uuid.UUID) (*types.CompanyResponse, error) {
+	company := new(types.CompanyResponse)
 
 	dbCompany, err := s.db.AdminGetCompanyById(s.ctx, id.String())
 	if err != nil {
@@ -102,8 +102,8 @@ func (s *companyStore) DeleteCompany(id *uuid.UUID) error {
 	return nil
 }
 
-func (s *companyStore) GetCompanyByCode(code string) (*types.Company, error) {
-	company := new(types.Company)
+func (s *companyStore) GetCompanyByCode(code string) (*types.CompanyResponse, error) {
+	company := new(types.CompanyResponse)
 
 	dbCompany, err := s.db.GetCompanyByCode(s.ctx, code)
 	if err != nil {

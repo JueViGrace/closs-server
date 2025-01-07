@@ -9,12 +9,12 @@ import (
 )
 
 type ConfigStore interface {
-	AdminGetCofigs() (configs []*types.Config, err error)
-	AdminGetConfigById(id *uuid.UUID) (config *types.Config, err error)
+	AdminGetCofigs() (configs []*types.ConfigResponse, err error)
+	AdminGetConfigById(id *uuid.UUID) (config *types.ConfigResponse, err error)
 	CreateConfig(r *types.CreateConfigRequest) (msg string, err error)
 	UpdateConfig(r *types.UpdateConfigRequest) (msg string, err error)
 	DeleteConfig(id *uuid.UUID) (err error)
-	GetConfigByUser(userId *uuid.UUID) (configs []*types.Config, err error)
+	GetConfigByUser(userId *uuid.UUID) (configs []*types.ConfigResponse, err error)
 }
 
 func (s *storage) ConfigStore() ConfigStore {
@@ -33,8 +33,8 @@ func NewConfigStore(ctx context.Context, db *db.Queries) ConfigStore {
 	}
 }
 
-func (s *configStore) AdminGetCofigs() ([]*types.Config, error) {
-	configs := make([]*types.Config, 0)
+func (s *configStore) AdminGetCofigs() ([]*types.ConfigResponse, error) {
+	configs := make([]*types.ConfigResponse, 0)
 
 	dbConfigs, err := s.db.AdminGetConfigs(s.ctx)
 	if err != nil {
@@ -52,8 +52,8 @@ func (s *configStore) AdminGetCofigs() ([]*types.Config, error) {
 	return configs, nil
 }
 
-func (s *configStore) AdminGetConfigById(id *uuid.UUID) (*types.Config, error) {
-	config := new(types.Config)
+func (s *configStore) AdminGetConfigById(id *uuid.UUID) (*types.ConfigResponse, error) {
+	config := new(types.ConfigResponse)
 
 	dbConfig, err := s.db.AdminGetConfigById(s.ctx, id.String())
 	if err != nil {
@@ -102,8 +102,8 @@ func (s *configStore) DeleteConfig(id *uuid.UUID) error {
 	return nil
 }
 
-func (s *configStore) GetConfigByUser(userId *uuid.UUID) ([]*types.Config, error) {
-	configs := make([]*types.Config, 0)
+func (s *configStore) GetConfigByUser(userId *uuid.UUID) ([]*types.ConfigResponse, error) {
+	configs := make([]*types.ConfigResponse, 0)
 
 	dbConfigs, err := s.db.GetConfigByUser(s.ctx, userId.String())
 	if err != nil {

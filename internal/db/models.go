@@ -6,301 +6,178 @@ package db
 
 import (
 	"database/sql"
-	"database/sql/driver"
-	"fmt"
-	"time"
 )
 
-type UsuarioRole string
-
-const (
-	UsuarioRoleCliente       UsuarioRole = "cliente"
-	UsuarioRoleVendedor      UsuarioRole = "vendedor"
-	UsuarioRoleGerente       UsuarioRole = "gerente"
-	UsuarioRoleAdministrador UsuarioRole = "administrador"
-)
-
-func (e *UsuarioRole) Scan(src interface{}) error {
-	switch s := src.(type) {
-	case []byte:
-		*e = UsuarioRole(s)
-	case string:
-		*e = UsuarioRole(s)
-	default:
-		return fmt.Errorf("unsupported scan type for UsuarioRole: %T", src)
-	}
-	return nil
+type ClossCompany struct {
+	KedCodigo string
+	KedNombre string
+	KedStatus int64
+	KedEnlace string
+	KedAgen   string
+	CreatedAt string
+	UpdatedAt string
+	DeletedAt sql.NullString
 }
 
-type NullUsuarioRole struct {
-	UsuarioRole UsuarioRole
-	Valid       bool // Valid is true if UsuarioRole is not NULL
+type ClossConfig struct {
+	CnfgIdconfig string
+	CnfgClase    string
+	CnfgTipo     string
+	CnfgValnum   float64
+	CnfgValsino  int64
+	CnfgValtxt   string
+	CnfgLentxt   int64
+	CnfgValfch   string
+	CnfgActiva   int64
+	CnfgEtiq     string
+	CnfgTtip     string
+	Username     string
+	CreatedAt    string
+	UpdatedAt    string
+	DeletedAt    sql.NullString
 }
 
-// Scan implements the Scanner interface.
-func (ns *NullUsuarioRole) Scan(value interface{}) error {
-	if value == nil {
-		ns.UsuarioRole, ns.Valid = "", false
-		return nil
-	}
-	ns.Valid = true
-	return ns.UsuarioRole.Scan(value)
-}
-
-// Value implements the driver Valuer interface.
-func (ns NullUsuarioRole) Value() (driver.Value, error) {
-	if !ns.Valid {
-		return nil, nil
-	}
-	return string(ns.UsuarioRole), nil
-}
-
-type Articulo struct {
-	ID           string
-	Codigo       string
-	Grupo        int32
-	Subgrupo     int32
-	Nombre       string
-	Referencia   string
-	Marca        string
-	Unidad       string
-	Existencia   int32
-	Precio1      string
-	Precio2      string
-	Precio3      string
-	Precio4      string
-	Precio5      string
-	Precio6      string
-	Precio7      string
-	Discont      bool
-	VtaMax       int32
-	VtaMin       int32
-	Dctotope     string
-	Enpreventa   bool
-	Comprometido int32
-	VtaMinenx    int32
-	VtaSolofac   bool
-	VtaSolone    bool
-	Codbarras    string
-	Detalles     string
-	Cantbulto    int32
-	CostoProm    string
-	Util1        string
-	Util2        string
-	Util3        string
-	Fchultcomp   time.Time
-	Qtyultcomp   int32
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
-	DeletedAt    sql.NullTime
-}
-
-type Cliente struct {
-	ID              string
-	UserID          sql.NullString
+type ClossCustomer struct {
 	Codigo          string
 	Nombre          string
+	Email           string
 	Direccion       string
 	Telefonos       string
 	Perscont        string
 	Vendedor        string
-	Contribespecial bool
-	Status          int16
-	Sector          int32
-	Subcodigo       int32
-	Precio          int16
-	Email           string
-	KneActiva       bool
-	KneMtomin       string
-	Noemifac        bool
-	Noeminota       bool
-	Fchultvta       time.Time
-	Mtoultvta       string
-	Prcdpagdia      string
-	Promdiasp       string
-	Riesgocrd       string
-	Cantdocs        int32
-	Totmtodocs      string
-	Prommtodoc      string
-	Diasultvta      string
-	Promdiasvta     string
-	Limcred         string
-	Dolarflete      bool
-	Nodolarflete    bool
-	CreatedAt       time.Time
-	UpdatedAt       time.Time
-	DeletedAt       sql.NullTime
+	Contribespecial int64
+	Status          int64
+	Sector          string
+	Subsector       string
+	Precio          int64
+	KneActiva       int64
+	KneMtomin       float64
+	Noemifac        int64
+	Noeminota       int64
+	Fchultvta       string
+	Mtoultvta       float64
+	Prcdpagdia      float64
+	Promdiasp       float64
+	Riesgocrd       float64
+	Cantdocs        float64
+	Totmtodocs      float64
+	Prommtodoc      float64
+	Diasultvta      float64
+	Promdiasvta     float64
+	Limcred         float64
+	Fchcrea         string
+	Dolarflete      int64
+	Nodolarflete    int64
+	CreatedAt       string
+	UpdatedAt       string
 }
 
-type KeDataconex struct {
-	ID        string
-	KedCodigo string
-	KedNombre string
-	KedStatus bool
-	KedEnlace string
-	KedAgen   string
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt sql.NullTime
-}
-
-type KeDoccti struct {
-	ID             string
+type ClossDocument struct {
 	Agencia        string
 	Tipodoc        string
 	Documento      string
 	Tipodocv       string
 	Codcliente     string
 	Nombrecli      string
-	Contribesp     bool
-	RutaParme      bool
-	Tipoprecio     string
-	Emision        time.Time
-	Recepcion      time.Time
-	Vence          time.Time
-	Diascred       string
-	Estatusdoc     string
-	Dtotneto       string
-	Dtotimpuest    string
-	Dtotalfinal    string
-	Dtotpagos      string
-	Dtotdescuen    string
-	Dflete         string
-	Dtotdev        string
-	Dvndmtototal   string
-	Dretencion     string
-	Dretencioniva  string
+	Contribesp     int64
+	RutaParme      int64
+	Tipoprecio     int64
+	Emision        string
+	Recepcion      string
+	Vence          string
+	Diascred       float64
+	Estatusdoc     int64
+	Dtotneto       float64
+	Dtotimpuest    float64
+	Dtotalfinal    float64
+	Dtotpagos      float64
+	Dtotdescuen    float64
+	Dflete         float64
+	Dtotdev        float64
+	Dvndmtototal   float64
+	Dretencion     float64
+	Dretencioniva  float64
 	Vendedor       string
 	Codcoord       string
-	Aceptadev      bool
-	KtiNegesp      bool
-	Bsiva          string
-	Bsflete        string
-	Bsretencion    string
-	Bsretencioniva string
-	Tasadoc        string
-	Mtodcto        string
-	Fchvencedcto   time.Time
-	Tienedcto      bool
-	Cbsret         string
-	Cdret          string
-	Cbsretiva      string
-	Cdretiva       string
-	Cbsrparme      string
-	Cdrparme       string
-	Cbsretflete    string
-	Cdretflete     string
-	Bsmtoiva       string
-	Bsmtofte       string
-	RetmunMto      string
-	Dolarflete     bool
-	Bsretflete     string
-	Dretflete      string
-	DretmunMto     string
-	Retivaoblig    bool
-	Edoentrega     bool
-	Dmtoiva        string
-	Prcdctoaplic   string
-	Montodctodol   string
-	Montodctobs    string
-	CreatedAt      time.Time
-	UpdatedAt      time.Time
-	DeletedAt      sql.NullTime
+	Aceptadev      int64
+	KtiNegesp      int64
+	Bsiva          float64
+	Bsflete        float64
+	Bsretencion    float64
+	Bsretencioniva float64
+	Tasadoc        float64
+	Mtodcto        float64
+	Fchvencedcto   string
+	Tienedcto      int64
+	Cbsret         float64
+	Cdret          float64
+	Cbsretiva      float64
+	Cdretiva       float64
+	Cbsrparme      float64
+	Cdrparme       float64
+	Cbsretflete    float64
+	Cdretflete     float64
+	Bsmtoiva       float64
+	Bsmtofte       float64
+	RetmunMto      float64
+	Dolarflete     int64
+	Bsretflete     float64
+	Dretflete      float64
+	DretmunMto     float64
+	Retivaoblig    int64
+	Edoentrega     int64
+	Dmtoiva        float64
+	Prcdctoaplic   float64
+	Montodctodol   float64
+	Montodctobs    float64
+	CreatedAt      string
+	UpdatedAt      string
 }
 
-type KeDoclmv struct {
-	DocID         string
-	ArticuloID    string
+type ClossDocumentLine struct {
 	Agencia       string
 	Tipodoc       string
 	Documento     string
 	Tipodocv      string
-	Grupo         int32
-	Subgrupo      int32
-	Origen        string
+	Grupo         string
+	Subgrupo      string
+	Origen        int64
 	Codigo        string
 	Codhijo       string
 	Pid           string
 	Nombre        string
-	Cantidad      int32
-	Cntdevuelt    int32
-	Vndcntdevuelt string
-	Dvndmtototal  string
-	Dpreciofin    string
-	Dpreciounit   string
-	Dmontoneto    string
-	Dmontototal   string
-	Timpueprc     string
-	Unidevuelt    int32
-	Fechadoc      time.Time
+	Cantidad      int64
+	Cntdevuelt    int64
+	Vndcntdevuelt int64
+	Dvndmtototal  float64
+	Dpreciofin    float64
+	Dpreciounit   float64
+	Dmontoneto    float64
+	Dmontototal   float64
+	Timpueprc     float64
+	Unidevuelt    int64
+	Fechadoc      string
 	Vendedor      string
 	Codcoord      string
-	CreatedAt     time.Time
-	UpdatedAt     time.Time
-	DeletedAt     sql.NullTime
 }
 
-type KeEstadc01 struct {
-	ID            string
-	Codcoord      string
-	Nomcoord      string
-	Vendedor      string
-	Nombrevend    string
-	Cntpedidos    int32
-	Mtopedidos    string
-	Cntfacturas   int32
-	Mtofacturas   string
-	Metavend      string
-	Prcmeta       string
-	Cntclientes   int32
-	Clivisit      int32
-	Prcvisitas    string
-	LomMontovtas  string
-	LomPrcvtas    string
-	LomPrcvisit   string
-	RlomMontovtas string
-	RlomPrcvtas   string
-	RlomPrcvisit  string
-	FechaEstad    time.Time
-	PpgdolTotneto string
-	DevdolTotneto string
-	DefdolTotneto string
-	Totdolcob     string
-	Cntrecl       string
-	Mtorecl       string
-	CreatedAt     time.Time
-	UpdatedAt     time.Time
-	DeletedAt     sql.NullTime
+type ClossGroup struct {
+	Codigo    string
+	Nombre    string
+	CreatedAt string
+	UpdatedAt string
+	DeletedAt sql.NullString
 }
 
-type KeNivgcium struct {
-	ID          string
+type ClossManager struct {
 	KngCodgcia  string
 	KngCodcoord string
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-	DeletedAt   sql.NullTime
+	CreatedAt   string
+	UpdatedAt   string
+	DeletedAt   sql.NullString
 }
 
-type KeOpmv struct {
-	PedidoID   string
-	ArticuloID string
-	KtiTdoc    string
-	KtiNdoc    string
-	KtiTipprec string
-	KmvCodart  string
-	KmvNombre  string
-	KmvCant    int32
-	KmvArtprec string
-	KmvStot    string
-	KmvDctolin string
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
-	DeletedAt  sql.NullTime
-}
-
-type KeOpti struct {
-	ID             string
+type ClossOrder struct {
 	KtiNdoc        string
 	KtiTdoc        string
 	KtiCodcli      string
@@ -308,67 +185,160 @@ type KeOpti struct {
 	KtiCodven      string
 	KtiDocsol      string
 	KtiCondicion   string
-	KtiTipprec     string
+	KtiTipprec     int64
 	KtiTotneto     string
-	KtiStatus      string
+	KtiStatus      int64
 	KtiNroped      string
-	KtiFchdoc      time.Time
-	KtiNegesp      bool
-	KePedstatus    string
-	Dolarflete     bool
-	Complemento    bool
+	KtiFchdoc      string
+	KtiNegesp      int64
+	KePedstatus    int64
+	Dolarflete     int64
+	Complemento    int64
 	NroComplemento string
-	CreatedAt      time.Time
-	UpdatedAt      time.Time
-	DeletedAt      sql.NullTime
+	CreatedAt      string
+	UpdatedAt      string
 }
 
-type KeWcnfConf struct {
-	ID           string
-	CnfgIdconfig string
-	CnfgClase    string
-	CnfgTipo     string
-	CnfgValnum   string
-	CnfgValsino  bool
-	CnfgValtxt   string
-	CnfgLentxt   int16
-	CnfgValfch   time.Time
-	CnfgActiva   bool
-	CnfgEtiq     string
-	CnfgTtip     string
-	UserID       string
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
-	DeletedAt    sql.NullTime
+type ClossOrderLine struct {
+	KtiTdoc    string
+	KtiNdoc    string
+	KtiTipprec string
+	KmvCodart  string
+	KmvNombre  string
+	KmvCant    int64
+	KmvArtprec float64
+	KmvStot    float64
+	KmvDctolin float64
+	CreatedAt  string
+	UpdatedAt  string
 }
 
-type Usuario struct {
+type ClossProduct struct {
+	Codigo       string
+	Grupo        string
+	Subgrupo     string
+	Nombre       string
+	Referencia   string
+	Marca        string
+	Unidad       string
+	Discont      int64
+	Existencia   int64
+	VtaMax       int64
+	VtaMin       int64
+	VtaMinenx    int64
+	Comprometido int64
+	Precio1      float64
+	Precio2      float64
+	Precio3      float64
+	Precio4      float64
+	Precio5      float64
+	Precio6      float64
+	Precio7      float64
+	Preventa     int64
+	Dctotope     float64
+	VtaSolofac   int64
+	VtaSolone    int64
+	Codbarras    int64
+	Detalles     string
+	Cantbulto    float64
+	CostoProm    float64
+	Util1        string
+	Util2        string
+	Util3        string
+	Fchultcomp   string
+	Qtyultcomp   string
+	Images       string
+	CreatedAt    string
+	UpdatedAt    string
+	DeletedAt    sql.NullString
+}
+
+type ClossSalesman struct {
+	Codigo    string
+	Nombre    string
+	Email     string
+	Telefono  string
+	Telefonos string
+	Status    int64
+	Supervpor string
+	Sector    string
+	Subcodigo string
+	Nivgcial  int64
+	CreatedAt string
+	UpdatedAt string
+}
+
+type ClossSalesmanStatistic struct {
+	Codcoord      string
+	Nomcoord      string
+	Vendedor      string
+	Nombrevend    string
+	Cntpedidos    int64
+	Mtopedidos    float64
+	Cntfacturas   int64
+	Mtofacturas   float64
+	Metavend      float64
+	Prcmeta       float64
+	Cntclientes   int64
+	Clivisit      int64
+	Prcvisitas    float64
+	LomMontovtas  float64
+	LomPrcvtas    float64
+	LomPrcvisit   float64
+	RlomMontovtas float64
+	RlomPrcvtas   float64
+	RlomPrcvisit  float64
+	FechaEstad    string
+	PpgdolTotneto float64
+	DevdolTotneto float64
+	DefdolTotneto float64
+	Totdolcob     float64
+	Cntrecl       int64
+	Mtorecl       float64
+	CreatedAt     string
+	UpdatedAt     string
+}
+
+type ClossSector struct {
+	Codigo    string
+	Zona      string
+	CreatedAt string
+	UpdatedAt string
+	DeletedAt sql.NullString
+}
+
+type ClossSession struct {
+	Token  string
+	UserID string
+}
+
+type ClossSubgroup struct {
+	Codigo    string
+	Subcodigo string
+	Nombre    string
+	CreatedAt string
+	UpdatedAt string
+	DeletedAt sql.NullString
+}
+
+type ClossSubsector struct {
+	Codigo    string
+	Subcodigo string
+	Subsector string
+	CreatedAt string
+	UpdatedAt string
+	DeletedAt sql.NullString
+}
+
+type ClossUser struct {
 	ID        string
 	Username  string
 	Password  string
-	Role      UsuarioRole
-	Desactivo bool
-	UltSinc   time.Time
+	Codigo    string
+	Role      string
+	UltSinc   string
 	Version   string
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt sql.NullTime
-}
-
-type Vendedor struct {
-	ID            string
-	UserID        sql.NullString
-	Codigo        string
-	Nombre        string
-	Telefono1     string
-	Telefono2     string
-	TelefonoMovil string
-	Status        int16
-	Supervpor     string
-	Sector        int32
-	Subcodigo     int32
-	Email         string
-	CreatedAt     time.Time
-	UpdatedAt     time.Time
-	DeletedAt     sql.NullTime
+	CreatedAt string
+	UpdatedAt string
+	DeletedAt sql.NullString
 }
