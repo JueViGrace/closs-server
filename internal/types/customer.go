@@ -7,7 +7,7 @@ import (
 	"github.com/JueViGrace/clo-backend/internal/util"
 )
 
-type Customer struct {
+type CustomerResponse struct {
 	Codigo          string  `json:"codigo"`
 	Nombre          string  `json:"nombre"`
 	Direccion       string  `json:"direccion"`
@@ -105,8 +105,8 @@ type UpdateCustomerRequest struct {
 	Nodolarflete    bool      `json:"nodolarflete"`
 }
 
-func DbCustomerToCustomer(db *db.ClossCustomer) *Customer {
-	return &Customer{
+func DbCustomerToCustomer(db *db.ClossCustomer) *CustomerResponse {
+	return &CustomerResponse{
 		Codigo:          db.Codigo,
 		Nombre:          db.Nombre,
 		Direccion:       db.Direccion,
@@ -173,8 +173,8 @@ func CreateCustomerToDb(r *CreateCustomerRequest) *db.CreateCustomerParams {
 		Fchcrea:         r.Fchultvta.String(),
 		Dolarflete:      int64(util.BoolToInt(r.Dolarflete)),
 		Nodolarflete:    int64(util.BoolToInt(r.Nodolarflete)),
-		CreatedAt:       time.Now().UTC().String(),
-		UpdatedAt:       time.Now().UTC().String(),
+		CreatedAt:       time.Now().String(),
+		UpdatedAt:       time.Now().String(),
 	}
 }
 
@@ -208,7 +208,7 @@ func UpdateCustomerToDb(r *UpdateCustomerRequest) *db.UpdateCustomerParams {
 		Limcred:         r.Limcred,
 		Dolarflete:      int64(util.BoolToInt(r.Dolarflete)),
 		Nodolarflete:    int64(util.BoolToInt(r.Nodolarflete)),
-		UpdatedAt:       time.Now().UTC().String(),
+		UpdatedAt:       time.Now().String(),
 		Codigo:          r.Codigo,
 	}
 }

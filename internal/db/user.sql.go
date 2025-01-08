@@ -88,6 +88,32 @@ func (q *Queries) DeleteUserById(ctx context.Context, id string) error {
 	return err
 }
 
+const getUserById = `-- name: GetUserById :one
+;
+
+select id, username, password, codigo, role, ult_sinc, version, created_at, updated_at, deleted_at
+from closs_user
+where id = ?
+`
+
+func (q *Queries) GetUserById(ctx context.Context, id string) (ClossUser, error) {
+	row := q.db.QueryRowContext(ctx, getUserById, id)
+	var i ClossUser
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.Password,
+		&i.Codigo,
+		&i.Role,
+		&i.UltSinc,
+		&i.Version,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DeletedAt,
+	)
+	return i, err
+}
+
 const getUserByUsername = `-- name: GetUserByUsername :one
 ;
 
@@ -171,7 +197,33 @@ func (q *Queries) SoftDeleteUser(ctx context.Context, arg SoftDeleteUserParams) 
 	return err
 }
 
-const updatePassword = `-- name: UpdatePassword :one
+const updateLastSync = `-- name: UpdateLastSync :exec
+update closs_user set
+    ult_sinc = ?,
+    version = ?,
+    updated_at = ?
+where id = ?
+RETURNING id, username, password, codigo, role, ult_sinc, version, created_at, updated_at, deleted_at
+`
+
+type UpdateLastSyncParams struct {
+	UltSinc   string
+	Version   string
+	UpdatedAt string
+	ID        string
+}
+
+func (q *Queries) UpdateLastSync(ctx context.Context, arg UpdateLastSyncParams) error {
+	_, err := q.db.ExecContext(ctx, updateLastSync,
+		arg.UltSinc,
+		arg.Version,
+		arg.UpdatedAt,
+		arg.ID,
+	)
+	return err
+}
+
+const updatePassword = `-- name: UpdatePassword :exec
 update closs_user set
     password = ?,
     updated_at = ?
@@ -185,59 +237,7 @@ type UpdatePasswordParams struct {
 	ID        string
 }
 
-func (q *Queries) UpdatePassword(ctx context.Context, arg UpdatePasswordParams) (ClossUser, error) {
-	row := q.db.QueryRowContext(ctx, updatePassword, arg.Password, arg.UpdatedAt, arg.ID)
-	var i ClossUser
-	err := row.Scan(
-		&i.ID,
-		&i.Username,
-		&i.Password,
-		&i.Codigo,
-		&i.Role,
-		&i.UltSinc,
-		&i.Version,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-		&i.DeletedAt,
-	)
-	return i, err
-}
-
-const updateUser = `-- name: UpdateUser :one
-update closs_user set
-    ult_sinc = ?,
-    version = ?,
-    updated_at = ?
-where id = ?
-RETURNING id, username, password, codigo, role, ult_sinc, version, created_at, updated_at, deleted_at
-`
-
-type UpdateUserParams struct {
-	UltSinc   string
-	Version   string
-	UpdatedAt string
-	ID        string
-}
-
-func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (ClossUser, error) {
-	row := q.db.QueryRowContext(ctx, updateUser,
-		arg.UltSinc,
-		arg.Version,
-		arg.UpdatedAt,
-		arg.ID,
-	)
-	var i ClossUser
-	err := row.Scan(
-		&i.ID,
-		&i.Username,
-		&i.Password,
-		&i.Codigo,
-		&i.Role,
-		&i.UltSinc,
-		&i.Version,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-		&i.DeletedAt,
-	)
-	return i, err
+func (q *Queries) UpdatePassword(ctx context.Context, arg UpdatePasswordParams) error {
+	_, err := q.db.ExecContext(ctx, updatePassword, arg.Password, arg.UpdatedAt, arg.ID)
+	return err
 }

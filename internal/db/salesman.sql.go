@@ -293,50 +293,7 @@ func (q *Queries) GetSalesmanByCode(ctx context.Context, codigo string) (GetSale
 	return i, err
 }
 
-const getSalesmen = `-- name: GetSalesmen :many
-select codigo, nombre, email, telefono, telefonos, status, supervpor, sector, subcodigo, nivgcial, created_at, updated_at
-from closs_salesman
-`
-
-func (q *Queries) GetSalesmen(ctx context.Context) ([]ClossSalesman, error) {
-	rows, err := q.db.QueryContext(ctx, getSalesmen)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []ClossSalesman
-	for rows.Next() {
-		var i ClossSalesman
-		if err := rows.Scan(
-			&i.Codigo,
-			&i.Nombre,
-			&i.Email,
-			&i.Telefono,
-			&i.Telefonos,
-			&i.Status,
-			&i.Supervpor,
-			&i.Sector,
-			&i.Subcodigo,
-			&i.Nivgcial,
-			&i.CreatedAt,
-			&i.UpdatedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
 const getSalesmenByManager = `-- name: GetSalesmenByManager :many
-;
-
 select
     closs_salesman.codigo,
     closs_user.username,

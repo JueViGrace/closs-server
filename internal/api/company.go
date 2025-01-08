@@ -9,7 +9,6 @@ func (a *api) CompanyRoutes(api fiber.Router) {
 	group := api.Group("/company")
 	handler := handlers.NewCompanyHandler(a.db.CompanyStore())
 
-	// g.Post("/validate")
 	group.Get("/", handler.GetCompanies)
 	group.Get("/:id", handler.GetCompany)
 	group.Post("/", handler.CreateCompany)

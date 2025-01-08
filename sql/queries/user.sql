@@ -3,6 +3,12 @@ select *
 from closs_user
 ;
 
+-- name: GetUserById :one
+select *
+from closs_user
+where id = ?
+;
+
 -- name: GetUserByUsername :one
 select *
 from closs_user
@@ -34,14 +40,14 @@ values (
 )
 RETURNING *;
 
--- name: UpdatePassword :one
+-- name: UpdatePassword :exec
 update closs_user set
     password = ?,
     updated_at = ?
 where id = ?
 RETURNING *;
 
--- name: UpdateUser :one
+-- name: UpdateLastSync :exec
 update closs_user set
     ult_sinc = ?,
     version = ?,

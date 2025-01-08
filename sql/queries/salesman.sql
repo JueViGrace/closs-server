@@ -1,8 +1,3 @@
--- name: GetSalesmen :many
-select *
-from closs_salesman
-;
-
 -- name: GetSalesmenByManager :many
 select
     closs_salesman.codigo,

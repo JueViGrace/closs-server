@@ -8,10 +8,15 @@ import (
 )
 
 type DocumentStore interface {
-	GetDocuments() (documents []*types.Document, err error)
-	GetDocumentsBySalesman(code string) (documents []*types.Document, err error)
-	GetDocumentsWithLines() (documents []*types.DocumentWithLines, err error)
-	GetDocumentsWithLinesBySalesman(code string) (documents []*types.DocumentWithLines, err error)
+	GetDocuments() (documents []types.DocumentResponse, err error)
+	GetDocumentsWithLines() (documents []types.DocumentWithLinesResponse, err error)
+	GetDocumentByCode(code string) (document *types.DocumentResponse, err error)
+	GetDocumentByCodeWithLines(code string) (document *types.DocumentWithLinesResponse, err error)
+	GetDocumentsByManager(code string) (documents []types.DocumentResponse, err error)
+	GetDocumentsBySalesman(code string) (documents []types.DocumentResponse, err error)
+	GetDocumentsByCustomer(code string) (documents []types.DocumentResponse, err error)
+	CreateDocument(r *types.CreateDocumentRequest) (document *types.DocumentWithLinesResponse, err error)
+	UpdateDocument(r *types.UpdateDocumentRequest) (document *types.DocumentWithLinesResponse, err error)
 }
 
 func (s *storage) DocumentStore() DocumentStore {
@@ -30,27 +35,55 @@ func NewDocumentStore(ctx context.Context, db *db.Queries) DocumentStore {
 	}
 }
 
-func (s *documentStore) GetDocuments() ([]*types.Document, error) {
-	docs := make([]*types.Document, 0)
+func (s *documentStore) GetDocuments() ([]types.DocumentResponse, error) {
+	res := make([]types.DocumentResponse, 0)
 
-	dbDocs, err := s.db.AdminGetDocuments(s.ctx)
+	dbDocs, err := s.db.GetDocuments(s.ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	for _, dbDoc := range dbDocs {
-		doc, err := types.DbKeDoccToDocument(&dbDoc)
-		if err != nil {
-			return nil, err
-		}
-		docs = append(docs, doc)
+		res = append(res, *types.DbDocToDocument(&dbDoc))
+	}
+
+	return res, nil
+}
+
+func (s *documentStore) GetDocumentsWithLines() ([]types.DocumentWithLinesResponse, error) {
+	_, err := s.db.GetDocumentsWithLines(s.ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return nil, nil
+}
+
+func (s *documentStore) GetDocumentByCode(code string) (*types.DocumentResponse, error) {
+	return nil, nil
+}
+
+func (s *documentStore) GetDocumentByCodeWithLines(code string) (*types.DocumentWithLinesResponse, error) {
+	return nil, nil
+}
+
+func (s *documentStore) GetDocumentsByManager(code string) ([]types.DocumentResponse, error) {
+	docs := make([]types.DocumentResponse, 0)
+
+	dbDocs, err := s.db.GetDocumentsByManager(s.ctx, code)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, dbDoc := range dbDocs {
+		docs = append(docs, *types.DbDocToDocument(&dbDoc))
 	}
 
 	return docs, nil
 }
 
-func (s *documentStore) GetDocumentsBySalesman(code string) ([]*types.Document, error) {
-	docs := make([]*types.Document, 0)
+func (s *documentStore) GetDocumentsBySalesman(code string) ([]types.DocumentResponse, error) {
+	docs := make([]types.DocumentResponse, 0)
 
 	dbDocs, err := s.db.GetDocumentsBySalesman(s.ctx, code)
 	if err != nil {
@@ -58,70 +91,67 @@ func (s *documentStore) GetDocumentsBySalesman(code string) ([]*types.Document, 
 	}
 
 	for _, dbDoc := range dbDocs {
-		doc, err := types.DbKeDoccToDocument(&dbDoc)
+		docs = append(docs, *types.DbDocToDocument(&dbDoc))
+	}
+
+	return docs, nil
+}
+
+func (s *documentStore) GetDocumentsByCustomer(code string) ([]types.DocumentResponse, error) {
+	docs := make([]types.DocumentResponse, 0)
+
+	dbDocs, err := s.db.GetDocumentsByCustomer(s.ctx, code)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, dbDoc := range dbDocs {
+		docs = append(docs, *types.DbDocToDocument(&dbDoc))
+	}
+
+	return docs, nil
+}
+
+func (s *documentStore) CreateDocument(r *types.CreateDocumentRequest) (*types.DocumentWithLinesResponse, error) {
+	lines := make([]types.DocumentLineResponse, 0, 0)
+
+	dbDoc, err := s.db.CreateDocument(s.ctx, *types.CreateDocumentToDb(r))
+	if err != nil {
+		return nil, err
+	}
+
+	head := types.DbDocToDocument(&dbDoc)
+
+	for _, line := range r.Lines {
+		dbLine, _ := s.db.CreateDocumentLine(s.ctx, *types.CreateDocumentLinesToDb(&line))
 		if err != nil {
-			return nil, err
+			continue
 		}
-		docs = append(docs, doc)
+
+		lines = append(lines, *types.DbDocLineToDocLine(&dbLine))
 	}
 
-	return docs, nil
+	return types.DocToDocWithLines(head, lines), nil
 }
 
-func (s *documentStore) GetDocumentsWithLines() ([]*types.DocumentWithLines, error) {
-	docs := make([]*types.DocumentWithLines, 0)
-	docMap := make(map[types.Document][]types.DocumentLine)
-	doc := new(types.Document)
+func (s *documentStore) UpdateDocument(r *types.UpdateDocumentRequest) (*types.DocumentWithLinesResponse, error) {
+	lines := make([]types.DocumentLineResponse, 0, 0)
 
-	dbDocs, err := s.db.AdminGetDocumentsWithLines(s.ctx)
+	dbDoc, err := s.db.UpdateDocument(s.ctx, *types.UpdateDocumentToDb(r))
 	if err != nil {
 		return nil, err
 	}
 
-	for _, dbDoc := range dbDocs {
-		if doc == nil {
-			doc = types.DbDocToDocument(&dbDoc)
+	head := types.DbDocToDocument(&dbDoc)
+
+	for _, line := range r.Lines {
+		dbLine, _ := s.db.UpdateDocumentLine(s.ctx, *types.UpdateDocumentLinesToDb(&line))
+		if err != nil {
+			continue
 		}
 
-		if doc.Documento != dbDoc.Documento {
-			doc = types.DbDocToDocument(&dbDoc)
-		}
-
-		docMap[*doc] = append(docMap[*doc], *types.DbDocToDocLine(&dbDoc))
+		lines = append(lines, *types.DbDocLineToDocLine(&dbLine))
 	}
 
-	for key, value := range docMap {
-		docs = append(docs, types.DocMapToDocWithLines(&key, &value))
-	}
-
-	return docs, nil
-}
-
-func (s *documentStore) GetDocumentsWithLinesBySalesman(code string) ([]*types.DocumentWithLines, error) {
-	docs := make([]*types.DocumentWithLines, 0)
-	docMap := make(map[types.Document][]types.DocumentLine)
-	doc := new(types.Document)
-
-	dbDocs, err := s.db.GetDocumentsWithLinesBySalesman(s.ctx, code)
-	if err != nil {
-		return nil, err
-	}
-
-	for _, dbDoc := range dbDocs {
-		if doc == nil {
-			doc = types.DbDocByCodeToDocument(&dbDoc)
-		}
-
-		if doc.Documento != dbDoc.Documento {
-			doc = types.DbDocByCodeToDocument(&dbDoc)
-		}
-
-		docMap[*doc] = append(docMap[*doc], *types.DbDocByCodeToDocLine(&dbDoc))
-	}
-
-	for key, value := range docMap {
-		docs = append(docs, types.DocMapToDocWithLines(&key, &value))
-	}
-
-	return docs, nil
+	return types.DocToDocWithLines(head, lines), nil
 }

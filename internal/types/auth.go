@@ -11,7 +11,7 @@ type SignInRequest struct {
 }
 
 type RefreshRequest struct {
-	Token string `json:"refresh_token"`
+	Token string `json:"refreshToken"`
 }
 
 type RecoverPasswordResquest struct {

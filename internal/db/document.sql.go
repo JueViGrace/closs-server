@@ -151,7 +151,7 @@ type CreateDocumentParams struct {
 	Emision        string
 	Recepcion      string
 	Vence          string
-	Diascred       float64
+	Diascred       int64
 	Estatusdoc     int64
 	Dtotneto       float64
 	Dtotimpuest    float64
@@ -327,98 +327,6 @@ func (q *Queries) CreateDocument(ctx context.Context, arg CreateDocumentParams) 
 	return i, err
 }
 
-const getDocmentsBySalesman = `-- name: GetDocmentsBySalesman :many
-;
-
-select closs_document.agencia, closs_document.tipodoc, closs_document.documento, closs_document.tipodocv, closs_document.codcliente, closs_document.nombrecli, closs_document.contribesp, closs_document.ruta_parme, closs_document.tipoprecio, closs_document.emision, closs_document.recepcion, closs_document.vence, closs_document.diascred, closs_document.estatusdoc, closs_document.dtotneto, closs_document.dtotimpuest, closs_document.dtotalfinal, closs_document.dtotpagos, closs_document.dtotdescuen, closs_document.dflete, closs_document.dtotdev, closs_document.dvndmtototal, closs_document.dretencion, closs_document.dretencioniva, closs_document.vendedor, closs_document.codcoord, closs_document.aceptadev, closs_document.kti_negesp, closs_document.bsiva, closs_document.bsflete, closs_document.bsretencion, closs_document.bsretencioniva, closs_document.tasadoc, closs_document.mtodcto, closs_document.fchvencedcto, closs_document.tienedcto, closs_document.cbsret, closs_document.cdret, closs_document.cbsretiva, closs_document.cdretiva, closs_document.cbsrparme, closs_document.cdrparme, closs_document.cbsretflete, closs_document.cdretflete, closs_document.bsmtoiva, closs_document.bsmtofte, closs_document.retmun_mto, closs_document.dolarflete, closs_document.bsretflete, closs_document.dretflete, closs_document.dretmun_mto, closs_document.retivaoblig, closs_document.edoentrega, closs_document.dmtoiva, closs_document.prcdctoaplic, closs_document.montodctodol, closs_document.montodctobs, closs_document.created_at, closs_document.updated_at
-from closs_document
-where closs_document.vendedor = ?
-order by closs_document.codcliente asc, closs_document.emision desc
-`
-
-func (q *Queries) GetDocmentsBySalesman(ctx context.Context, vendedor string) ([]ClossDocument, error) {
-	rows, err := q.db.QueryContext(ctx, getDocmentsBySalesman, vendedor)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []ClossDocument
-	for rows.Next() {
-		var i ClossDocument
-		if err := rows.Scan(
-			&i.Agencia,
-			&i.Tipodoc,
-			&i.Documento,
-			&i.Tipodocv,
-			&i.Codcliente,
-			&i.Nombrecli,
-			&i.Contribesp,
-			&i.RutaParme,
-			&i.Tipoprecio,
-			&i.Emision,
-			&i.Recepcion,
-			&i.Vence,
-			&i.Diascred,
-			&i.Estatusdoc,
-			&i.Dtotneto,
-			&i.Dtotimpuest,
-			&i.Dtotalfinal,
-			&i.Dtotpagos,
-			&i.Dtotdescuen,
-			&i.Dflete,
-			&i.Dtotdev,
-			&i.Dvndmtototal,
-			&i.Dretencion,
-			&i.Dretencioniva,
-			&i.Vendedor,
-			&i.Codcoord,
-			&i.Aceptadev,
-			&i.KtiNegesp,
-			&i.Bsiva,
-			&i.Bsflete,
-			&i.Bsretencion,
-			&i.Bsretencioniva,
-			&i.Tasadoc,
-			&i.Mtodcto,
-			&i.Fchvencedcto,
-			&i.Tienedcto,
-			&i.Cbsret,
-			&i.Cdret,
-			&i.Cbsretiva,
-			&i.Cdretiva,
-			&i.Cbsrparme,
-			&i.Cdrparme,
-			&i.Cbsretflete,
-			&i.Cdretflete,
-			&i.Bsmtoiva,
-			&i.Bsmtofte,
-			&i.RetmunMto,
-			&i.Dolarflete,
-			&i.Bsretflete,
-			&i.Dretflete,
-			&i.DretmunMto,
-			&i.Retivaoblig,
-			&i.Edoentrega,
-			&i.Dmtoiva,
-			&i.Prcdctoaplic,
-			&i.Montodctodol,
-			&i.Montodctobs,
-			&i.CreatedAt,
-			&i.UpdatedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
 const getDocumentByCode = `-- name: GetDocumentByCode :one
 ;
 
@@ -517,7 +425,7 @@ type GetDocumentWithLinesByCodeRow struct {
 	Emision        string
 	Recepcion      string
 	Vence          string
-	Diascred       float64
+	Diascred       int64
 	Estatusdoc     int64
 	Dtotneto       float64
 	Dtotimpuest    float64
@@ -785,6 +693,98 @@ func (q *Queries) GetDocuments(ctx context.Context) ([]ClossDocument, error) {
 	return items, nil
 }
 
+const getDocumentsByCustomer = `-- name: GetDocumentsByCustomer :many
+;
+
+select closs_document.agencia, closs_document.tipodoc, closs_document.documento, closs_document.tipodocv, closs_document.codcliente, closs_document.nombrecli, closs_document.contribesp, closs_document.ruta_parme, closs_document.tipoprecio, closs_document.emision, closs_document.recepcion, closs_document.vence, closs_document.diascred, closs_document.estatusdoc, closs_document.dtotneto, closs_document.dtotimpuest, closs_document.dtotalfinal, closs_document.dtotpagos, closs_document.dtotdescuen, closs_document.dflete, closs_document.dtotdev, closs_document.dvndmtototal, closs_document.dretencion, closs_document.dretencioniva, closs_document.vendedor, closs_document.codcoord, closs_document.aceptadev, closs_document.kti_negesp, closs_document.bsiva, closs_document.bsflete, closs_document.bsretencion, closs_document.bsretencioniva, closs_document.tasadoc, closs_document.mtodcto, closs_document.fchvencedcto, closs_document.tienedcto, closs_document.cbsret, closs_document.cdret, closs_document.cbsretiva, closs_document.cdretiva, closs_document.cbsrparme, closs_document.cdrparme, closs_document.cbsretflete, closs_document.cdretflete, closs_document.bsmtoiva, closs_document.bsmtofte, closs_document.retmun_mto, closs_document.dolarflete, closs_document.bsretflete, closs_document.dretflete, closs_document.dretmun_mto, closs_document.retivaoblig, closs_document.edoentrega, closs_document.dmtoiva, closs_document.prcdctoaplic, closs_document.montodctodol, closs_document.montodctobs, closs_document.created_at, closs_document.updated_at
+from closs_document
+where closs_document.codcliente = ?
+order by closs_document.emision desc
+`
+
+func (q *Queries) GetDocumentsByCustomer(ctx context.Context, codcliente string) ([]ClossDocument, error) {
+	rows, err := q.db.QueryContext(ctx, getDocumentsByCustomer, codcliente)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ClossDocument
+	for rows.Next() {
+		var i ClossDocument
+		if err := rows.Scan(
+			&i.Agencia,
+			&i.Tipodoc,
+			&i.Documento,
+			&i.Tipodocv,
+			&i.Codcliente,
+			&i.Nombrecli,
+			&i.Contribesp,
+			&i.RutaParme,
+			&i.Tipoprecio,
+			&i.Emision,
+			&i.Recepcion,
+			&i.Vence,
+			&i.Diascred,
+			&i.Estatusdoc,
+			&i.Dtotneto,
+			&i.Dtotimpuest,
+			&i.Dtotalfinal,
+			&i.Dtotpagos,
+			&i.Dtotdescuen,
+			&i.Dflete,
+			&i.Dtotdev,
+			&i.Dvndmtototal,
+			&i.Dretencion,
+			&i.Dretencioniva,
+			&i.Vendedor,
+			&i.Codcoord,
+			&i.Aceptadev,
+			&i.KtiNegesp,
+			&i.Bsiva,
+			&i.Bsflete,
+			&i.Bsretencion,
+			&i.Bsretencioniva,
+			&i.Tasadoc,
+			&i.Mtodcto,
+			&i.Fchvencedcto,
+			&i.Tienedcto,
+			&i.Cbsret,
+			&i.Cdret,
+			&i.Cbsretiva,
+			&i.Cdretiva,
+			&i.Cbsrparme,
+			&i.Cdrparme,
+			&i.Cbsretflete,
+			&i.Cdretflete,
+			&i.Bsmtoiva,
+			&i.Bsmtofte,
+			&i.RetmunMto,
+			&i.Dolarflete,
+			&i.Bsretflete,
+			&i.Dretflete,
+			&i.DretmunMto,
+			&i.Retivaoblig,
+			&i.Edoentrega,
+			&i.Dmtoiva,
+			&i.Prcdctoaplic,
+			&i.Montodctodol,
+			&i.Montodctobs,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getDocumentsByManager = `-- name: GetDocumentsByManager :many
 ;
 
@@ -800,6 +800,98 @@ order by
 
 func (q *Queries) GetDocumentsByManager(ctx context.Context, kngCodgcia string) ([]ClossDocument, error) {
 	rows, err := q.db.QueryContext(ctx, getDocumentsByManager, kngCodgcia)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ClossDocument
+	for rows.Next() {
+		var i ClossDocument
+		if err := rows.Scan(
+			&i.Agencia,
+			&i.Tipodoc,
+			&i.Documento,
+			&i.Tipodocv,
+			&i.Codcliente,
+			&i.Nombrecli,
+			&i.Contribesp,
+			&i.RutaParme,
+			&i.Tipoprecio,
+			&i.Emision,
+			&i.Recepcion,
+			&i.Vence,
+			&i.Diascred,
+			&i.Estatusdoc,
+			&i.Dtotneto,
+			&i.Dtotimpuest,
+			&i.Dtotalfinal,
+			&i.Dtotpagos,
+			&i.Dtotdescuen,
+			&i.Dflete,
+			&i.Dtotdev,
+			&i.Dvndmtototal,
+			&i.Dretencion,
+			&i.Dretencioniva,
+			&i.Vendedor,
+			&i.Codcoord,
+			&i.Aceptadev,
+			&i.KtiNegesp,
+			&i.Bsiva,
+			&i.Bsflete,
+			&i.Bsretencion,
+			&i.Bsretencioniva,
+			&i.Tasadoc,
+			&i.Mtodcto,
+			&i.Fchvencedcto,
+			&i.Tienedcto,
+			&i.Cbsret,
+			&i.Cdret,
+			&i.Cbsretiva,
+			&i.Cdretiva,
+			&i.Cbsrparme,
+			&i.Cdrparme,
+			&i.Cbsretflete,
+			&i.Cdretflete,
+			&i.Bsmtoiva,
+			&i.Bsmtofte,
+			&i.RetmunMto,
+			&i.Dolarflete,
+			&i.Bsretflete,
+			&i.Dretflete,
+			&i.DretmunMto,
+			&i.Retivaoblig,
+			&i.Edoentrega,
+			&i.Dmtoiva,
+			&i.Prcdctoaplic,
+			&i.Montodctodol,
+			&i.Montodctobs,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getDocumentsBySalesman = `-- name: GetDocumentsBySalesman :many
+;
+
+select closs_document.agencia, closs_document.tipodoc, closs_document.documento, closs_document.tipodocv, closs_document.codcliente, closs_document.nombrecli, closs_document.contribesp, closs_document.ruta_parme, closs_document.tipoprecio, closs_document.emision, closs_document.recepcion, closs_document.vence, closs_document.diascred, closs_document.estatusdoc, closs_document.dtotneto, closs_document.dtotimpuest, closs_document.dtotalfinal, closs_document.dtotpagos, closs_document.dtotdescuen, closs_document.dflete, closs_document.dtotdev, closs_document.dvndmtototal, closs_document.dretencion, closs_document.dretencioniva, closs_document.vendedor, closs_document.codcoord, closs_document.aceptadev, closs_document.kti_negesp, closs_document.bsiva, closs_document.bsflete, closs_document.bsretencion, closs_document.bsretencioniva, closs_document.tasadoc, closs_document.mtodcto, closs_document.fchvencedcto, closs_document.tienedcto, closs_document.cbsret, closs_document.cdret, closs_document.cbsretiva, closs_document.cdretiva, closs_document.cbsrparme, closs_document.cdrparme, closs_document.cbsretflete, closs_document.cdretflete, closs_document.bsmtoiva, closs_document.bsmtofte, closs_document.retmun_mto, closs_document.dolarflete, closs_document.bsretflete, closs_document.dretflete, closs_document.dretmun_mto, closs_document.retivaoblig, closs_document.edoentrega, closs_document.dmtoiva, closs_document.prcdctoaplic, closs_document.montodctodol, closs_document.montodctobs, closs_document.created_at, closs_document.updated_at
+from closs_document
+where closs_document.vendedor = ?
+order by closs_document.codcliente asc, closs_document.emision desc
+`
+
+func (q *Queries) GetDocumentsBySalesman(ctx context.Context, vendedor string) ([]ClossDocument, error) {
+	rows, err := q.db.QueryContext(ctx, getDocumentsBySalesman, vendedor)
 	if err != nil {
 		return nil, err
 	}
@@ -903,7 +995,7 @@ type GetDocumentsWithLinesRow struct {
 	Emision        string
 	Recepcion      string
 	Vence          string
-	Diascred       float64
+	Diascred       int64
 	Estatusdoc     int64
 	Dtotneto       float64
 	Dtotimpuest    float64
@@ -1083,98 +1175,6 @@ func (q *Queries) GetDocumentsWithLines(ctx context.Context) ([]GetDocumentsWith
 	return items, nil
 }
 
-const getdocumentsByCustomer = `-- name: GetdocumentsByCustomer :many
-;
-
-select closs_document.agencia, closs_document.tipodoc, closs_document.documento, closs_document.tipodocv, closs_document.codcliente, closs_document.nombrecli, closs_document.contribesp, closs_document.ruta_parme, closs_document.tipoprecio, closs_document.emision, closs_document.recepcion, closs_document.vence, closs_document.diascred, closs_document.estatusdoc, closs_document.dtotneto, closs_document.dtotimpuest, closs_document.dtotalfinal, closs_document.dtotpagos, closs_document.dtotdescuen, closs_document.dflete, closs_document.dtotdev, closs_document.dvndmtototal, closs_document.dretencion, closs_document.dretencioniva, closs_document.vendedor, closs_document.codcoord, closs_document.aceptadev, closs_document.kti_negesp, closs_document.bsiva, closs_document.bsflete, closs_document.bsretencion, closs_document.bsretencioniva, closs_document.tasadoc, closs_document.mtodcto, closs_document.fchvencedcto, closs_document.tienedcto, closs_document.cbsret, closs_document.cdret, closs_document.cbsretiva, closs_document.cdretiva, closs_document.cbsrparme, closs_document.cdrparme, closs_document.cbsretflete, closs_document.cdretflete, closs_document.bsmtoiva, closs_document.bsmtofte, closs_document.retmun_mto, closs_document.dolarflete, closs_document.bsretflete, closs_document.dretflete, closs_document.dretmun_mto, closs_document.retivaoblig, closs_document.edoentrega, closs_document.dmtoiva, closs_document.prcdctoaplic, closs_document.montodctodol, closs_document.montodctobs, closs_document.created_at, closs_document.updated_at
-from closs_document
-where closs_document.codcliente = ?
-order by closs_document.emision desc
-`
-
-func (q *Queries) GetdocumentsByCustomer(ctx context.Context, codcliente string) ([]ClossDocument, error) {
-	rows, err := q.db.QueryContext(ctx, getdocumentsByCustomer, codcliente)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []ClossDocument
-	for rows.Next() {
-		var i ClossDocument
-		if err := rows.Scan(
-			&i.Agencia,
-			&i.Tipodoc,
-			&i.Documento,
-			&i.Tipodocv,
-			&i.Codcliente,
-			&i.Nombrecli,
-			&i.Contribesp,
-			&i.RutaParme,
-			&i.Tipoprecio,
-			&i.Emision,
-			&i.Recepcion,
-			&i.Vence,
-			&i.Diascred,
-			&i.Estatusdoc,
-			&i.Dtotneto,
-			&i.Dtotimpuest,
-			&i.Dtotalfinal,
-			&i.Dtotpagos,
-			&i.Dtotdescuen,
-			&i.Dflete,
-			&i.Dtotdev,
-			&i.Dvndmtototal,
-			&i.Dretencion,
-			&i.Dretencioniva,
-			&i.Vendedor,
-			&i.Codcoord,
-			&i.Aceptadev,
-			&i.KtiNegesp,
-			&i.Bsiva,
-			&i.Bsflete,
-			&i.Bsretencion,
-			&i.Bsretencioniva,
-			&i.Tasadoc,
-			&i.Mtodcto,
-			&i.Fchvencedcto,
-			&i.Tienedcto,
-			&i.Cbsret,
-			&i.Cdret,
-			&i.Cbsretiva,
-			&i.Cdretiva,
-			&i.Cbsrparme,
-			&i.Cdrparme,
-			&i.Cbsretflete,
-			&i.Cdretflete,
-			&i.Bsmtoiva,
-			&i.Bsmtofte,
-			&i.RetmunMto,
-			&i.Dolarflete,
-			&i.Bsretflete,
-			&i.Dretflete,
-			&i.DretmunMto,
-			&i.Retivaoblig,
-			&i.Edoentrega,
-			&i.Dmtoiva,
-			&i.Prcdctoaplic,
-			&i.Montodctodol,
-			&i.Montodctobs,
-			&i.CreatedAt,
-			&i.UpdatedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
 const updateDocument = `-- name: UpdateDocument :one
 update closs_document set 
     agencia = ?,
@@ -1250,7 +1250,7 @@ type UpdateDocumentParams struct {
 	Emision        string
 	Recepcion      string
 	Vence          string
-	Diascred       float64
+	Diascred       int64
 	Estatusdoc     int64
 	Dtotneto       float64
 	Dtotimpuest    float64

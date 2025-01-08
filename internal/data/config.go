@@ -5,16 +5,14 @@ import (
 
 	"github.com/JueViGrace/clo-backend/internal/db"
 	"github.com/JueViGrace/clo-backend/internal/types"
-	"github.com/google/uuid"
 )
 
 type ConfigStore interface {
-	AdminGetCofigs() (configs []*types.ConfigResponse, err error)
-	AdminGetConfigById(id *uuid.UUID) (config *types.ConfigResponse, err error)
-	CreateConfig(r *types.CreateConfigRequest) (msg string, err error)
-	UpdateConfig(r *types.UpdateConfigRequest) (msg string, err error)
-	DeleteConfig(id *uuid.UUID) (err error)
-	GetConfigByUser(userId *uuid.UUID) (configs []*types.ConfigResponse, err error)
+	GetCofigs() (configs []types.ConfigResponse, err error)
+	GetConfigsByUser(username string) (configs []types.ConfigResponse, err error)
+	CreateConfig(r *types.CreateConfigRequest) (config *types.ConfigResponse, err error)
+	UpdateConfig(r *types.UpdateConfigRequest) (config *types.ConfigResponse, err error)
+	DeleteConfig(r *types.DeleteConfigRequest) (err error)
 }
 
 func (s *storage) ConfigStore() ConfigStore {
@@ -33,91 +31,62 @@ func NewConfigStore(ctx context.Context, db *db.Queries) ConfigStore {
 	}
 }
 
-func (s *configStore) AdminGetCofigs() ([]*types.ConfigResponse, error) {
-	configs := make([]*types.ConfigResponse, 0)
+func (s *configStore) GetCofigs() ([]types.ConfigResponse, error) {
+	configs := make([]types.ConfigResponse, 0)
 
-	dbConfigs, err := s.db.AdminGetConfigs(s.ctx)
+	dbConfigs, err := s.db.GetConfigs(s.ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	for _, dbConfig := range dbConfigs {
-		config, err := types.DbConfigToConfig(&dbConfig)
-		if err != nil {
-			return nil, err
-		}
-		configs = append(configs, config)
+		configs = append(configs, *types.DbConfigToConfig(&dbConfig))
 	}
 
 	return configs, nil
 }
 
-func (s *configStore) AdminGetConfigById(id *uuid.UUID) (*types.ConfigResponse, error) {
-	config := new(types.ConfigResponse)
+func (s *configStore) GetConfigsByUser(username string) ([]types.ConfigResponse, error) {
+	configs := make([]types.ConfigResponse, 0)
 
-	dbConfig, err := s.db.AdminGetConfigById(s.ctx, id.String())
+	dbConfigs, err := s.db.GetConfigsByUsername(s.ctx, username)
 	if err != nil {
 		return nil, err
 	}
 
-	config, err = types.DbConfigToConfig(&dbConfig)
+	for _, dbConfig := range dbConfigs {
+		configs = append(configs, *types.DbConfigToConfig(&dbConfig))
+	}
+
+	return configs, nil
+}
+
+func (s *configStore) CreateConfig(r *types.CreateConfigRequest) (*types.ConfigResponse, error) {
+	dbConfig, err := s.db.CreateConfig(s.ctx, *types.CreateConfigToDb(r))
 	if err != nil {
 		return nil, err
 	}
 
-	return config, nil
+	return types.DbConfigToConfig(&dbConfig), nil
 }
 
-func (s *configStore) CreateConfig(r *types.CreateConfigRequest) (string, error) {
-	cr, err := types.CreateConfigToDb(r)
+func (s *configStore) UpdateConfig(r *types.UpdateConfigRequest) (*types.ConfigResponse, error) {
+	dbConfig, err := s.db.UpdateConfig(s.ctx, *types.UpdateConfigToDb(r))
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	err = s.db.CreateConfig(s.ctx, *cr)
-	if err != nil {
-		return "", err
-	}
-
-	return "Created!", nil
+	return types.DbConfigToConfig(&dbConfig), nil
 }
 
-func (s *configStore) UpdateConfig(r *types.UpdateConfigRequest) (string, error) {
-	ur := types.UpdateConfigToDb(r)
-
-	err := s.db.UpdateConfig(s.ctx, *ur)
-	if err != nil {
-		return "", err
-	}
-
-	return "Updated!", nil
-}
-
-func (s *configStore) DeleteConfig(id *uuid.UUID) error {
-	err := s.db.SoftDeleteConfig(s.ctx, id.String())
+func (s *configStore) DeleteConfig(r *types.DeleteConfigRequest) error {
+	err := s.db.DeleteConfig(s.ctx, db.DeleteConfigParams{
+		CnfgIdconfig: r.CnfgIdconfig,
+		Username:     r.Username,
+	})
 	if err != nil {
 		return err
 	}
 
 	return nil
-}
-
-func (s *configStore) GetConfigByUser(userId *uuid.UUID) ([]*types.ConfigResponse, error) {
-	configs := make([]*types.ConfigResponse, 0)
-
-	dbConfigs, err := s.db.GetConfigByUser(s.ctx, userId.String())
-	if err != nil {
-		return nil, err
-	}
-
-	for _, dbConfig := range dbConfigs {
-		config, err := types.DbConfigToConfig(&dbConfig)
-		if err != nil {
-			return nil, err
-		}
-
-		configs = append(configs, config)
-	}
-
-	return configs, nil
 }

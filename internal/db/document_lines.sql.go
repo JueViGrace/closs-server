@@ -9,7 +9,7 @@ import (
 	"context"
 )
 
-const createDocumentLine = `-- name: CreateDocumentLine :exec
+const createDocumentLine = `-- name: CreateDocumentLine :one
 insert into closs_document_lines (
     agencia,
     tipodoc,
@@ -62,6 +62,7 @@ values(
     ?,
     ?
 )
+RETURNING agencia, tipodoc, documento, tipodocv, grupo, subgrupo, origen, codigo, codhijo, pid, nombre, cantidad, cntdevuelt, vndcntdevuelt, dvndmtototal, dpreciofin, dpreciounit, dmontoneto, dmontototal, timpueprc, unidevuelt, fechadoc, vendedor, codcoord
 `
 
 type CreateDocumentLineParams struct {
@@ -91,8 +92,8 @@ type CreateDocumentLineParams struct {
 	Codcoord      string
 }
 
-func (q *Queries) CreateDocumentLine(ctx context.Context, arg CreateDocumentLineParams) error {
-	_, err := q.db.ExecContext(ctx, createDocumentLine,
+func (q *Queries) CreateDocumentLine(ctx context.Context, arg CreateDocumentLineParams) (ClossDocumentLine, error) {
+	row := q.db.QueryRowContext(ctx, createDocumentLine,
 		arg.Agencia,
 		arg.Tipodoc,
 		arg.Documento,
@@ -118,10 +119,37 @@ func (q *Queries) CreateDocumentLine(ctx context.Context, arg CreateDocumentLine
 		arg.Vendedor,
 		arg.Codcoord,
 	)
-	return err
+	var i ClossDocumentLine
+	err := row.Scan(
+		&i.Agencia,
+		&i.Tipodoc,
+		&i.Documento,
+		&i.Tipodocv,
+		&i.Grupo,
+		&i.Subgrupo,
+		&i.Origen,
+		&i.Codigo,
+		&i.Codhijo,
+		&i.Pid,
+		&i.Nombre,
+		&i.Cantidad,
+		&i.Cntdevuelt,
+		&i.Vndcntdevuelt,
+		&i.Dvndmtototal,
+		&i.Dpreciofin,
+		&i.Dpreciounit,
+		&i.Dmontoneto,
+		&i.Dmontototal,
+		&i.Timpueprc,
+		&i.Unidevuelt,
+		&i.Fechadoc,
+		&i.Vendedor,
+		&i.Codcoord,
+	)
+	return i, err
 }
 
-const updateDocumentLine = `-- name: UpdateDocumentLine :exec
+const updateDocumentLine = `-- name: UpdateDocumentLine :one
 update closs_document_lines set 
     agencia = ?,
     tipodoc = ?,
@@ -146,6 +174,7 @@ update closs_document_lines set
     vendedor = ?,
     codcoord = ?
 WHERE documento = ? and codigo = ?
+RETURNING agencia, tipodoc, documento, tipodocv, grupo, subgrupo, origen, codigo, codhijo, pid, nombre, cantidad, cntdevuelt, vndcntdevuelt, dvndmtototal, dpreciofin, dpreciounit, dmontoneto, dmontototal, timpueprc, unidevuelt, fechadoc, vendedor, codcoord
 `
 
 type UpdateDocumentLineParams struct {
@@ -175,8 +204,8 @@ type UpdateDocumentLineParams struct {
 	Codigo        string
 }
 
-func (q *Queries) UpdateDocumentLine(ctx context.Context, arg UpdateDocumentLineParams) error {
-	_, err := q.db.ExecContext(ctx, updateDocumentLine,
+func (q *Queries) UpdateDocumentLine(ctx context.Context, arg UpdateDocumentLineParams) (ClossDocumentLine, error) {
+	row := q.db.QueryRowContext(ctx, updateDocumentLine,
 		arg.Agencia,
 		arg.Tipodoc,
 		arg.Tipodocv,
@@ -202,5 +231,32 @@ func (q *Queries) UpdateDocumentLine(ctx context.Context, arg UpdateDocumentLine
 		arg.Documento,
 		arg.Codigo,
 	)
-	return err
+	var i ClossDocumentLine
+	err := row.Scan(
+		&i.Agencia,
+		&i.Tipodoc,
+		&i.Documento,
+		&i.Tipodocv,
+		&i.Grupo,
+		&i.Subgrupo,
+		&i.Origen,
+		&i.Codigo,
+		&i.Codhijo,
+		&i.Pid,
+		&i.Nombre,
+		&i.Cantidad,
+		&i.Cntdevuelt,
+		&i.Vndcntdevuelt,
+		&i.Dvndmtototal,
+		&i.Dpreciofin,
+		&i.Dpreciounit,
+		&i.Dmontoneto,
+		&i.Dmontototal,
+		&i.Timpueprc,
+		&i.Unidevuelt,
+		&i.Fechadoc,
+		&i.Vendedor,
+		&i.Codcoord,
+	)
+	return i, err
 }

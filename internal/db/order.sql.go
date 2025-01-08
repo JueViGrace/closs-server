@@ -67,7 +67,7 @@ type CreateOrderParams struct {
 	KtiDocsol      string
 	KtiCondicion   string
 	KtiTipprec     int64
-	KtiTotneto     string
+	KtiTotneto     float64
 	KtiStatus      int64
 	KtiNroped      string
 	KtiFchdoc      string
@@ -341,7 +341,7 @@ type GetOrderWithLinesByCodeRow struct {
 	KtiDocsol      string
 	KtiCondicion   string
 	KtiTipprec     int64
-	KtiTotneto     string
+	KtiTotneto     float64
 	KtiStatus      int64
 	KtiNroped      string
 	KtiFchdoc      string
@@ -389,13 +389,13 @@ type GetOrderWithLinesByCodeRow struct {
 	VtaSolone      sql.NullInt64
 	Codbarras      sql.NullInt64
 	Detalles       sql.NullString
-	Cantbulto      sql.NullFloat64
+	Cantbulto      sql.NullInt64
 	CostoProm      sql.NullFloat64
-	Util1          sql.NullString
-	Util2          sql.NullString
-	Util3          sql.NullString
+	Util1          sql.NullFloat64
+	Util2          sql.NullFloat64
+	Util3          sql.NullFloat64
 	Fchultcomp     sql.NullString
-	Qtyultcomp     sql.NullString
+	Qtyultcomp     sql.NullInt64
 	Images         sql.NullString
 	CreatedAt_3    sql.NullString
 	UpdatedAt_3    sql.NullString
@@ -718,7 +718,7 @@ type GetOrdersWithLinesRow struct {
 	KtiDocsol      string
 	KtiCondicion   string
 	KtiTipprec     int64
-	KtiTotneto     string
+	KtiTotneto     float64
 	KtiStatus      int64
 	KtiNroped      string
 	KtiFchdoc      string
@@ -766,13 +766,13 @@ type GetOrdersWithLinesRow struct {
 	VtaSolone      sql.NullInt64
 	Codbarras      sql.NullInt64
 	Detalles       sql.NullString
-	Cantbulto      sql.NullFloat64
+	Cantbulto      sql.NullInt64
 	CostoProm      sql.NullFloat64
-	Util1          sql.NullString
-	Util2          sql.NullString
-	Util3          sql.NullString
+	Util1          sql.NullFloat64
+	Util2          sql.NullFloat64
+	Util3          sql.NullFloat64
 	Fchultcomp     sql.NullString
-	Qtyultcomp     sql.NullString
+	Qtyultcomp     sql.NullInt64
 	Images         sql.NullString
 	CreatedAt_3    sql.NullString
 	UpdatedAt_3    sql.NullString
@@ -900,7 +900,7 @@ type UpdateOrderParams struct {
 	KtiDocsol      string
 	KtiCondicion   string
 	KtiTipprec     int64
-	KtiTotneto     string
+	KtiTotneto     float64
 	KtiStatus      int64
 	KtiNroped      string
 	KtiFchdoc      string

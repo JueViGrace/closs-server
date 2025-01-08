@@ -53,8 +53,8 @@ func CreateCompanyToDb(r *CreateCompanyRequest) *db.CreateCompanyParams {
 		KedStatus: int64(r.KedStatus),
 		KedEnlace: r.KedEnlace,
 		KedAgen:   r.KedAgen,
-		CreatedAt: time.Now().UTC().String(),
-		UpdatedAt: time.Now().UTC().String(),
+		CreatedAt: time.Now().String(),
+		UpdatedAt: time.Now().String(),
 	}
 }
 
@@ -64,7 +64,7 @@ func UpdateCompanyToDb(r *UpdateCompanyRequest) *db.UpdateCompanyParams {
 		KedStatus: int64(r.KedStatus),
 		KedEnlace: r.KedEnlace,
 		KedAgen:   r.KedAgen,
-		UpdatedAt: time.Now().UTC().String(),
+		UpdatedAt: time.Now().String(),
 		KedCodigo: r.KedCodigo,
 	}
 }

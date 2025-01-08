@@ -1,4 +1,4 @@
--- name: CreateDocumentLine :exec
+-- name: CreateDocumentLine :one
 insert into closs_document_lines (
     agencia,
     tipodoc,
@@ -50,9 +50,10 @@ values(
     ?,
     ?,
     ?
-);
+)
+RETURNING *;
 
--- name: UpdateDocumentLine :exec
+-- name: UpdateDocumentLine :one
 update closs_document_lines set 
     agencia = ?,
     tipodoc = ?,
@@ -76,5 +77,6 @@ update closs_document_lines set
     fechadoc = ?,
     vendedor = ?,
     codcoord = ?
-WHERE documento = ? and codigo = ?;
+WHERE documento = ? and codigo = ?
+RETURNING *;
 

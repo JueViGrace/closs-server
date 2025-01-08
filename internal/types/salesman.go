@@ -8,12 +8,28 @@ type CreateSalesmanRequest struct{}
 
 type UpdateSalesmanRequest struct{}
 
-func DbSalesmanToSalesman(db *db.Vendedor) (*Salesman, error) {
-	return &Salesman{}, nil
+func DbSalesmanToSalesman(db *db.GetSalesmanByCodeRow) *Salesman {
+	return &Salesman{}
 }
 
-func CreateSalesmanToDb(r *CreateSalesmanRequest) (*db.CreateSalesmanParams, error) {
-	return &db.CreateSalesmanParams{}, nil
+func DbExistingSalesmanToSalesman(db *db.GetExistingSalesmanByCodeRow) *Salesman {
+	return &Salesman{}
+}
+
+func DbSalesmanByManagerToSalesman(db *db.GetSalesmenByManagerRow) *Salesman {
+	return &Salesman{}
+}
+
+func DbExistingSalesmanByManagerToSalesman(db *db.GetExistingSalesmenByManagerRow) *Salesman {
+	return &Salesman{}
+}
+
+func mapToSalesman() *Salesman {
+	return &Salesman{}
+}
+
+func CreateSalesmanToDb(r *CreateSalesmanRequest) *db.CreateSalesmanParams {
+	return &db.CreateSalesmanParams{}
 }
 
 func UpdateSalesmanToDb(r *UpdateSalesmanRequest) *db.UpdateSalesmanParams {

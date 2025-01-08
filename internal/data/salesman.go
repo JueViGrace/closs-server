@@ -5,15 +5,15 @@ import (
 
 	"github.com/JueViGrace/clo-backend/internal/db"
 	"github.com/JueViGrace/clo-backend/internal/types"
-	"github.com/google/uuid"
 )
 
 type SalesmanStore interface {
-	GetSalesmen() (salesmen []*types.Salesman, err error)
-	GetSalesman(id *uuid.UUID) (salesman *types.Salesman, err error)
-	CreateSalesman(r *types.CreateSalesmanRequest) (msg string, err error)
-	UpdateSalesman(r *types.UpdateSalesmanRequest) (msg string, err error)
-	DeleteSalesman(id *uuid.UUID) (err error)
+	GetSalesmenByManager(code string) (salesmen []types.Salesman, err error)
+	GetExistingSalesmenByManager(code string) (salesmen []types.Salesman, err error)
+	GetSalesmanByCode(code string) (salesman *types.Salesman, err error)
+	GetExistingSalesmanByCode(code string) (salesman *types.Salesman, err error)
+	CreateSalesman(r *types.CreateSalesmanRequest) (salesman *types.Salesman, err error)
+	UpdateSalesman(r *types.UpdateSalesmanRequest) (salesman *types.Salesman, err error)
 }
 
 func (s *storage) SalesmanStore() SalesmanStore {
@@ -32,72 +32,68 @@ func NewSalesmanStore(ctx context.Context, db *db.Queries) SalesmanStore {
 	}
 }
 
-func (s *salesmanStore) GetSalesmen() ([]*types.Salesman, error) {
-	salesmen := make([]*types.Salesman, 0)
+func (s *salesmanStore) GetSalesmenByManager(code string) ([]types.Salesman, error) {
+	salesmen := make([]types.Salesman, 0)
 
-	dbSalesmen, err := s.db.AdminGetSalesmen(s.ctx)
+	dbSalesmen, err := s.db.GetSalesmenByManager(s.ctx, code)
 	if err != nil {
 		return nil, err
 	}
 
 	for _, dbSalesman := range dbSalesmen {
-		salesman, err := types.DbSalesmanToSalesman(&dbSalesman)
-		if err != nil {
-			return nil, err
-		}
-
-		salesmen = append(salesmen, salesman)
+		salesmen = append(salesmen, *types.DbSalesmanByManagerToSalesman(&dbSalesman))
 	}
 
 	return salesmen, nil
 }
 
-func (s *salesmanStore) GetSalesman(id *uuid.UUID) (*types.Salesman, error) {
-	salesman := new(types.Salesman)
+func (s *salesmanStore) GetExistingSalesmenByManager(code string) ([]types.Salesman, error) {
+	salesmen := make([]types.Salesman, 0)
 
-	dbSalesman, err := s.db.GetSalesmanById(s.ctx, id.String())
+	dbSalesmen, err := s.db.GetExistingSalesmenByManager(s.ctx, code)
 	if err != nil {
 		return nil, err
 	}
 
-	salesman, err = types.DbSalesmanToSalesman(&dbSalesman)
+	for _, dbSalesman := range dbSalesmen {
+		salesmen = append(salesmen, *types.DbExistingSalesmanByManagerToSalesman(&dbSalesman))
+	}
+
+	return salesmen, nil
+}
+
+func (s *salesmanStore) GetExistingSalesmanByCode(code string) (*types.Salesman, error) {
+	dbSalesman, err := s.db.GetExistingSalesmanByCode(s.ctx, code)
 	if err != nil {
 		return nil, err
 	}
 
-	return salesman, nil
+	return types.DbExistingSalesmanToSalesman(&dbSalesman), nil
 }
 
-func (s *salesmanStore) CreateSalesman(r *types.CreateSalesmanRequest) (string, error) {
-	cr, err := types.CreateSalesmanToDb(r)
+func (s *salesmanStore) GetSalesmanByCode(code string) (*types.Salesman, error) {
+	dbSalesman, err := s.db.GetSalesmanByCode(s.ctx, code)
 	if err != nil {
-		return "", nil
+		return nil, err
 	}
 
-	err = s.db.CreateSalesman(s.ctx, *cr)
-	if err != nil {
-		return "", err
-	}
-
-	return "Created!", nil
+	return types.DbSalesmanToSalesman(&dbSalesman), nil
 }
 
-func (s *salesmanStore) UpdateSalesman(r *types.UpdateSalesmanRequest) (string, error) {
-	ur := types.UpdateSalesmanToDb(r)
-
-	err := s.db.UpdateSalesman(s.ctx, *ur)
+func (s *salesmanStore) CreateSalesman(r *types.CreateSalesmanRequest) (*types.Salesman, error) {
+	dbSalesman, err := s.db.CreateSalesman(s.ctx, *types.CreateSalesmanToDb(r))
 	if err != nil {
-		return "", nil
+		return nil, err
 	}
 
-	return "Updated!", nil
+	return s.GetSalesmanByCode(dbSalesman.Codigo)
 }
 
-func (s *salesmanStore) DeleteSalesman(id *uuid.UUID) error {
-	err := s.db.SoftDeleteSalesman(s.ctx, id.String())
+func (s *salesmanStore) UpdateSalesman(r *types.UpdateSalesmanRequest) (*types.Salesman, error) {
+	dbSalesman, err := s.db.UpdateSalesman(s.ctx, *types.UpdateSalesmanToDb(r))
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return s.GetSalesmanByCode(dbSalesman.Codigo)
 }

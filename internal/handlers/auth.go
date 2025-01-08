@@ -10,6 +10,7 @@ type AuthHandler interface {
 	SignUp(c *fiber.Ctx) error
 	SignIn(c *fiber.Ctx) error
 	RecoverPassword(c *fiber.Ctx) error
+	Refresh(c *fiber.Ctx) error
 }
 
 type authHandler struct {

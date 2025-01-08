@@ -5,18 +5,15 @@ import (
 
 	"github.com/JueViGrace/clo-backend/internal/db"
 	"github.com/JueViGrace/clo-backend/internal/types"
-	"github.com/google/uuid"
 )
 
 type CustomerStore interface {
-	AdminGetCustomers() (customers []*types.CustomerResponse, err error)
-	AdminGetCustomer(id *uuid.UUID) (customer *types.CustomerResponse, err error)
-	CreateCustomer(r *types.CreateCustomerRequest) (msg string, err error)
-	UpdateCustomer(r *types.UpdateCustomerRequest) (msg string, err error)
-	DeleteCustomer(id *uuid.UUID) (err error)
-	GetCustomersByManager(code string) (customers []*types.CustomerResponse, err error)
-	GetCustomersBySalesman(code string) (customers []*types.CustomerResponse, err error)
-	GetCustomerById(id *uuid.UUID) (customer *types.CustomerResponse, err error)
+	GetCustomers() (customers []types.CustomerResponse, err error)
+	GetCustomerByCode(code string) (customer *types.CustomerResponse, err error)
+	GetCustomersByManager(code string) (customers []types.CustomerResponse, err error)
+	GetCustomersBySalesman(code string) (customers []types.CustomerResponse, err error)
+	CreateCustomer(r *types.CreateCustomerRequest) (customer *types.CustomerResponse, err error)
+	UpdateCustomer(r *types.UpdateCustomerRequest) (customer *types.CustomerResponse, err error)
 }
 
 func (s *storage) CustomerStore() CustomerStore {
@@ -35,80 +32,74 @@ func NewCustomerStore(ctx context.Context, db *db.Queries) CustomerStore {
 	}
 }
 
-func (s *customerStore) AdminGetCustomers() ([]*types.CustomerResponse, error) {
-	customers := make([]*types.CustomerResponse, 0)
+func (s *customerStore) GetCustomers() ([]types.CustomerResponse, error) {
+	customers := make([]types.CustomerResponse, 0)
 
-	dbCustomers, err := s.db.AdminGetCustomers(s.ctx)
+	dbCustomers, err := s.db.GetCustomers(s.ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	for _, dbCustomer := range dbCustomers {
-		customer, err := types.DbCustomerToCustomer(&dbCustomer)
-		if err != nil {
-			return nil, err
-		}
-		customers = append(customers, customer)
+		customers = append(customers, *types.DbCustomerToCustomer(&dbCustomer))
 	}
 
 	return customers, nil
 }
 
-func (s *customerStore) AdminGetCustomer(id *uuid.UUID) (*types.CustomerResponse, error) {
-	customer := new(types.CustomerResponse)
-
-	dbCustomer, err := s.db.GetCustomerById(s.ctx, id.String())
+func (s *customerStore) GetCustomerByCode(code string) (*types.CustomerResponse, error) {
+	dbCustomer, err := s.db.GetCustomerByCode(s.ctx, code)
 	if err != nil {
 		return nil, err
 	}
 
-	customer, err = types.DbCustomerToCustomer(&dbCustomer)
+	return types.DbCustomerToCustomer(&dbCustomer), nil
+}
+
+func (s *customerStore) GetCustomersByManager(code string) ([]types.CustomerResponse, error) {
+	customers := make([]types.CustomerResponse, 0)
+
+	dbCustomers, err := s.db.GetCustomersByManager(s.ctx, code)
 	if err != nil {
 		return nil, err
 	}
 
-	return customer, nil
-}
-
-func (s *customerStore) CreateCustomer(r *types.CreateCustomerRequest) (string, error) {
-	cr, err := types.CreateCustomerToDb(r)
-	if err != nil {
-		return "", err
+	for _, dbCustomer := range dbCustomers {
+		customers = append(customers, *types.DbCustomerToCustomer(&dbCustomer))
 	}
 
-	err = s.db.CreateCustomer(s.ctx, *cr)
+	return customers, nil
+}
+
+func (s *customerStore) GetCustomersBySalesman(code string) ([]types.CustomerResponse, error) {
+	customers := make([]types.CustomerResponse, 0)
+
+	dbCustomers, err := s.db.GetCustomersBySalesman(s.ctx, code)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return "Created!", nil
-}
-
-func (s *customerStore) UpdateCustomer(r *types.UpdateCustomerRequest) (string, error) {
-	ur := types.UpdateCustomerToDb(r)
-
-	err := s.db.UpdateCustomer(s.ctx, *ur)
-	if err != nil {
-		return "", err
+	for _, dbCustomer := range dbCustomers {
+		customers = append(customers, *types.DbCustomerToCustomer(&dbCustomer))
 	}
 
-	return "Updated!", nil
+	return customers, nil
 }
 
-func (s *customerStore) DeleteCustomer(id *uuid.UUID) error {
-	err := s.db.SoftDeleteCustomer(s.ctx, id.String())
+func (s *customerStore) CreateCustomer(r *types.CreateCustomerRequest) (*types.CustomerResponse, error) {
+	dbCustomer, err := s.db.CreateCustomer(s.ctx, *types.CreateCustomerToDb(r))
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return types.DbCustomerToCustomer(&dbCustomer), nil
 }
 
-func GetCustomersByManager(code string) ([]*types.CustomerResponse, error) {
-}
+func (s *customerStore) UpdateCustomer(r *types.UpdateCustomerRequest) (*types.CustomerResponse, error) {
+	dbCustomer, err := s.db.UpdateCustomer(s.ctx, *types.UpdateCustomerToDb(r))
+	if err != nil {
+		return nil, err
+	}
 
-func GetCustomersBySalesman(code string) ([]*types.CustomerResponse, error) {
-}
-
-func GetCustomerById(id *uuid.UUID) (*types.CustomerResponse, error) {
+	return types.DbCustomerToCustomer(&dbCustomer), nil
 }

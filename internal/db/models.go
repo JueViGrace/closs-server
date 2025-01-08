@@ -85,7 +85,7 @@ type ClossDocument struct {
 	Emision        string
 	Recepcion      string
 	Vence          string
-	Diascred       float64
+	Diascred       int64
 	Estatusdoc     int64
 	Dtotneto       float64
 	Dtotimpuest    float64
@@ -186,7 +186,7 @@ type ClossOrder struct {
 	KtiDocsol      string
 	KtiCondicion   string
 	KtiTipprec     int64
-	KtiTotneto     string
+	KtiTotneto     float64
 	KtiStatus      int64
 	KtiNroped      string
 	KtiFchdoc      string
@@ -240,13 +240,13 @@ type ClossProduct struct {
 	VtaSolone    int64
 	Codbarras    int64
 	Detalles     string
-	Cantbulto    float64
+	Cantbulto    int64
 	CostoProm    float64
-	Util1        string
-	Util2        string
-	Util3        string
+	Util1        float64
+	Util2        float64
+	Util3        float64
 	Fchultcomp   string
-	Qtyultcomp   string
+	Qtyultcomp   int64
 	Images       string
 	CreatedAt    string
 	UpdatedAt    string

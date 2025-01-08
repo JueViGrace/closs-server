@@ -55,6 +55,11 @@ type UpdateConfigRequest struct {
 	CnfgIdconfig string    `json:"cnfg_idconfig"`
 }
 
+type DeleteConfigRequest struct {
+	Username     string `json:"username"`
+	CnfgIdconfig string `json:"cnfg_idconfig"`
+}
+
 func DbConfigToConfig(db *db.ClossConfig) *ConfigResponse {
 	return &ConfigResponse{
 		CnfgIdconfig: db.CnfgIdconfig,
@@ -89,8 +94,8 @@ func CreateConfigToDb(r *CreateConfigRequest) *db.CreateConfigParams {
 		CnfgEtiq:     r.CnfgEtiq,
 		CnfgTtip:     r.CnfgTtip,
 		Username:     r.Username,
-		CreatedAt:    time.Now().UTC().String(),
-		UpdatedAt:    time.Now().UTC().String(),
+		CreatedAt:    time.Now().String(),
+		UpdatedAt:    time.Now().String(),
 	}
 }
 
@@ -106,7 +111,7 @@ func UpdateConfigToDb(r *UpdateConfigRequest) *db.UpdateConfigParams {
 		CnfgActiva:   int64(util.BoolToInt(r.CnfgActiva)),
 		CnfgEtiq:     r.CnfgEtiq,
 		CnfgTtip:     r.CnfgTtip,
-		UpdatedAt:    time.Now().UTC().String(),
+		UpdatedAt:    time.Now().String(),
 		CnfgIdconfig: r.CnfgIdconfig,
 		Username:     r.Username,
 	}

@@ -3,16 +3,16 @@ select *
 from closs_product
 ;
 
--- name: GetProductByCode :one
-select *
-from closs_product
-where codigo = ?
-;
-
 -- name: GetExistingProducts :many
 select *
 from closs_product
 where (existencia - comprometido) > 0 and discont = 0 and deleted_at is null
+;
+
+-- name: GetProductByCode :one
+select *
+from closs_product
+where codigo = ?
 ;
 
 -- name: GetExistingProductByCode :one
@@ -25,7 +25,7 @@ where
     and deleted_at is null
 ;
 
--- name: CreateProduct :exec
+-- name: CreateProduct :one
 insert into closs_product (
     codigo,
     grupo,
@@ -99,9 +99,10 @@ values (
     ?,
     ?,
     ?
-);
+)
+RETURNING *;
 
--- name: UpdateProduct :exec
+-- name: UpdateProduct :one
 update closs_product set 
     grupo = ?,
     subgrupo = ?,
@@ -136,7 +137,8 @@ update closs_product set
     fchultcomp = ?,
     qtyultcomp = ?,
     updated_at = ?
-where codigo = ?;
+where codigo = ?
+RETURNING *;
 
 -- name: SoftDeleteProduct :exec
 update closs_product set 

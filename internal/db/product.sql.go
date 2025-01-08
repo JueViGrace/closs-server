@@ -10,7 +10,7 @@ import (
 	"database/sql"
 )
 
-const createProduct = `-- name: CreateProduct :exec
+const createProduct = `-- name: CreateProduct :one
 ;
 
 insert into closs_product (
@@ -87,6 +87,7 @@ values (
     ?,
     ?
 )
+RETURNING codigo, grupo, subgrupo, nombre, referencia, marca, unidad, discont, existencia, vta_max, vta_min, vta_minenx, comprometido, precio1, precio2, precio3, precio4, precio5, precio6, precio7, preventa, dctotope, vta_solofac, vta_solone, codbarras, detalles, cantbulto, costo_prom, util1, util2, util3, fchultcomp, qtyultcomp, images, created_at, updated_at, deleted_at
 `
 
 type CreateProductParams struct {
@@ -116,19 +117,19 @@ type CreateProductParams struct {
 	VtaSolone    int64
 	Codbarras    int64
 	Detalles     string
-	Cantbulto    float64
+	Cantbulto    int64
 	CostoProm    float64
-	Util1        string
-	Util2        string
-	Util3        string
+	Util1        float64
+	Util2        float64
+	Util3        float64
 	Fchultcomp   string
-	Qtyultcomp   string
+	Qtyultcomp   int64
 	CreatedAt    string
 	UpdatedAt    string
 }
 
-func (q *Queries) CreateProduct(ctx context.Context, arg CreateProductParams) error {
-	_, err := q.db.ExecContext(ctx, createProduct,
+func (q *Queries) CreateProduct(ctx context.Context, arg CreateProductParams) (ClossProduct, error) {
+	row := q.db.QueryRowContext(ctx, createProduct,
 		arg.Codigo,
 		arg.Grupo,
 		arg.Subgrupo,
@@ -165,7 +166,47 @@ func (q *Queries) CreateProduct(ctx context.Context, arg CreateProductParams) er
 		arg.CreatedAt,
 		arg.UpdatedAt,
 	)
-	return err
+	var i ClossProduct
+	err := row.Scan(
+		&i.Codigo,
+		&i.Grupo,
+		&i.Subgrupo,
+		&i.Nombre,
+		&i.Referencia,
+		&i.Marca,
+		&i.Unidad,
+		&i.Discont,
+		&i.Existencia,
+		&i.VtaMax,
+		&i.VtaMin,
+		&i.VtaMinenx,
+		&i.Comprometido,
+		&i.Precio1,
+		&i.Precio2,
+		&i.Precio3,
+		&i.Precio4,
+		&i.Precio5,
+		&i.Precio6,
+		&i.Precio7,
+		&i.Preventa,
+		&i.Dctotope,
+		&i.VtaSolofac,
+		&i.VtaSolone,
+		&i.Codbarras,
+		&i.Detalles,
+		&i.Cantbulto,
+		&i.CostoProm,
+		&i.Util1,
+		&i.Util2,
+		&i.Util3,
+		&i.Fchultcomp,
+		&i.Qtyultcomp,
+		&i.Images,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DeletedAt,
+	)
+	return i, err
 }
 
 const deleteProduct = `-- name: DeleteProduct :exec
@@ -442,7 +483,7 @@ func (q *Queries) SoftDeleteProduct(ctx context.Context, arg SoftDeleteProductPa
 	return err
 }
 
-const updateProduct = `-- name: UpdateProduct :exec
+const updateProduct = `-- name: UpdateProduct :one
 update closs_product set 
     grupo = ?,
     subgrupo = ?,
@@ -478,6 +519,7 @@ update closs_product set
     qtyultcomp = ?,
     updated_at = ?
 where codigo = ?
+RETURNING codigo, grupo, subgrupo, nombre, referencia, marca, unidad, discont, existencia, vta_max, vta_min, vta_minenx, comprometido, precio1, precio2, precio3, precio4, precio5, precio6, precio7, preventa, dctotope, vta_solofac, vta_solone, codbarras, detalles, cantbulto, costo_prom, util1, util2, util3, fchultcomp, qtyultcomp, images, created_at, updated_at, deleted_at
 `
 
 type UpdateProductParams struct {
@@ -506,19 +548,19 @@ type UpdateProductParams struct {
 	VtaSolone    int64
 	Codbarras    int64
 	Detalles     string
-	Cantbulto    float64
+	Cantbulto    int64
 	CostoProm    float64
-	Util1        string
-	Util2        string
-	Util3        string
+	Util1        float64
+	Util2        float64
+	Util3        float64
 	Fchultcomp   string
-	Qtyultcomp   string
+	Qtyultcomp   int64
 	UpdatedAt    string
 	Codigo       string
 }
 
-func (q *Queries) UpdateProduct(ctx context.Context, arg UpdateProductParams) error {
-	_, err := q.db.ExecContext(ctx, updateProduct,
+func (q *Queries) UpdateProduct(ctx context.Context, arg UpdateProductParams) (ClossProduct, error) {
+	row := q.db.QueryRowContext(ctx, updateProduct,
 		arg.Grupo,
 		arg.Subgrupo,
 		arg.Nombre,
@@ -554,5 +596,45 @@ func (q *Queries) UpdateProduct(ctx context.Context, arg UpdateProductParams) er
 		arg.UpdatedAt,
 		arg.Codigo,
 	)
-	return err
+	var i ClossProduct
+	err := row.Scan(
+		&i.Codigo,
+		&i.Grupo,
+		&i.Subgrupo,
+		&i.Nombre,
+		&i.Referencia,
+		&i.Marca,
+		&i.Unidad,
+		&i.Discont,
+		&i.Existencia,
+		&i.VtaMax,
+		&i.VtaMin,
+		&i.VtaMinenx,
+		&i.Comprometido,
+		&i.Precio1,
+		&i.Precio2,
+		&i.Precio3,
+		&i.Precio4,
+		&i.Precio5,
+		&i.Precio6,
+		&i.Precio7,
+		&i.Preventa,
+		&i.Dctotope,
+		&i.VtaSolofac,
+		&i.VtaSolone,
+		&i.Codbarras,
+		&i.Detalles,
+		&i.Cantbulto,
+		&i.CostoProm,
+		&i.Util1,
+		&i.Util2,
+		&i.Util3,
+		&i.Fchultcomp,
+		&i.Qtyultcomp,
+		&i.Images,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DeletedAt,
+	)
+	return i, err
 }

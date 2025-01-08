@@ -3,19 +3,26 @@ package util
 import (
 	"fmt"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 )
 
-var jwtSecret string = os.Getenv("JWT_SECRET")
+var (
+	jwtSecret string           = os.Getenv("JWT_SECRET")
+	Issuer    string           = "ClossServer"
+	Audience  jwt.ClaimStrings = jwt.ClaimStrings{
+		"api",
+	}
+	accessExpiration  time.Time = time.Now().Add(1 * time.Hour)
+	refreshExpiration time.Time = time.Now().Add(24 * time.Hour)
+)
 
 type userClaims struct {
-	FullName string `json:"full_name"`
-	Email    string `json:"email"`
-	Role     string `json:"role"`
+	UserId   uuid.UUID `json:"userId"`
+	Username string    `json:"username"`
+	Code     string    `json:"code"`
 }
 
 type JWTClaims struct {
@@ -23,36 +30,45 @@ type JWTClaims struct {
 	jwt.RegisteredClaims
 }
 
-func CreateJWT(fullName, email, role string) (string, error) {
-	id, err := uuid.NewV7()
+func CreateAccessToken(id, username, code string) (string, error) {
+	return createJWT(id, username, code, accessExpiration)
+}
+
+func CreateRefreshToken(id, username, code string) (string, error) {
+	return createJWT(id, username, code, refreshExpiration)
+}
+
+func createJWT(id, username, code string, expiration time.Time) (string, error) {
+	tokenId, err := uuid.NewV7()
 	if err != nil {
 		return "", err
 	}
 
-	sub := strings.ToLower(strings.Split(fullName, " ")[0])
+	userId, err := uuid.Parse(id)
+	if err != nil {
+		return "", err
+	}
 
 	claims := JWTClaims{
 		userClaims{
-			FullName: fullName,
-			Email:    email,
-			Role:     role,
+			UserId:   userId,
+			Username: username,
+			Code:     code,
 		},
 		jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
+			ExpiresAt: jwt.NewNumericDate(expiration),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			NotBefore: jwt.NewNumericDate(time.Now()),
-			Issuer:    "CloServer",
-			Subject:   sub,
-			ID:        id.String(),
-			Audience: jwt.ClaimStrings{
-				"api",
-			},
+			Issuer:    Issuer,
+			Subject:   id,
+			ID:        tokenId.String(),
+			Audience:  Audience,
 		},
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	return token.SignedString(jwtSecret)
+	return token.SignedString([]byte(jwtSecret))
 }
 
 func ValidateJWT(tokenString string) (*jwt.Token, error) {

@@ -7,57 +7,62 @@ import (
 	"github.com/google/uuid"
 )
 
-type User struct {
-	ID        uuid.UUID `json:"id"`
-	Username  string    `json:"username"`
-	Password  string    `json:"-"`
-	Role      Role      `json:"role"`
-	Desactivo bool      `json:"desactivo"`
-	UltSinc   time.Time `json:"ult_sinc"`
-	Version   string    `json:"version"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	DeletedAt time.Time `json:"deleted_at"`
+type UserResponse struct {
+	ID        string `json:"id"`
+	Username  string `json:"username"`
+	Password  string `json:"-"`
+	Code      string `json:"codigo"`
+	Role      Role   `json:"-"`
+	LastSync  string `json:"lastSync"`
+	Version   string `json:"version"`
+	CreatedAt string `json:"createdAt"`
+	UpdatedAt string `json:"updatedAt"`
+	DeletedAt string `json:"deletedAt"`
 }
 
-type UpdateUserRequest struct {
-	UltSinc time.Time `json:"ult_sinc"`
-	Version string    `json:"version"`
-	ID      uuid.UUID `json:"id"`
+type CreateUserRequest struct {
+	Username string `json:"username"`
+	Password string `json:"-"`
+	Code     string `json:"codigo"`
+	Role     Role   `json:"-"`
+	LastSync string `json:"lastSync"`
+	Version  string `json:"version"`
+}
+
+type UpdateLastSyncRequest struct {
+	LastSync time.Time `json:"lastSync"`
+	Version  string    `json:"version"`
+	ID       uuid.UUID `json:"id"`
+}
+
+type UpdatePasswordRequest struct {
+	Password string    `json:"password"`
+	ID       uuid.UUID `json:"id"`
 }
 
 type Role string
 
 const (
-	RoleCliente  Role = "cliente"
-	RoleVendedor Role = "vendedor"
-	RoleGerente  Role = "gerente"
-	RoleAdmin    Role = "administrador"
+	RoleCustomer Role = "customer"
+	RoleSalesman Role = "salesman"
+	RoleManager  Role = "manager"
+	RoleAdmin    Role = "admin"
 )
 
-func DbUserToUser(db *db.Usuario) (*User, error) {
-	id, err := uuid.Parse(db.ID)
-	if err != nil {
-		return nil, err
-	}
-	return &User{
-		ID:        id,
+func DbUserToUser(db *db.ClossUser) *UserResponse {
+	return &UserResponse{
+		ID:        db.ID,
 		Username:  db.Username,
 		Password:  db.Password,
 		Role:      Role(db.Role),
-		Desactivo: db.Desactivo,
-		UltSinc:   db.UltSinc,
+		LastSync:  db.UltSinc,
 		Version:   db.Version,
 		CreatedAt: db.CreatedAt,
 		UpdatedAt: db.UpdatedAt,
-		DeletedAt: db.DeletedAt.Time,
-	}, nil
+		DeletedAt: db.DeletedAt.String,
+	}
 }
 
-func UpdateUserToDb(r *UpdateUserRequest) *db.UpdateUserParams {
-	return &db.UpdateUserParams{
-		UltSinc: r.UltSinc,
-		Version: r.Version,
-		ID:      r.ID.String(),
-	}
+func CreateUserToDb(r *CreateUserRequest) (*db.CreateUserParams, error) {
+	return &db.CreateUserParams{}, nil
 }

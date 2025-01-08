@@ -5,15 +5,14 @@ import (
 
 	"github.com/JueViGrace/clo-backend/internal/db"
 	"github.com/JueViGrace/clo-backend/internal/types"
-	"github.com/google/uuid"
 )
 
 type StatisticStore interface {
-	GetStatistics() ([]*types.Statistic, error)
-	GetStatistic(id *uuid.UUID) (*types.Statistic, error)
-	CreateStatistic(r *types.CreateStatisticRequest) (string, error)
-	UpdateStatistic(r *types.UpdateStatisticRequest) (string, error)
-	DeleteStatistic(id *uuid.UUID) error
+	GetStatistics() ([]types.SalesmanStatistic, error)
+	GetStatisticsByManager(code string) ([]types.SalesmanStatistic, error)
+	GetStatisticBySalesman(code string) (*types.SalesmanStatistic, error)
+	CreateStatistic(r *types.CreateStatisticRequest) (*types.SalesmanStatistic, error)
+	UpdateStatistic(r *types.UpdateStatisticRequest) (*types.SalesmanStatistic, error)
 }
 
 func (s *storage) StatisticStore() StatisticStore {
@@ -32,71 +31,59 @@ func NewStatisticStore(ctx context.Context, db *db.Queries) StatisticStore {
 	}
 }
 
-func (s *statisticStore) GetStatistics() ([]*types.Statistic, error) {
-	statistics := make([]*types.Statistic, 0)
+func (s *statisticStore) GetStatistics() ([]types.SalesmanStatistic, error) {
+	statistics := make([]types.SalesmanStatistic, 0)
 
-	dbStatistics, err := s.db.AdminGetStatistics(s.ctx)
+	dbStatistics, err := s.db.GetStatistics(s.ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	for _, dbStatistic := range dbStatistics {
-		statistic, err := types.DbStatisticToStatistc(&dbStatistic)
-		if err != nil {
-			return nil, err
-		}
-		statistics = append(statistics, statistic)
+		statistics = append(statistics, *types.DbStatisticToStatistc(&dbStatistic))
 	}
 
 	return statistics, nil
 }
 
-func (s *statisticStore) GetStatistic(id *uuid.UUID) (*types.Statistic, error) {
-	statistic := new(types.Statistic)
+func (s *statisticStore) GetStatisticsByManager(code string) ([]types.SalesmanStatistic, error) {
+	statistics := make([]types.SalesmanStatistic, 0)
 
-	dbStatistic, err := s.db.GetStatisticsById(s.ctx, id.String())
+	dbStatistics, err := s.db.GetStatisticsByManager(s.ctx, code)
 	if err != nil {
 		return nil, err
 	}
 
-	statistic, err = types.DbStatisticToStatistc(&dbStatistic)
+	for _, dbStatistic := range dbStatistics {
+		statistics = append(statistics, *types.DbStatisticToStatistc(&dbStatistic))
+	}
+
+	return statistics, nil
+}
+
+func (s *statisticStore) GetStatisticBySalesman(code string) (*types.SalesmanStatistic, error) {
+	dbStatistic, err := s.db.GetStatisticBySalesman(s.ctx, code)
 	if err != nil {
 		return nil, err
 	}
 
-	return statistic, nil
+	return types.DbStatisticToStatistc(&dbStatistic), nil
 }
 
-func (s *statisticStore) CreateStatistic(r *types.CreateStatisticRequest) (string, error) {
-	cr, err := types.CreateStatisticToDb(r)
+func (s *statisticStore) CreateStatistic(r *types.CreateStatisticRequest) (*types.SalesmanStatistic, error) {
+	dbStatistic, err := s.db.CreateStatistic(s.ctx, *types.CreateStatisticToDb(r))
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	err = s.db.CreateStatistic(s.ctx, *cr)
-	if err != nil {
-		return "", err
-	}
-
-	return "Created!", nil
+	return types.DbStatisticToStatistc(&dbStatistic), nil
 }
 
-func (s *statisticStore) UpdateStatistic(r *types.UpdateStatisticRequest) (string, error) {
-	ur := types.UpdateStatisticToDb(r)
-
-	err := s.db.UpdateStatistic(s.ctx, *ur)
+func (s *statisticStore) UpdateStatistic(r *types.UpdateStatisticRequest) (*types.SalesmanStatistic, error) {
+	dbStatistic, err := s.db.UpdateStatistic(s.ctx, *types.UpdateStatisticToDb(r))
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return "Updated!", nil
-}
-
-func (s *statisticStore) DeleteStatistic(id *uuid.UUID) error {
-	err := s.db.SoftDeleteStatistic(s.ctx, id.String())
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return types.DbStatisticToStatistc(&dbStatistic), nil
 }

@@ -4,200 +4,281 @@ import (
 	"time"
 
 	"github.com/JueViGrace/clo-backend/internal/db"
-	"github.com/google/uuid"
+	"github.com/JueViGrace/clo-backend/internal/util"
 )
 
-type DocumentWithLines struct {
-	Document
-	Lines []DocumentLine `json:"lines"`
+type DocumentWithLinesResponse struct {
+	DocumentResponse
+	Lines []DocumentLineResponse `json:"lines"`
 }
 
-type Document struct {
-	Agencia        string    `json:"agencia"`
-	Tipodoc        string    `json:"tipodoc"`
-	Documento      string    `json:"documento"`
-	Tipodocv       string    `json:"tipodocv"`
-	Codcliente     string    `json:"codcliente"`
-	Nombrecli      string    `json:"nombrecli"`
-	Contribesp     bool      `json:"contribesp"`
-	RutaParme      bool      `json:"ruta_parme"`
-	Tipoprecio     string    `json:"tipoprecio"`
-	Emision        time.Time `json:"emision"`
-	Recepcion      time.Time `json:"recepcion"`
-	Vence          time.Time `json:"vence"`
-	Diascred       string    `json:"diascred"`
-	Estatusdoc     string    `json:"estatusdoc"`
-	Dtotneto       string    `json:"dtotneto"`
-	Dtotimpuest    string    `json:"dtotimpuest"`
-	Dtotalfinal    string    `json:"dtotalfinal"`
-	Dtotpagos      string    `json:"dtotpagos"`
-	Dtotdescuen    string    `json:"dtotdescuen"`
-	Dflete         string    `json:"dFlete"`
-	Dtotdev        string    `json:"dtotdev"`
-	Dvndmtototal   string    `json:"dvndmtototal"`
-	Dretencion     string    `json:"dretencion"`
-	Dretencioniva  string    `json:"dretencioniva"`
-	Vendedor       string    `json:"vendedor"`
-	Codcoord       string    `json:"codcoord"`
-	Aceptadev      bool      `json:"aceptadev"`
-	KtiNegesp      bool      `json:"kti_negesp"`
-	Bsiva          string    `json:"bsiva"`
-	Bsflete        string    `json:"bsflete"`
-	Bsretencion    string    `json:"bsretencion"`
-	Bsretencioniva string    `json:"bsretencioniva"`
-	Tasadoc        string    `json:"tasadoc"`
-	Mtodcto        string    `json:"mtodcto"`
-	Fchvencedcto   time.Time `json:"fchvencedcto"`
-	Tienedcto      bool      `json:"tienedcto"`
-	Cbsret         string    `json:"cbsret"`
-	Cdret          string    `json:"cdret"`
-	Cbsretiva      string    `json:"cbsretiva"`
-	Cdretiva       string    `json:"cdretiva"`
-	Cbsrparme      string    `json:"cbsrparme"`
-	Cdrparme       string    `json:"cdrparme"`
-	Cbsretflete    string    `json:"cbsretflete"`
-	Cdretflete     string    `json:"cdretflete"`
-	Bsmtoiva       string    `json:"bsmtoiva"`
-	Bsmtofte       string    `json:"bsmtofte"`
-	RetmunMto      string    `json:"retmun_mto"`
-	Dolarflete     bool      `json:"dolarflete"`
-	Bsretflete     string    `json:"bsretflete"`
-	Dretflete      string    `json:"dretflete"`
-	DretmunMto     string    `json:"dretmun_mto"`
-	Retivaoblig    bool      `json:"retivaoblig"`
-	Edoentrega     bool      `json:"edoentrega"`
-	Dmtoiva        string    `json:"dmtoiva"`
-	Prcdctoaplic   string    `json:"prcdctoaplic"`
-	Montodctodol   string    `json:"montodctodol"`
-	Montodctobs    string    `json:"montodctobs"`
-	CreatedAt      time.Time `json:"created_at"`
-	UpdatedAt      time.Time `json:"updated_at"`
+type DocumentResponse struct {
+	Agencia        string  `json:"agencia"`
+	Tipodoc        string  `json:"tipodoc"`
+	Documento      string  `json:"documento"`
+	Tipodocv       string  `json:"tipodocv"`
+	Codcliente     string  `json:"codcliente"`
+	Nombrecli      string  `json:"nombrecli"`
+	Contribesp     bool    `json:"contribesp"`
+	RutaParme      bool    `json:"ruta_parme"`
+	Tipoprecio     int     `json:"tipoprecio"`
+	Emision        string  `json:"emision"`
+	Recepcion      string  `json:"recepcion"`
+	Vence          string  `json:"vence"`
+	Diascred       int     `json:"diascred"`
+	Estatusdoc     int     `json:"estatusdoc"`
+	Dtotneto       float64 `json:"dtotneto"`
+	Dtotimpuest    float64 `json:"dtotimpuest"`
+	Dtotalfinal    float64 `json:"dtotalfinal"`
+	Dtotpagos      float64 `json:"dtotpagos"`
+	Dtotdescuen    float64 `json:"dtotdescuen"`
+	Dflete         float64 `json:"dFlete"`
+	Dtotdev        float64 `json:"dtotdev"`
+	Dvndmtototal   float64 `json:"dvndmtototal"`
+	Dretencion     float64 `json:"dretencion"`
+	Dretencioniva  float64 `json:"dretencioniva"`
+	Vendedor       string  `json:"vendedor"`
+	Codcoord       string  `json:"codcoord"`
+	Aceptadev      bool    `json:"aceptadev"`
+	KtiNegesp      bool    `json:"kti_negesp"`
+	Bsiva          float64 `json:"bsiva"`
+	Bsflete        float64 `json:"bsflete"`
+	Bsretencion    float64 `json:"bsretencion"`
+	Bsretencioniva float64 `json:"bsretencioniva"`
+	Tasadoc        float64 `json:"tasadoc"`
+	Mtodcto        float64 `json:"mtodcto"`
+	Fchvencedcto   string  `json:"fchvencedcto"`
+	Tienedcto      bool    `json:"tienedcto"`
+	Cbsret         float64 `json:"cbsret"`
+	Cdret          float64 `json:"cdret"`
+	Cbsretiva      float64 `json:"cbsretiva"`
+	Cdretiva       float64 `json:"cdretiva"`
+	Cbsrparme      float64 `json:"cbsrparme"`
+	Cdrparme       float64 `json:"cdrparme"`
+	Cbsretflete    float64 `json:"cbsretflete"`
+	Cdretflete     float64 `json:"cdretflete"`
+	Bsmtoiva       float64 `json:"bsmtoiva"`
+	Bsmtofte       float64 `json:"bsmtofte"`
+	RetmunMto      float64 `json:"retmun_mto"`
+	Dolarflete     bool    `json:"dolarflete"`
+	Bsretflete     float64 `json:"bsretflete"`
+	Dretflete      float64 `json:"dretflete"`
+	DretmunMto     float64 `json:"dretmun_mto"`
+	Retivaoblig    bool    `json:"retivaoblig"`
+	Edoentrega     bool    `json:"edoentrega"`
+	Dmtoiva        float64 `json:"dmtoiva"`
+	Prcdctoaplic   float64 `json:"prcdctoaplic"`
+	Montodctodol   float64 `json:"montodctodol"`
+	Montodctobs    float64 `json:"montodctobs"`
+	CreatedAt      string  `json:"created_at"`
+	UpdatedAt      string  `json:"updated_at"`
 }
 
-type DocumentLine struct {
-	Agencia       string    `json:"agencia"`
-	Tipodoc       string    `json:"tipodoc"`
-	Documento     string    `json:"documento"`
-	Tipodocv      string    `json:"tipodocv"`
-	Grupo         int32     `json:"grupo"`
-	Subgrupo      int32     `json:"subgrupo"`
-	Origen        string    `json:"origen"`
-	Codigo        string    `json:"codigo"`
-	Codhijo       string    `json:"codhijo"`
-	Pid           string    `json:"pid"`
-	Nombre        string    `json:"nombre"`
-	Cantidad      int32     `json:"cantidad"`
-	Cntdevuelt    int32     `json:"cntdevuelt"`
-	Vndcntdevuelt string    `json:"vndcntdevuelt"`
-	Dvndmtototal  string    `json:"dvndmtototal"`
-	Dpreciofin    string    `json:"dpreciofin"`
-	Dpreciounit   string    `json:"dpreciounit"`
-	Dmontoneto    string    `json:"dmontoneto"`
-	Dmontototal   string    `json:"dmontototal"`
-	Timpueprc     string    `json:"timpueprc"`
-	Unidevuelt    int32     `json:"unidevuelt"`
-	Fechadoc      time.Time `json:"fechadoc"`
-	Vendedor      string    `json:"vendedor"`
-	Codcoord      string    `json:"codcoord"`
-	CreatedAt     time.Time `json:"created_at"`
-	UpdatedAt     time.Time `json:"updated_at"`
+type DocumentLineResponse struct {
+	Agencia       string  `json:"agencia"`
+	Tipodoc       string  `json:"tipodoc"`
+	Documento     string  `json:"documento"`
+	Tipodocv      string  `json:"tipodocv"`
+	Grupo         string  `json:"grupo"`
+	Subgrupo      string  `json:"subgrupo"`
+	Origen        int     `json:"origen"`
+	Codigo        string  `json:"codigo"`
+	Codhijo       string  `json:"codhijo"`
+	Pid           string  `json:"pid"`
+	Nombre        string  `json:"nombre"`
+	Cantidad      int     `json:"cantidad"`
+	Cntdevuelt    int     `json:"cntdevuelt"`
+	Vndcntdevuelt int     `json:"vndcntdevuelt"`
+	Dvndmtototal  float64 `json:"dvndmtototal"`
+	Dpreciofin    float64 `json:"dpreciofin"`
+	Dpreciounit   float64 `json:"dpreciounit"`
+	Dmontoneto    float64 `json:"dmontoneto"`
+	Dmontototal   float64 `json:"dmontototal"`
+	Timpueprc     float64 `json:"timpueprc"`
+	Unidevuelt    int     `json:"unidevuelt"`
+	Fechadoc      string  `json:"fechadoc"`
+	Vendedor      string  `json:"vendedor"`
+	Codcoord      string  `json:"codcoord"`
 }
 
 type CreateDocumentRequest struct {
-	Agencia        string    `json:"agencia"`
-	Tipodoc        string    `json:"tipodoc"`
-	Documento      string    `json:"documento"`
-	Tipodocv       string    `json:"tipodocv"`
-	Codcliente     string    `json:"codcliente"`
-	Nombrecli      string    `json:"nombrecli"`
-	Contribesp     bool      `json:"contribesp"`
-	RutaParme      bool      `json:"ruta_parme"`
-	Tipoprecio     string    `json:"tipoprecio"`
-	Emision        time.Time `json:"emision"`
-	Recepcion      time.Time `json:"recepcion"`
-	Vence          time.Time `json:"vence"`
-	Diascred       string    `json:"diascred"`
-	Estatusdoc     string    `json:"estatusdoc"`
-	Dtotneto       string    `json:"dtotneto"`
-	Dtotimpuest    string    `json:"dtotimpuest"`
-	Dtotalfinal    string    `json:"dtotalfinal"`
-	Dtotpagos      string    `json:"dtotpagos"`
-	Dtotdescuen    string    `json:"dtotdescuen"`
-	Dflete         string    `json:"dFlete"`
-	Dtotdev        string    `json:"dtotdev"`
-	Dvndmtototal   string    `json:"dvndmtototal"`
-	Dretencion     string    `json:"dretencion"`
-	Dretencioniva  string    `json:"dretencioniva"`
-	Vendedor       string    `json:"vendedor"`
-	Codcoord       string    `json:"codcoord"`
-	Aceptadev      bool      `json:"aceptadev"`
-	KtiNegesp      bool      `json:"kti_negesp"`
-	Bsiva          string    `json:"bsiva"`
-	Bsflete        string    `json:"bsflete"`
-	Bsretencion    string    `json:"bsretencion"`
-	Bsretencioniva string    `json:"bsretencioniva"`
-	Tasadoc        string    `json:"tasadoc"`
-	Mtodcto        string    `json:"mtodcto"`
-	Fchvencedcto   time.Time `json:"fchvencedcto"`
-	Tienedcto      bool      `json:"tienedcto"`
-	Cbsret         string    `json:"cbsret"`
-	Cdret          string    `json:"cdret"`
-	Cbsretiva      string    `json:"cbsretiva"`
-	Cdretiva       string    `json:"cdretiva"`
-	Cbsrparme      string    `json:"cbsrparme"`
-	Cdrparme       string    `json:"cdrparme"`
-	Cbsretflete    string    `json:"cbsretflete"`
-	Cdretflete     string    `json:"cdretflete"`
-	Bsmtoiva       string    `json:"bsmtoiva"`
-	Bsmtofte       string    `json:"bsmtofte"`
-	RetmunMto      string    `json:"retmun_mto"`
-	Dolarflete     bool      `json:"dolarflete"`
-	Bsretflete     string    `json:"bsretflete"`
-	Dretflete      string    `json:"dretflete"`
-	DretmunMto     string    `json:"dretmun_mto"`
-	Retivaoblig    bool      `json:"retivaoblig"`
-	Edoentrega     bool      `json:"edoentrega"`
-	Dmtoiva        string    `json:"dmtoiva"`
-	Prcdctoaplic   string    `json:"prcdctoaplic"`
-	Montodctodol   string    `json:"montodctodol"`
-	Montodctobs    string    `json:"montodctobs"`
+	Agencia        string                      `json:"agencia"`
+	Tipodoc        string                      `json:"tipodoc"`
+	Documento      string                      `json:"documento"`
+	Tipodocv       string                      `json:"tipodocv"`
+	Codcliente     string                      `json:"codcliente"`
+	Nombrecli      string                      `json:"nombrecli"`
+	Contribesp     bool                        `json:"contribesp"`
+	RutaParme      bool                        `json:"ruta_parme"`
+	Tipoprecio     int                         `json:"tipoprecio"`
+	Emision        time.Time                   `json:"emision"`
+	Recepcion      time.Time                   `json:"recepcion"`
+	Vence          time.Time                   `json:"vence"`
+	Diascred       int                         `json:"diascred"`
+	Estatusdoc     int                         `json:"estatusdoc"`
+	Dtotneto       float64                     `json:"dtotneto"`
+	Dtotimpuest    float64                     `json:"dtotimpuest"`
+	Dtotalfinal    float64                     `json:"dtotalfinal"`
+	Dtotpagos      float64                     `json:"dtotpagos"`
+	Dtotdescuen    float64                     `json:"dtotdescuen"`
+	Dflete         float64                     `json:"dFlete"`
+	Dtotdev        float64                     `json:"dtotdev"`
+	Dvndmtototal   float64                     `json:"dvndmtototal"`
+	Dretencion     float64                     `json:"dretencion"`
+	Dretencioniva  float64                     `json:"dretencioniva"`
+	Vendedor       string                      `json:"vendedor"`
+	Codcoord       string                      `json:"codcoord"`
+	Aceptadev      bool                        `json:"aceptadev"`
+	KtiNegesp      bool                        `json:"kti_negesp"`
+	Bsiva          float64                     `json:"bsiva"`
+	Bsflete        float64                     `json:"bsflete"`
+	Bsretencion    float64                     `json:"bsretencion"`
+	Bsretencioniva float64                     `json:"bsretencioniva"`
+	Tasadoc        float64                     `json:"tasadoc"`
+	Mtodcto        float64                     `json:"mtodcto"`
+	Fchvencedcto   time.Time                   `json:"fchvencedcto"`
+	Tienedcto      bool                        `json:"tienedcto"`
+	Cbsret         float64                     `json:"cbsret"`
+	Cdret          float64                     `json:"cdret"`
+	Cbsretiva      float64                     `json:"cbsretiva"`
+	Cdretiva       float64                     `json:"cdretiva"`
+	Cbsrparme      float64                     `json:"cbsrparme"`
+	Cdrparme       float64                     `json:"cdrparme"`
+	Cbsretflete    float64                     `json:"cbsretflete"`
+	Cdretflete     float64                     `json:"cdretflete"`
+	Bsmtoiva       float64                     `json:"bsmtoiva"`
+	Bsmtofte       float64                     `json:"bsmtofte"`
+	RetmunMto      float64                     `json:"retmun_mto"`
+	Dolarflete     bool                        `json:"dolarflete"`
+	Bsretflete     float64                     `json:"bsretflete"`
+	Dretflete      float64                     `json:"dretflete"`
+	DretmunMto     float64                     `json:"dretmun_mto"`
+	Retivaoblig    bool                        `json:"retivaoblig"`
+	Edoentrega     bool                        `json:"edoentrega"`
+	Dmtoiva        float64                     `json:"dmtoiva"`
+	Prcdctoaplic   float64                     `json:"prcdctoaplic"`
+	Montodctodol   float64                     `json:"montodctodol"`
+	Montodctobs    float64                     `json:"montodctobs"`
+	Lines          []CreateDocumentLineRequest `json:"lines"`
 }
 
 type CreateDocumentLineRequest struct {
-	DocID         uuid.UUID `json:"doc_id"`
-	ArticuloID    uuid.UUID `json:"articulo_id"`
 	Agencia       string    `json:"agencia"`
 	Tipodoc       string    `json:"tipodoc"`
 	Documento     string    `json:"documento"`
 	Tipodocv      string    `json:"tipodocv"`
-	Grupo         int32     `json:"grupo"`
-	Subgrupo      int32     `json:"subgrupo"`
-	Origen        string    `json:"origen"`
+	Grupo         string    `json:"grupo"`
+	Subgrupo      string    `json:"subgrupo"`
+	Origen        int       `json:"origen"`
 	Codigo        string    `json:"codigo"`
 	Codhijo       string    `json:"codhijo"`
 	Pid           string    `json:"pid"`
 	Nombre        string    `json:"nombre"`
-	Cantidad      int32     `json:"cantidad"`
-	Cntdevuelt    int32     `json:"cntdevuelt"`
-	Vndcntdevuelt string    `json:"vndcntdevuelt"`
-	Dvndmtototal  string    `json:"dvndmtototal"`
-	Dpreciofin    string    `json:"dpreciofin"`
-	Dpreciounit   string    `json:"dpreciounit"`
-	Dmontoneto    string    `json:"dmontoneto"`
-	Dmontototal   string    `json:"dmontototal"`
-	Timpueprc     string    `json:"timpueprc"`
+	Cantidad      int       `json:"cantidad"`
+	Cntdevuelt    int       `json:"cntdevuelt"`
+	Vndcntdevuelt int       `json:"vndcntdevuelt"`
+	Dvndmtototal  float64   `json:"dvndmtototal"`
+	Dpreciofin    float64   `json:"dpreciofin"`
+	Dpreciounit   float64   `json:"dpreciounit"`
+	Dmontoneto    float64   `json:"dmontoneto"`
+	Dmontototal   float64   `json:"dmontototal"`
+	Timpueprc     float64   `json:"timpueprc"`
 	Unidevuelt    int32     `json:"unidevuelt"`
 	Fechadoc      time.Time `json:"fechadoc"`
 	Vendedor      string    `json:"vendedor"`
 	Codcoord      string    `json:"codcoord"`
 }
 
-type UpdateDocumentRequest struct{}
+type UpdateDocumentRequest struct {
+	Agencia        string                      `json:"agencia"`
+	Tipodoc        string                      `json:"tipodoc"`
+	Documento      string                      `json:"documento"`
+	Tipodocv       string                      `json:"tipodocv"`
+	Codcliente     string                      `json:"codcliente"`
+	Nombrecli      string                      `json:"nombrecli"`
+	Contribesp     bool                        `json:"contribesp"`
+	RutaParme      bool                        `json:"ruta_parme"`
+	Tipoprecio     int                         `json:"tipoprecio"`
+	Emision        time.Time                   `json:"emision"`
+	Recepcion      time.Time                   `json:"recepcion"`
+	Vence          time.Time                   `json:"vence"`
+	Diascred       int                         `json:"diascred"`
+	Estatusdoc     int                         `json:"estatusdoc"`
+	Dtotneto       float64                     `json:"dtotneto"`
+	Dtotimpuest    float64                     `json:"dtotimpuest"`
+	Dtotalfinal    float64                     `json:"dtotalfinal"`
+	Dtotpagos      float64                     `json:"dtotpagos"`
+	Dtotdescuen    float64                     `json:"dtotdescuen"`
+	Dflete         float64                     `json:"dFlete"`
+	Dtotdev        float64                     `json:"dtotdev"`
+	Dvndmtototal   float64                     `json:"dvndmtototal"`
+	Dretencion     float64                     `json:"dretencion"`
+	Dretencioniva  float64                     `json:"dretencioniva"`
+	Vendedor       string                      `json:"vendedor"`
+	Codcoord       string                      `json:"codcoord"`
+	Aceptadev      bool                        `json:"aceptadev"`
+	KtiNegesp      bool                        `json:"kti_negesp"`
+	Bsiva          float64                     `json:"bsiva"`
+	Bsflete        float64                     `json:"bsflete"`
+	Bsretencion    float64                     `json:"bsretencion"`
+	Bsretencioniva float64                     `json:"bsretencioniva"`
+	Tasadoc        float64                     `json:"tasadoc"`
+	Mtodcto        float64                     `json:"mtodcto"`
+	Fchvencedcto   time.Time                   `json:"fchvencedcto"`
+	Tienedcto      bool                        `json:"tienedcto"`
+	Cbsret         float64                     `json:"cbsret"`
+	Cdret          float64                     `json:"cdret"`
+	Cbsretiva      float64                     `json:"cbsretiva"`
+	Cdretiva       float64                     `json:"cdretiva"`
+	Cbsrparme      float64                     `json:"cbsrparme"`
+	Cdrparme       float64                     `json:"cdrparme"`
+	Cbsretflete    float64                     `json:"cbsretflete"`
+	Cdretflete     float64                     `json:"cdretflete"`
+	Bsmtoiva       float64                     `json:"bsmtoiva"`
+	Bsmtofte       float64                     `json:"bsmtofte"`
+	RetmunMto      float64                     `json:"retmun_mto"`
+	Dolarflete     bool                        `json:"dolarflete"`
+	Bsretflete     float64                     `json:"bsretflete"`
+	Dretflete      float64                     `json:"dretflete"`
+	DretmunMto     float64                     `json:"dretmun_mto"`
+	Retivaoblig    bool                        `json:"retivaoblig"`
+	Edoentrega     bool                        `json:"edoentrega"`
+	Dmtoiva        float64                     `json:"dmtoiva"`
+	Prcdctoaplic   float64                     `json:"prcdctoaplic"`
+	Montodctodol   float64                     `json:"montodctodol"`
+	Montodctobs    float64                     `json:"montodctobs"`
+	Lines          []UpdateDocumentLineRequest `json:"lines"`
+}
 
-type UpdateDocumentLineRequest struct{}
+type UpdateDocumentLineRequest struct {
+	Agencia       string    `json:"agencia"`
+	Tipodoc       string    `json:"tipodoc"`
+	Documento     string    `json:"documento"`
+	Tipodocv      string    `json:"tipodocv"`
+	Grupo         string    `json:"grupo"`
+	Subgrupo      string    `json:"subgrupo"`
+	Origen        int       `json:"origen"`
+	Codigo        string    `json:"codigo"`
+	Codhijo       string    `json:"codhijo"`
+	Pid           string    `json:"pid"`
+	Nombre        string    `json:"nombre"`
+	Cantidad      int       `json:"cantidad"`
+	Cntdevuelt    int       `json:"cntdevuelt"`
+	Vndcntdevuelt int       `json:"vndcntdevuelt"`
+	Dvndmtototal  float64   `json:"dvndmtototal"`
+	Dpreciofin    float64   `json:"dpreciofin"`
+	Dpreciounit   float64   `json:"dpreciounit"`
+	Dmontoneto    float64   `json:"dmontoneto"`
+	Dmontototal   float64   `json:"dmontototal"`
+	Timpueprc     float64   `json:"timpueprc"`
+	Unidevuelt    int32     `json:"unidevuelt"`
+	Fechadoc      time.Time `json:"fechadoc"`
+	Vendedor      string    `json:"vendedor"`
+	Codcoord      string    `json:"codcoord"`
+}
 
-func DbKeDoccToDocument(db *db.ClossDocument) *Document {
-	return &Document{
+func DbDocToDocument(db *db.ClossDocument) *DocumentResponse {
+	return &DocumentResponse{
 		Agencia:        db.Agencia,
 		Tipodoc:        db.Tipodoc,
 		Documento:      db.Documento,
@@ -206,12 +287,12 @@ func DbKeDoccToDocument(db *db.ClossDocument) *Document {
 		Nombrecli:      db.Nombrecli,
 		Contribesp:     db.Contribesp == 1,
 		RutaParme:      db.RutaParme == 1,
-		Tipoprecio:     db.Tipoprecio,
+		Tipoprecio:     int(db.Tipoprecio),
 		Emision:        db.Emision,
 		Recepcion:      db.Recepcion,
 		Vence:          db.Vence,
-		Diascred:       db.Diascred,
-		Estatusdoc:     db.Estatusdoc,
+		Diascred:       int(db.Diascred),
+		Estatusdoc:     int(db.Estatusdoc),
 		Dtotneto:       db.Dtotneto,
 		Dtotimpuest:    db.Dtotimpuest,
 		Dtotalfinal:    db.Dtotalfinal,
@@ -224,8 +305,8 @@ func DbKeDoccToDocument(db *db.ClossDocument) *Document {
 		Dretencioniva:  db.Dretencioniva,
 		Vendedor:       db.Vendedor,
 		Codcoord:       db.Codcoord,
-		Aceptadev:      db.Aceptadev,
-		KtiNegesp:      db.KtiNegesp,
+		Aceptadev:      db.Aceptadev == 1,
+		KtiNegesp:      db.KtiNegesp == 1,
 		Bsiva:          db.Bsiva,
 		Bsflete:        db.Bsflete,
 		Bsretencion:    db.Bsretencion,
@@ -233,7 +314,7 @@ func DbKeDoccToDocument(db *db.ClossDocument) *Document {
 		Tasadoc:        db.Tasadoc,
 		Mtodcto:        db.Mtodcto,
 		Fchvencedcto:   db.Fchvencedcto,
-		Tienedcto:      db.Tienedcto,
+		Tienedcto:      db.Tienedcto == 1,
 		Cbsret:         db.Cbsret,
 		Cdret:          db.Cdret,
 		Cbsretiva:      db.Cbsretiva,
@@ -245,12 +326,12 @@ func DbKeDoccToDocument(db *db.ClossDocument) *Document {
 		Bsmtoiva:       db.Bsmtoiva,
 		Bsmtofte:       db.Bsmtofte,
 		RetmunMto:      db.RetmunMto,
-		Dolarflete:     db.Dolarflete,
+		Dolarflete:     db.Dolarflete == 1,
 		Bsretflete:     db.Bsretflete,
 		Dretflete:      db.Dretflete,
 		DretmunMto:     db.DretmunMto,
-		Retivaoblig:    db.Retivaoblig,
-		Edoentrega:     db.Edoentrega,
+		Retivaoblig:    db.Retivaoblig == 1,
+		Edoentrega:     db.Edoentrega == 1,
 		Dmtoiva:        db.Dmtoiva,
 		Prcdctoaplic:   db.Prcdctoaplic,
 		Montodctodol:   db.Montodctodol,
@@ -260,264 +341,223 @@ func DbKeDoccToDocument(db *db.ClossDocument) *Document {
 	}
 }
 
-func DocMapToDocWithLines(key *Document, value *[]DocumentLine) *DocumentWithLines {
-	return &DocumentWithLines{
-		Document: Document{
-			Agencia:        key.Agencia,
-			Tipodoc:        key.Tipodoc,
-			Documento:      key.Documento,
-			Tipodocv:       key.Tipodocv,
-			Codcliente:     key.Codcliente,
-			Nombrecli:      key.Nombrecli,
-			Contribesp:     key.Contribesp,
-			RutaParme:      key.RutaParme,
-			Tipoprecio:     key.Tipoprecio,
-			Emision:        key.Emision,
-			Recepcion:      key.Recepcion,
-			Vence:          key.Vence,
-			Diascred:       key.Diascred,
-			Estatusdoc:     key.Estatusdoc,
-			Dtotneto:       key.Dtotneto,
-			Dtotimpuest:    key.Dtotimpuest,
-			Dtotalfinal:    key.Dtotalfinal,
-			Dtotpagos:      key.Dtotpagos,
-			Dtotdescuen:    key.Dtotdescuen,
-			Dflete:         key.Dflete,
-			Dtotdev:        key.Dtotdev,
-			Dvndmtototal:   key.Dvndmtototal,
-			Dretencion:     key.Dretencion,
-			Dretencioniva:  key.Dretencioniva,
-			Vendedor:       key.Vendedor,
-			Codcoord:       key.Codcoord,
-			Aceptadev:      key.Aceptadev,
-			KtiNegesp:      key.KtiNegesp,
-			Bsiva:          key.Bsiva,
-			Bsflete:        key.Bsflete,
-			Bsretencion:    key.Bsretencion,
-			Bsretencioniva: key.Bsretencioniva,
-			Tasadoc:        key.Tasadoc,
-			Mtodcto:        key.Mtodcto,
-			Fchvencedcto:   key.Fchvencedcto,
-			Tienedcto:      key.Tienedcto,
-			Cbsret:         key.Cbsret,
-			Cdret:          key.Cdret,
-			Cbsretiva:      key.Cbsretiva,
-			Cdretiva:       key.Cdretiva,
-			Cbsrparme:      key.Cbsrparme,
-			Cdrparme:       key.Cdrparme,
-			Cbsretflete:    key.Cbsretflete,
-			Cdretflete:     key.Cdretflete,
-			Bsmtoiva:       key.Bsmtoiva,
-			Bsmtofte:       key.Bsmtofte,
-			RetmunMto:      key.RetmunMto,
-			Dolarflete:     key.Dolarflete,
-			Bsretflete:     key.Bsretflete,
-			Dretflete:      key.Dretflete,
-			DretmunMto:     key.DretmunMto,
-			Retivaoblig:    key.Retivaoblig,
-			Edoentrega:     key.Edoentrega,
-			Dmtoiva:        key.Dmtoiva,
-			Prcdctoaplic:   key.Prcdctoaplic,
-			Montodctodol:   key.Montodctodol,
-			Montodctobs:    key.Montodctobs,
-			CreatedAt:      key.CreatedAt,
-			UpdatedAt:      key.UpdatedAt,
-			DeletedAt:      key.DeletedAt,
-		},
-		Lines: *value,
+func DbDocLineToDocLine(db *db.ClossDocumentLine) *DocumentLineResponse {
+	return &DocumentLineResponse{
+		Agencia:       db.Agencia,
+		Tipodoc:       db.Tipodoc,
+		Documento:     db.Documento,
+		Tipodocv:      db.Tipodocv,
+		Grupo:         db.Grupo,
+		Subgrupo:      db.Subgrupo,
+		Origen:        int(db.Origen),
+		Codigo:        db.Codigo,
+		Codhijo:       db.Codhijo,
+		Pid:           db.Pid,
+		Nombre:        db.Nombre,
+		Cantidad:      int(db.Cantidad),
+		Cntdevuelt:    int(db.Cntdevuelt),
+		Vndcntdevuelt: int(db.Vndcntdevuelt),
+		Dvndmtototal:  db.Dvndmtototal,
+		Dpreciofin:    db.Dpreciofin,
+		Dpreciounit:   db.Dpreciounit,
+		Dmontoneto:    db.Dmontoneto,
+		Dmontototal:   db.Dmontototal,
+		Timpueprc:     db.Timpueprc,
+		Unidevuelt:    int(db.Unidevuelt),
+		Fechadoc:      db.Fechadoc,
+		Vendedor:      db.Vendedor,
+		Codcoord:      db.Codcoord,
 	}
 }
 
-func DbDocToDocument(db *db.AdminGetDocumentsWithLinesRow) *Document {
-	return &Document{
-		Agencia:        db.Agencia,
-		Tipodoc:        db.Tipodoc,
-		Documento:      db.Documento,
-		Tipodocv:       db.Tipodocv,
-		Codcliente:     db.Codcliente,
-		Nombrecli:      db.Nombrecli,
-		Contribesp:     db.Contribesp,
-		RutaParme:      db.RutaParme,
-		Tipoprecio:     db.Tipoprecio,
-		Emision:        db.Emision,
-		Recepcion:      db.Recepcion,
-		Vence:          db.Vence,
-		Diascred:       db.Diascred,
-		Estatusdoc:     db.Estatusdoc,
-		Dtotneto:       db.Dtotneto,
-		Dtotimpuest:    db.Dtotimpuest,
-		Dtotalfinal:    db.Dtotalfinal,
-		Dtotpagos:      db.Dtotpagos,
-		Dtotdescuen:    db.Dtotdescuen,
-		Dflete:         db.Dflete,
-		Dtotdev:        db.Dtotdev,
-		Dvndmtototal:   db.Dvndmtototal,
-		Dretencion:     db.Dretencion,
-		Dretencioniva:  db.Dretencioniva,
-		Vendedor:       db.Vendedor,
-		Codcoord:       db.Codcoord,
-		Aceptadev:      db.Aceptadev,
-		KtiNegesp:      db.KtiNegesp,
-		Bsiva:          db.Bsiva,
-		Bsflete:        db.Bsflete,
-		Bsretencion:    db.Bsretencion,
-		Bsretencioniva: db.Bsretencioniva,
-		Tasadoc:        db.Tasadoc,
-		Mtodcto:        db.Mtodcto,
-		Fchvencedcto:   db.Fchvencedcto,
-		Tienedcto:      db.Tienedcto,
-		Cbsret:         db.Cbsret,
-		Cdret:          db.Cdret,
-		Cbsretiva:      db.Cbsretiva,
-		Cdretiva:       db.Cdretiva,
-		Cbsrparme:      db.Cbsrparme,
-		Cdrparme:       db.Cdrparme,
-		Cbsretflete:    db.Cbsretflete,
-		Cdretflete:     db.Cdretflete,
-		Bsmtoiva:       db.Bsmtoiva,
-		Bsmtofte:       db.Bsmtofte,
-		RetmunMto:      db.RetmunMto,
-		Dolarflete:     db.Dolarflete,
-		Bsretflete:     db.Bsretflete,
-		Dretflete:      db.Dretflete,
-		DretmunMto:     db.DretmunMto,
-		Retivaoblig:    db.Retivaoblig,
-		Edoentrega:     db.Edoentrega,
-		Dmtoiva:        db.Dmtoiva,
-		Prcdctoaplic:   db.Prcdctoaplic,
-		Montodctodol:   db.Montodctodol,
-		Montodctobs:    db.Montodctobs,
-		CreatedAt:      db.CreatedAt,
-		UpdatedAt:      db.UpdatedAt,
-		DeletedAt:      db.DeletedAt.Time,
+func CreateDocumentToDb(r *CreateDocumentRequest) *db.CreateDocumentParams {
+	return &db.CreateDocumentParams{
+		Agencia:        r.Agencia,
+		Tipodoc:        r.Tipodoc,
+		Documento:      r.Documento,
+		Tipodocv:       r.Tipodocv,
+		Codcliente:     r.Codcliente,
+		Nombrecli:      r.Nombrecli,
+		Contribesp:     int64(util.BoolToInt(r.Contribesp)),
+		RutaParme:      int64(util.BoolToInt(r.RutaParme)),
+		Tipoprecio:     int64(r.Tipoprecio),
+		Emision:        r.Emision.String(),
+		Recepcion:      r.Recepcion.String(),
+		Vence:          r.Vence.String(),
+		Diascred:       int64(r.Diascred),
+		Estatusdoc:     int64(r.Estatusdoc),
+		Dtotneto:       r.Dtotneto,
+		Dtotimpuest:    r.Dtotimpuest,
+		Dtotalfinal:    r.Dtotalfinal,
+		Dtotpagos:      r.Dtotpagos,
+		Dtotdescuen:    r.Dtotdescuen,
+		Dflete:         r.Dflete,
+		Dtotdev:        r.Dtotdev,
+		Dvndmtototal:   r.Dvndmtototal,
+		Dretencion:     r.Dretencion,
+		Dretencioniva:  r.Dretencioniva,
+		Vendedor:       r.Vendedor,
+		Codcoord:       r.Codcoord,
+		Aceptadev:      int64(util.BoolToInt(r.Aceptadev)),
+		KtiNegesp:      int64(util.BoolToInt(r.KtiNegesp)),
+		Bsiva:          r.Bsiva,
+		Bsflete:        r.Bsflete,
+		Bsretencion:    r.Bsretencion,
+		Bsretencioniva: r.Bsretencioniva,
+		Tasadoc:        r.Tasadoc,
+		Mtodcto:        r.Mtodcto,
+		Fchvencedcto:   r.Fchvencedcto.String(),
+		Tienedcto:      int64(util.BoolToInt(r.Tienedcto)),
+		Cbsret:         r.Cbsret,
+		Cdret:          r.Cdret,
+		Cbsretiva:      r.Cbsretiva,
+		Cdretiva:       r.Cdretiva,
+		Cbsrparme:      r.Cbsrparme,
+		Cdrparme:       r.Cdrparme,
+		Cbsretflete:    r.Cbsretflete,
+		Cdretflete:     r.Cdretflete,
+		Bsmtoiva:       r.Bsmtoiva,
+		Bsmtofte:       r.Bsmtofte,
+		RetmunMto:      r.RetmunMto,
+		Dolarflete:     int64(util.BoolToInt(r.Dolarflete)),
+		Bsretflete:     r.Bsretflete,
+		Dretflete:      r.Dretflete,
+		DretmunMto:     r.DretmunMto,
+		Retivaoblig:    int64(util.BoolToInt(r.Retivaoblig)),
+		Edoentrega:     int64(util.BoolToInt(r.Edoentrega)),
+		Dmtoiva:        r.Dmtoiva,
+		Prcdctoaplic:   r.Prcdctoaplic,
+		Montodctodol:   r.Montodctodol,
+		Montodctobs:    r.Montodctobs,
+		CreatedAt:      time.Now().String(),
+		UpdatedAt:      time.Now().String(),
 	}
 }
 
-func DbDocToDocLine(db *db.AdminGetDocumentsWithLinesRow) *DocumentLine {
-	return &DocumentLine{
-		Agencia:       db.Agencia_2.String,
-		Tipodoc:       db.Tipodoc_2.String,
-		Documento:     db.Documento_2.String,
-		Tipodocv:      db.Tipodocv_2.String,
-		Grupo:         db.Grupo.Int32,
-		Subgrupo:      db.Subgrupo.Int32,
-		Origen:        db.Origen.String,
-		Codigo:        db.Codigo.String,
-		Codhijo:       db.Codhijo.String,
-		Pid:           db.Pid.String,
-		Nombre:        db.Nombre.String,
-		Cantidad:      db.Cantidad.Int32,
-		Cntdevuelt:    db.Cntdevuelt.Int32,
-		Vndcntdevuelt: db.Vndcntdevuelt.String,
-		Dvndmtototal:  db.Dvndmtototal_2.String,
-		Dpreciofin:    db.Dpreciofin.String,
-		Dpreciounit:   db.Dpreciounit.String,
-		Dmontoneto:    db.Dmontoneto.String,
-		Dmontototal:   db.Dmontototal.String,
-		Timpueprc:     db.Timpueprc.String,
-		Unidevuelt:    db.Unidevuelt.Int32,
-		Fechadoc:      db.Fechadoc.Time,
-		Vendedor:      db.Vendedor_2.String,
-		Codcoord:      db.Codcoord_2.String,
-		CreatedAt:     db.CreatedAt_2.Time,
-		UpdatedAt:     db.UpdatedAt_2.Time,
-		DeletedAt:     db.DeletedAt_2.Time,
+func UpdateDocumentToDb(r *UpdateDocumentRequest) *db.UpdateDocumentParams {
+	return &db.UpdateDocumentParams{
+		Agencia:        r.Agencia,
+		Tipodoc:        r.Tipodoc,
+		Documento:      r.Documento,
+		Tipodocv:       r.Tipodocv,
+		Codcliente:     r.Codcliente,
+		Nombrecli:      r.Nombrecli,
+		Contribesp:     int64(util.BoolToInt(r.Contribesp)),
+		RutaParme:      int64(util.BoolToInt(r.RutaParme)),
+		Tipoprecio:     int64(r.Tipoprecio),
+		Emision:        r.Emision.String(),
+		Recepcion:      r.Recepcion.String(),
+		Vence:          r.Vence.String(),
+		Diascred:       int64(r.Diascred),
+		Estatusdoc:     int64(r.Estatusdoc),
+		Dtotneto:       r.Dtotneto,
+		Dtotimpuest:    r.Dtotimpuest,
+		Dtotalfinal:    r.Dtotalfinal,
+		Dtotpagos:      r.Dtotpagos,
+		Dtotdescuen:    r.Dtotdescuen,
+		Dflete:         r.Dflete,
+		Dtotdev:        r.Dtotdev,
+		Dvndmtototal:   r.Dvndmtototal,
+		Dretencion:     r.Dretencion,
+		Dretencioniva:  r.Dretencioniva,
+		Vendedor:       r.Vendedor,
+		Codcoord:       r.Codcoord,
+		Aceptadev:      int64(util.BoolToInt(r.Aceptadev)),
+		KtiNegesp:      int64(util.BoolToInt(r.KtiNegesp)),
+		Bsiva:          r.Bsiva,
+		Bsflete:        r.Bsflete,
+		Bsretencion:    r.Bsretencion,
+		Bsretencioniva: r.Bsretencioniva,
+		Tasadoc:        r.Tasadoc,
+		Mtodcto:        r.Mtodcto,
+		Fchvencedcto:   r.Fchvencedcto.String(),
+		Tienedcto:      int64(util.BoolToInt(r.Tienedcto)),
+		Cbsret:         r.Cbsret,
+		Cdret:          r.Cdret,
+		Cbsretiva:      r.Cbsretiva,
+		Cdretiva:       r.Cdretiva,
+		Cbsrparme:      r.Cbsrparme,
+		Cdrparme:       r.Cdrparme,
+		Cbsretflete:    r.Cbsretflete,
+		Cdretflete:     r.Cdretflete,
+		Bsmtoiva:       r.Bsmtoiva,
+		Bsmtofte:       r.Bsmtofte,
+		RetmunMto:      r.RetmunMto,
+		Dolarflete:     int64(util.BoolToInt(r.Dolarflete)),
+		Bsretflete:     r.Bsretflete,
+		Dretflete:      r.Dretflete,
+		DretmunMto:     r.DretmunMto,
+		Retivaoblig:    int64(util.BoolToInt(r.Retivaoblig)),
+		Edoentrega:     int64(util.BoolToInt(r.Edoentrega)),
+		Dmtoiva:        r.Dmtoiva,
+		Prcdctoaplic:   r.Prcdctoaplic,
+		Montodctodol:   r.Montodctodol,
+		Montodctobs:    r.Montodctobs,
+		UpdatedAt:      time.Now().String(),
 	}
 }
 
-func DbDocByCodeToDocument(db *db.GetDocumentsWithLinesBySalesmanRow) *Document {
-	return &Document{
-		Agencia:        db.Agencia,
-		Tipodoc:        db.Tipodoc,
-		Documento:      db.Documento,
-		Tipodocv:       db.Tipodocv,
-		Codcliente:     db.Codcliente,
-		Nombrecli:      db.Nombrecli,
-		Contribesp:     db.Contribesp,
-		RutaParme:      db.RutaParme,
-		Tipoprecio:     db.Tipoprecio,
-		Emision:        db.Emision,
-		Recepcion:      db.Recepcion,
-		Vence:          db.Vence,
-		Diascred:       db.Diascred,
-		Estatusdoc:     db.Estatusdoc,
-		Dtotneto:       db.Dtotneto,
-		Dtotimpuest:    db.Dtotimpuest,
-		Dtotalfinal:    db.Dtotalfinal,
-		Dtotpagos:      db.Dtotpagos,
-		Dtotdescuen:    db.Dtotdescuen,
-		Dflete:         db.Dflete,
-		Dtotdev:        db.Dtotdev,
-		Dvndmtototal:   db.Dvndmtototal,
-		Dretencion:     db.Dretencion,
-		Dretencioniva:  db.Dretencioniva,
-		Vendedor:       db.Vendedor,
-		Codcoord:       db.Codcoord,
-		Aceptadev:      db.Aceptadev,
-		KtiNegesp:      db.KtiNegesp,
-		Bsiva:          db.Bsiva,
-		Bsflete:        db.Bsflete,
-		Bsretencion:    db.Bsretencion,
-		Bsretencioniva: db.Bsretencioniva,
-		Tasadoc:        db.Tasadoc,
-		Mtodcto:        db.Mtodcto,
-		Fchvencedcto:   db.Fchvencedcto,
-		Tienedcto:      db.Tienedcto,
-		Cbsret:         db.Cbsret,
-		Cdret:          db.Cdret,
-		Cbsretiva:      db.Cbsretiva,
-		Cdretiva:       db.Cdretiva,
-		Cbsrparme:      db.Cbsrparme,
-		Cdrparme:       db.Cdrparme,
-		Cbsretflete:    db.Cbsretflete,
-		Cdretflete:     db.Cdretflete,
-		Bsmtoiva:       db.Bsmtoiva,
-		Bsmtofte:       db.Bsmtofte,
-		RetmunMto:      db.RetmunMto,
-		Dolarflete:     db.Dolarflete,
-		Bsretflete:     db.Bsretflete,
-		Dretflete:      db.Dretflete,
-		DretmunMto:     db.DretmunMto,
-		Retivaoblig:    db.Retivaoblig,
-		Edoentrega:     db.Edoentrega,
-		Dmtoiva:        db.Dmtoiva,
-		Prcdctoaplic:   db.Prcdctoaplic,
-		Montodctodol:   db.Montodctodol,
-		Montodctobs:    db.Montodctobs,
-		CreatedAt:      db.CreatedAt,
-		UpdatedAt:      db.UpdatedAt,
-		DeletedAt:      db.DeletedAt.Time,
+func CreateDocumentLinesToDb(r *CreateDocumentLineRequest) *db.CreateDocumentLineParams {
+	return &db.CreateDocumentLineParams{
+		Agencia:       r.Agencia,
+		Tipodoc:       r.Tipodoc,
+		Documento:     r.Documento,
+		Tipodocv:      r.Tipodocv,
+		Grupo:         r.Grupo,
+		Subgrupo:      r.Subgrupo,
+		Origen:        int64(r.Origen),
+		Codigo:        r.Codigo,
+		Codhijo:       r.Codhijo,
+		Pid:           r.Pid,
+		Nombre:        r.Nombre,
+		Cantidad:      int64(r.Cantidad),
+		Cntdevuelt:    int64(r.Cntdevuelt),
+		Vndcntdevuelt: int64(r.Vndcntdevuelt),
+		Dvndmtototal:  r.Dvndmtototal,
+		Dpreciofin:    r.Dpreciofin,
+		Dpreciounit:   r.Dpreciounit,
+		Dmontoneto:    r.Dmontoneto,
+		Dmontototal:   r.Dmontototal,
+		Timpueprc:     r.Timpueprc,
+		Unidevuelt:    int64(r.Unidevuelt),
+		Fechadoc:      r.Fechadoc.String(),
+		Vendedor:      r.Vendedor,
+		Codcoord:      r.Codcoord,
 	}
 }
 
-func DbDocByCodeToDocLine(db *db.GetDocumentsWithLinesBySalesmanRow) *DocumentLine {
-	return &DocumentLine{
-		Agencia:       db.Agencia_2.String,
-		Tipodoc:       db.Tipodoc_2.String,
-		Documento:     db.Documento_2.String,
-		Tipodocv:      db.Tipodocv_2.String,
-		Grupo:         db.Grupo.Int32,
-		Subgrupo:      db.Subgrupo.Int32,
-		Origen:        db.Origen.String,
-		Codigo:        db.Codigo.String,
-		Codhijo:       db.Codhijo.String,
-		Pid:           db.Pid.String,
-		Nombre:        db.Nombre.String,
-		Cantidad:      db.Cantidad.Int32,
-		Cntdevuelt:    db.Cntdevuelt.Int32,
-		Vndcntdevuelt: db.Vndcntdevuelt.String,
-		Dvndmtototal:  db.Dvndmtototal_2.String,
-		Dpreciofin:    db.Dpreciofin.String,
-		Dpreciounit:   db.Dpreciounit.String,
-		Dmontoneto:    db.Dmontoneto.String,
-		Dmontototal:   db.Dmontototal.String,
-		Timpueprc:     db.Timpueprc.String,
-		Unidevuelt:    db.Unidevuelt.Int32,
-		Fechadoc:      db.Fechadoc.Time,
-		Vendedor:      db.Vendedor_2.String,
-		Codcoord:      db.Codcoord_2.String,
-		CreatedAt:     db.CreatedAt,
-		UpdatedAt:     db.UpdatedAt,
-		DeletedAt:     db.DeletedAt.Time,
+func UpdateDocumentLinesToDb(r *UpdateDocumentLineRequest) *db.UpdateDocumentLineParams {
+	return &db.UpdateDocumentLineParams{
+		Agencia:       r.Agencia,
+		Tipodoc:       r.Tipodoc,
+		Documento:     r.Documento,
+		Tipodocv:      r.Tipodocv,
+		Grupo:         r.Grupo,
+		Subgrupo:      r.Subgrupo,
+		Origen:        int64(r.Origen),
+		Codigo:        r.Codigo,
+		Codhijo:       r.Codhijo,
+		Pid:           r.Pid,
+		Nombre:        r.Nombre,
+		Cantidad:      int64(r.Cantidad),
+		Cntdevuelt:    int64(r.Cntdevuelt),
+		Vndcntdevuelt: int64(r.Vndcntdevuelt),
+		Dvndmtototal:  r.Dvndmtototal,
+		Dpreciofin:    r.Dpreciofin,
+		Dpreciounit:   r.Dpreciounit,
+		Dmontoneto:    r.Dmontoneto,
+		Dmontototal:   r.Dmontototal,
+		Timpueprc:     r.Timpueprc,
+		Unidevuelt:    int64(r.Unidevuelt),
+		Fechadoc:      r.Fechadoc.String(),
+		Vendedor:      r.Vendedor,
+		Codcoord:      r.Codcoord,
+	}
+}
+
+func DocToDocWithLines(key *DocumentResponse, value []DocumentLineResponse) *DocumentWithLinesResponse {
+	return &DocumentWithLinesResponse{
+		DocumentResponse: *key,
+		Lines:            value,
 	}
 }

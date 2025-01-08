@@ -171,64 +171,7 @@ func (q *Queries) CreateStatistic(ctx context.Context, arg CreateStatisticParams
 	return i, err
 }
 
-const getStatistics = `-- name: GetStatistics :many
-select codcoord, nomcoord, vendedor, nombrevend, cntpedidos, mtopedidos, cntfacturas, mtofacturas, metavend, prcmeta, cntclientes, clivisit, prcvisitas, lom_montovtas, lom_prcvtas, lom_prcvisit, rlom_montovtas, rlom_prcvtas, rlom_prcvisit, fecha_estad, ppgdol_totneto, devdol_totneto, defdol_totneto, totdolcob, cntrecl, mtorecl, created_at, updated_at
-from closs_salesman_statistic
-`
-
-func (q *Queries) GetStatistics(ctx context.Context) ([]ClossSalesmanStatistic, error) {
-	rows, err := q.db.QueryContext(ctx, getStatistics)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []ClossSalesmanStatistic
-	for rows.Next() {
-		var i ClossSalesmanStatistic
-		if err := rows.Scan(
-			&i.Codcoord,
-			&i.Nomcoord,
-			&i.Vendedor,
-			&i.Nombrevend,
-			&i.Cntpedidos,
-			&i.Mtopedidos,
-			&i.Cntfacturas,
-			&i.Mtofacturas,
-			&i.Metavend,
-			&i.Prcmeta,
-			&i.Cntclientes,
-			&i.Clivisit,
-			&i.Prcvisitas,
-			&i.LomMontovtas,
-			&i.LomPrcvtas,
-			&i.LomPrcvisit,
-			&i.RlomMontovtas,
-			&i.RlomPrcvtas,
-			&i.RlomPrcvisit,
-			&i.FechaEstad,
-			&i.PpgdolTotneto,
-			&i.DevdolTotneto,
-			&i.DefdolTotneto,
-			&i.Totdolcob,
-			&i.Cntrecl,
-			&i.Mtorecl,
-			&i.CreatedAt,
-			&i.UpdatedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const getStatisticsByCode = `-- name: GetStatisticsByCode :many
+const getStatisticBySalesman = `-- name: GetStatisticBySalesman :one
 ;
 
 select codcoord, nomcoord, vendedor, nombrevend, cntpedidos, mtopedidos, cntfacturas, mtofacturas, metavend, prcmeta, cntclientes, clivisit, prcvisitas, lom_montovtas, lom_prcvtas, lom_prcvisit, rlom_montovtas, rlom_prcvtas, rlom_prcvisit, fecha_estad, ppgdol_totneto, devdol_totneto, defdol_totneto, totdolcob, cntrecl, mtorecl, created_at, updated_at
@@ -236,8 +179,49 @@ from closs_salesman_statistic
 where vendedor = ?
 `
 
-func (q *Queries) GetStatisticsByCode(ctx context.Context, vendedor string) ([]ClossSalesmanStatistic, error) {
-	rows, err := q.db.QueryContext(ctx, getStatisticsByCode, vendedor)
+func (q *Queries) GetStatisticBySalesman(ctx context.Context, vendedor string) (ClossSalesmanStatistic, error) {
+	row := q.db.QueryRowContext(ctx, getStatisticBySalesman, vendedor)
+	var i ClossSalesmanStatistic
+	err := row.Scan(
+		&i.Codcoord,
+		&i.Nomcoord,
+		&i.Vendedor,
+		&i.Nombrevend,
+		&i.Cntpedidos,
+		&i.Mtopedidos,
+		&i.Cntfacturas,
+		&i.Mtofacturas,
+		&i.Metavend,
+		&i.Prcmeta,
+		&i.Cntclientes,
+		&i.Clivisit,
+		&i.Prcvisitas,
+		&i.LomMontovtas,
+		&i.LomPrcvtas,
+		&i.LomPrcvisit,
+		&i.RlomMontovtas,
+		&i.RlomPrcvtas,
+		&i.RlomPrcvisit,
+		&i.FechaEstad,
+		&i.PpgdolTotneto,
+		&i.DevdolTotneto,
+		&i.DefdolTotneto,
+		&i.Totdolcob,
+		&i.Cntrecl,
+		&i.Mtorecl,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const getStatistics = `-- name: GetStatistics :many
+select codcoord, nomcoord, vendedor, nombrevend, cntpedidos, mtopedidos, cntfacturas, mtofacturas, metavend, prcmeta, cntclientes, clivisit, prcvisitas, lom_montovtas, lom_prcvtas, lom_prcvisit, rlom_montovtas, rlom_prcvtas, rlom_prcvisit, fecha_estad, ppgdol_totneto, devdol_totneto, defdol_totneto, totdolcob, cntrecl, mtorecl, created_at, updated_at
+from closs_salesman_statistic
+`
+
+func (q *Queries) GetStatistics(ctx context.Context) ([]ClossSalesmanStatistic, error) {
+	rows, err := q.db.QueryContext(ctx, getStatistics)
 	if err != nil {
 		return nil, err
 	}

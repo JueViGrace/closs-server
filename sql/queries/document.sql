@@ -35,14 +35,14 @@ order by
     closs_document.codcliente asc
 ;
 
--- name: GetDocmentsBySalesman :many
+-- name: GetDocumentsBySalesman :many
 select closs_document.*
 from closs_document
 where closs_document.vendedor = ?
 order by closs_document.codcliente asc, closs_document.emision desc
 ;
 
--- name: GetdocumentsByCustomer :many
+-- name: GetDocumentsByCustomer :many
 select closs_document.*
 from closs_document
 where closs_document.codcliente = ?

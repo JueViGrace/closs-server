@@ -2,6 +2,8 @@ package data
 
 import (
 	"context"
+	"database/sql"
+	"time"
 
 	"github.com/JueViGrace/clo-backend/internal/db"
 	"github.com/JueViGrace/clo-backend/internal/types"
@@ -9,9 +11,13 @@ import (
 )
 
 type UserStore interface {
-	GetUsers() (users []*types.User, err error)
-	GetUser(id *uuid.UUID) (user *types.User, err error)
-	UpdateUser(r *types.UpdateUserRequest) (msg string, err error)
+	GetUsers() (users []types.UserResponse, err error)
+	GetUserById(id *uuid.UUID) (user *types.UserResponse, err error)
+	GetUserByUsername(username string) (user *types.UserResponse, err error)
+	CreateUser(r *types.CreateUserRequest) (user *types.UserResponse, err error)
+	UpdateLastSync(r *types.UpdateLastSyncRequest) (err error)
+	UpdatePassword(r *types.UpdatePasswordRequest) (err error)
+	SoftDeleteUser(id *uuid.UUID) (err error)
 	DeleteUser(id *uuid.UUID) (err error)
 }
 
@@ -31,54 +37,88 @@ func NewUserStore(ctx context.Context, db *db.Queries) UserStore {
 	}
 }
 
-func (s *userStore) GetUsers() ([]*types.User, error) {
-	users := make([]*types.User, 0)
+func (s *userStore) GetUsers() ([]types.UserResponse, error) {
+	users := make([]types.UserResponse, 0)
 
-	dbUsers, err := s.db.AdminGetUsers(s.ctx)
+	dbUsers, err := s.db.GetUsers(s.ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	for _, dbUser := range dbUsers {
-		user, err := types.DbUserToUser(&dbUser)
-		if err != nil {
-			return nil, err
-		}
-		users = append(users, user)
+		users = append(users, *types.DbUserToUser(&dbUser))
 	}
 
 	return users, nil
 }
 
-func (s *userStore) GetUser(id *uuid.UUID) (*types.User, error) {
-	user := new(types.User)
-
+func (s *userStore) GetUserById(id *uuid.UUID) (*types.UserResponse, error) {
 	dbUser, err := s.db.GetUserById(s.ctx, id.String())
 	if err != nil {
 		return nil, err
 	}
 
-	user, err = types.DbUserToUser(&dbUser)
+	return types.DbUserToUser(&dbUser), nil
+}
+
+func (s *userStore) GetUserByUsername(username string) (*types.UserResponse, error) {
+	dbUser, err := s.db.GetUserById(s.ctx, username)
 	if err != nil {
 		return nil, err
 	}
 
-	return user, nil
+	return types.DbUserToUser(&dbUser), nil
 }
 
-func (s *userStore) UpdateUser(r *types.UpdateUserRequest) (string, error) {
-	ur := types.UpdateUserToDb(r)
+func (s *userStore) CreateUser(r *types.CreateUserRequest) (*types.UserResponse, error) {
+	return nil, nil
+}
 
-	err := s.db.UpdateUser(s.ctx, *ur)
+func (s *userStore) UpdatePassword(r *types.UpdatePasswordRequest) error {
+	err := s.db.UpdatePassword(s.ctx, db.UpdatePasswordParams{
+		Password:  r.Password,
+		UpdatedAt: time.Now().String(),
+		ID:        r.ID.String(),
+	})
 	if err != nil {
-		return "", err
+		return err
 	}
 
-	return "Updated!", nil
+	return nil
+}
+
+func (s *userStore) UpdateLastSync(r *types.UpdateLastSyncRequest) error {
+	err := s.db.UpdateLastSync(s.ctx, db.UpdateLastSyncParams{
+		UltSinc:   r.LastSync.String(),
+		Version:   r.Version,
+		UpdatedAt: time.Now().String(),
+		ID:        r.ID.String(),
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *userStore) SoftDeleteUser(id *uuid.UUID) error {
+	err := s.db.SoftDeleteUser(s.ctx, db.SoftDeleteUserParams{
+		UpdatedAt: time.Now().String(),
+		DeletedAt: sql.NullString{
+			String: time.Now().String(),
+			Valid:  true,
+		},
+		ID: id.String(),
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s *userStore) DeleteUser(id *uuid.UUID) error {
-	err := s.db.SoftDeleteUser(s.ctx, id.String())
+	err := s.db.DeleteUserById(s.ctx, id.String())
 	if err != nil {
 		return err
 	}

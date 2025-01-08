@@ -11,7 +11,7 @@ left join
 where closs_managers.kng_codgcia = ?
 ;
 
--- name: GetStatisticsByCode :many
+-- name: GetStatisticBySalesman :one
 select *
 from closs_salesman_statistic
 where vendedor = ?
