@@ -7,11 +7,13 @@ import (
 
 func (a *api) ConfigRoutes(api fiber.Router) {
 	group := api.Group("/config")
+	adminGroup := group.Group("/config")
+
 	handler := handlers.NewConfigHandler(a.db.ConfigStore())
 
-	group.Get("/", handler.GetConfigs)
-	group.Get("/:id", handler.GetConfig)
-	group.Post("/", handler.CreateConfig)
-	group.Patch("/", handler.UpdateConfig)
-	group.Delete("/:id", handler.DeleteConfig)
+	adminGroup.Get("/", handler.GetConfigs)
+	group.Get("/:id", handler.GetConfigsByUser)
+	adminGroup.Post("/", handler.CreateConfig)
+	adminGroup.Put("/", handler.UpdateConfig)
+	adminGroup.Delete("/", handler.DeleteConfig)
 }

@@ -3,15 +3,17 @@ package handlers
 import (
 	"github.com/JueViGrace/clo-backend/internal/data"
 	"github.com/JueViGrace/clo-backend/internal/types"
-	"github.com/JueViGrace/clo-backend/internal/util"
 	"github.com/gofiber/fiber/v2"
 )
 
 type ProductHandler interface {
 	GetProducts(c *fiber.Ctx) error
-	GetProduct(c *fiber.Ctx) error
+	GetExistingProducts(c *fiber.Ctx) error
+	GetProductByCode(c *fiber.Ctx) error
+	GetExistingProductByCode(c *fiber.Ctx) error
 	CreateProduct(c *fiber.Ctx) error
 	UpdateProduct(c *fiber.Ctx) error
+	SoftDeleteProduct(c *fiber.Ctx) error
 	DeleteProduct(c *fiber.Ctx) error
 }
 
@@ -38,15 +40,34 @@ func (h *productHandler) GetProducts(c *fiber.Ctx) error {
 	return c.Status(res.Status).JSON(res)
 }
 
-func (h *productHandler) GetProduct(c *fiber.Ctx) error {
+func (h *productHandler) GetExistingProducts(c *fiber.Ctx) error {
 	res := new(types.APIResponse)
-	id, err := util.GetIdFromParams(c.Params("id"))
+
+	products, err := h.db.GetExistingProducts()
 	if err != nil {
-		res = types.RespondBadRequest(err.Error(), "Invalid request")
+		res = types.RespondNotFound(err.Error(), "Failed")
 		return c.Status(res.Status).JSON(res)
 	}
 
-	product, err := h.db.GetProduct(id)
+	res = types.RespondOk(products, "Success")
+	return c.Status(res.Status).JSON(res)
+}
+
+func (h *productHandler) GetProductByCode(c *fiber.Ctx) error {
+	res := new(types.APIResponse)
+	product, err := h.db.GetProductByCode(c.Params("code"))
+	if err != nil {
+		res = types.RespondNotFound(err.Error(), "Failed")
+		return c.Status(res.Status).JSON(res)
+	}
+
+	res = types.RespondOk(product, "Success")
+	return c.Status(res.Status).JSON(res)
+}
+
+func (h *productHandler) GetExistingProductByCode(c *fiber.Ctx) error {
+	res := new(types.APIResponse)
+	product, err := h.db.GetExistingProductByCode(c.Params("code"))
 	if err != nil {
 		res = types.RespondNotFound(err.Error(), "Failed")
 		return c.Status(res.Status).JSON(res)
@@ -92,15 +113,21 @@ func (h *productHandler) UpdateProduct(c *fiber.Ctx) error {
 	return c.Status(res.Status).JSON(res)
 }
 
-func (h *productHandler) DeleteProduct(c *fiber.Ctx) error {
+func (h *productHandler) SoftDeleteProduct(c *fiber.Ctx) error {
 	res := new(types.APIResponse)
-	id, err := util.GetIdFromParams(c.Params("id"))
+	err := h.db.SoftDeleteProduct(c.Params("code"))
 	if err != nil {
-		res = types.RespondBadRequest(err.Error(), "Invalid request")
+		res = types.RespondNotFound(err.Error(), "Failed")
 		return c.Status(res.Status).JSON(res)
 	}
 
-	err = h.db.DeleteProduct(id)
+	res = types.RespondNoContent("Deleted", "Success")
+	return c.Status(res.Status).JSON(res)
+}
+
+func (h *productHandler) DeleteProduct(c *fiber.Ctx) error {
+	res := new(types.APIResponse)
+	err := h.db.DeleteProduct(c.Params("code"))
 	if err != nil {
 		res = types.RespondNotFound(err.Error(), "Failed")
 		return c.Status(res.Status).JSON(res)

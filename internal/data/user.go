@@ -71,7 +71,17 @@ func (s *userStore) GetUserByUsername(username string) (*types.UserResponse, err
 }
 
 func (s *userStore) CreateUser(r *types.CreateUserRequest) (*types.UserResponse, error) {
-	return nil, nil
+	cr, err := types.CreateUserToDb(r)
+	if err != nil {
+		return nil, err
+	}
+
+	dbUser, err := s.db.CreateUser(s.ctx, *cr)
+	if err != nil {
+		return nil, err
+	}
+
+	return types.DbUserToUser(&dbUser), nil
 }
 
 func (s *userStore) UpdatePassword(r *types.UpdatePasswordRequest) error {

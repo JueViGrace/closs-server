@@ -10,8 +10,8 @@ func (a *api) ProductRoutes(api fiber.Router) {
 	handler := handlers.NewProductHandler(a.db.ProductStore())
 
 	group.Get("/", handler.GetProducts)
-	group.Get("/:id", handler.GetProduct)
+	group.Get("/:code", handler.GetProductByCode)
 	group.Post("/", handler.CreateProduct)
 	group.Patch("/", handler.UpdateProduct)
-	group.Delete("/:id", handler.DeleteProduct)
+	group.Delete("/:code", handler.DeleteProduct)
 }

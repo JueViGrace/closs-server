@@ -8,7 +8,7 @@ import (
 )
 
 type ConfigStore interface {
-	GetCofigs() (configs []types.ConfigResponse, err error)
+	GetConfigs() (configs []types.ConfigResponse, err error)
 	GetConfigsByUser(username string) (configs []types.ConfigResponse, err error)
 	CreateConfig(r *types.CreateConfigRequest) (config *types.ConfigResponse, err error)
 	UpdateConfig(r *types.UpdateConfigRequest) (config *types.ConfigResponse, err error)
@@ -31,7 +31,7 @@ func NewConfigStore(ctx context.Context, db *db.Queries) ConfigStore {
 	}
 }
 
-func (s *configStore) GetCofigs() ([]types.ConfigResponse, error) {
+func (s *configStore) GetConfigs() ([]types.ConfigResponse, error) {
 	configs := make([]types.ConfigResponse, 0)
 
 	dbConfigs, err := s.db.GetConfigs(s.ctx)

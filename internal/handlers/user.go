@@ -9,8 +9,7 @@ import (
 
 type UserHandler interface {
 	GetUsers(c *fiber.Ctx) error
-	GetUser(c *fiber.Ctx) error
-	UpdateUser(c *fiber.Ctx) error
+	GetUserById(c *fiber.Ctx) error
 	DeleteUser(c *fiber.Ctx) error
 }
 
@@ -37,7 +36,7 @@ func (h *userHandler) GetUsers(c *fiber.Ctx) error {
 	return c.Status(res.Status).JSON(res)
 }
 
-func (h *userHandler) GetUser(c *fiber.Ctx) error {
+func (h *userHandler) GetUserById(c *fiber.Ctx) error {
 	res := new(types.APIResponse)
 	id, err := util.GetIdFromParams(c.Params("id"))
 	if err != nil {
@@ -45,31 +44,13 @@ func (h *userHandler) GetUser(c *fiber.Ctx) error {
 		return c.Status(res.Status).JSON(res)
 	}
 
-	user, err := h.db.GetUser(id)
+	user, err := h.db.GetUserById(id)
 	if err != nil {
 		res = types.RespondNotFound(err.Error(), "Failed")
 		return c.Status(res.Status).JSON(res)
 	}
 
 	res = types.RespondOk(user, "Success")
-	return c.Status(res.Status).JSON(res)
-}
-
-func (h *userHandler) UpdateUser(c *fiber.Ctx) error {
-	res := new(types.APIResponse)
-	r := new(types.UpdateUserRequest)
-	if err := c.BodyParser(r); err != nil {
-		res = types.RespondBadRequest(err.Error(), "Invalid request")
-		return c.Status(res.Status).JSON(res)
-	}
-
-	m, err := h.db.UpdateUser(r)
-	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
-		return c.Status(res.Status).JSON(res)
-	}
-
-	res = types.RespondAccepted(m, "Success")
 	return c.Status(res.Status).JSON(res)
 }
 

@@ -3,17 +3,17 @@ package handlers
 import (
 	"github.com/JueViGrace/clo-backend/internal/data"
 	"github.com/JueViGrace/clo-backend/internal/types"
-	"github.com/JueViGrace/clo-backend/internal/util"
 	"github.com/gofiber/fiber/v2"
 )
 
 type CompanyHandler interface {
 	GetCompanies(c *fiber.Ctx) error
-	GetCompany(c *fiber.Ctx) error
+	GetCompanyByCode(c *fiber.Ctx) error
+	GetExistingCompanyByCode(c *fiber.Ctx) error
 	CreateCompany(c *fiber.Ctx) error
 	UpdateCompany(c *fiber.Ctx) error
+	SoftDeleteCompany(c *fiber.Ctx) error
 	DeleteCompany(c *fiber.Ctx) error
-	GetCompanyByCode(c *fiber.Ctx) error
 }
 
 type companyHandler struct {
@@ -29,7 +29,7 @@ func NewCompanyHandler(db data.CompanyStore) CompanyHandler {
 func (h *companyHandler) GetCompanies(c *fiber.Ctx) error {
 	res := new(types.APIResponse)
 
-	companies, err := h.db.AdminGetCompanies()
+	companies, err := h.db.GetCompanies()
 	if err != nil {
 		res = types.RespondNotFound(err.Error(), "Failed")
 		return c.Status(res.Status).JSON(res)
@@ -39,15 +39,23 @@ func (h *companyHandler) GetCompanies(c *fiber.Ctx) error {
 	return c.Status(res.Status).JSON(res)
 }
 
-func (h *companyHandler) GetCompany(c *fiber.Ctx) error {
+func (h *companyHandler) GetCompanyByCode(c *fiber.Ctx) error {
 	res := new(types.APIResponse)
-	id, err := util.GetIdFromParams(c.Params("id"))
+
+	company, err := h.db.GetCompanyByCode(c.Params("code"))
 	if err != nil {
-		res = types.RespondBadRequest(err.Error(), "Invalid request")
+		res = types.RespondNotFound(err.Error(), "Failed")
 		return c.Status(res.Status).JSON(res)
 	}
 
-	company, err := h.db.AdminGetCompanyById(id)
+	res = types.RespondOk(company, "Success")
+	return c.Status(res.Status).JSON(res)
+}
+
+func (h *companyHandler) GetExistingCompanyByCode(c *fiber.Ctx) error {
+	res := new(types.APIResponse)
+
+	company, err := h.db.GetExistingCompanyByCode(c.Params("code"))
 	if err != nil {
 		res = types.RespondNotFound(err.Error(), "Failed")
 		return c.Status(res.Status).JSON(res)
@@ -93,15 +101,10 @@ func (h *companyHandler) UpdateCompany(c *fiber.Ctx) error {
 	return c.Status(res.Status).JSON(res)
 }
 
-func (h *companyHandler) DeleteCompany(c *fiber.Ctx) error {
+func (h *companyHandler) SoftDeleteCompany(c *fiber.Ctx) error {
 	res := new(types.APIResponse)
-	id, err := util.GetIdFromParams(c.Params("id"))
-	if err != nil {
-		res = types.RespondBadRequest(err.Error(), "Invalid request")
-		return c.Status(res.Status).JSON(res)
-	}
 
-	err = h.db.DeleteCompany(id)
+	err := h.db.SoftDeleteCompany(c.Params("code"))
 	if err != nil {
 		res = types.RespondNotFound(err.Error(), "Failed")
 		return c.Status(res.Status).JSON(res)
@@ -111,16 +114,15 @@ func (h *companyHandler) DeleteCompany(c *fiber.Ctx) error {
 	return c.Status(res.Status).JSON(res)
 }
 
-func (h *companyHandler) GetCompanyByCode(c *fiber.Ctx) error {
+func (h *companyHandler) DeleteCompany(c *fiber.Ctx) error {
 	res := new(types.APIResponse)
-	code := c.Params("code")
 
-	company, err := h.db.GetCompanyByCode(code)
+	err := h.db.DeleteCompany(c.Params("code"))
 	if err != nil {
 		res = types.RespondNotFound(err.Error(), "Failed")
 		return c.Status(res.Status).JSON(res)
 	}
 
-	res = types.RespondOk(company, "Success")
+	res = types.RespondNoContent("Deleted", "Success")
 	return c.Status(res.Status).JSON(res)
 }

@@ -16,7 +16,7 @@ from closs_order
 where kti_ndoc = ?
 ;
 
--- name: GetOrderWithLinesByCode :one
+-- name: GetOrderWithLinesByCode :many
 select *
 from closs_order
 left join closs_order_lines on closs_order.kti_ndoc = closs_order_lines.kti_ndoc
@@ -134,7 +134,7 @@ values(
 )
 RETURNING *;
 
--- name: UpdateOrder :exec
+-- name: UpdateOrder :one
 update closs_order set 
     kti_tdoc = ?,
     kti_codcli = ?,
@@ -153,5 +153,6 @@ update closs_order set
     complemento = ?,
     nro_complemento = ?,
     updated_at = ?
-WHERE kti_ndoc = ?;
+WHERE kti_ndoc = ?
+RETURNING *;
 

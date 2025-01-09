@@ -3,16 +3,14 @@ package handlers
 import (
 	"github.com/JueViGrace/clo-backend/internal/data"
 	"github.com/JueViGrace/clo-backend/internal/types"
-	"github.com/JueViGrace/clo-backend/internal/util"
 	"github.com/gofiber/fiber/v2"
 )
 
 type CustomerHandler interface {
 	GetCustomers(c *fiber.Ctx) error
-	GetCustomer(c *fiber.Ctx) error
+	GetCustomerByCode(c *fiber.Ctx) error
 	CreateCustomer(c *fiber.Ctx) error
 	UpdateCustomer(c *fiber.Ctx) error
-	DeleteCustomer(c *fiber.Ctx) error
 }
 
 type customerHandler struct {
@@ -27,26 +25,51 @@ func NewCustomerHandler(db data.CustomerStore) CustomerHandler {
 
 func (h *customerHandler) GetCustomers(c *fiber.Ctx) error {
 	res := new(types.APIResponse)
-
-	customers, err := h.db.GetCustomers()
-	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
+	mq := new(types.ManagerCustomerQueries)
+	if err := c.QueryParser(mq); err != nil {
+		res = types.RespondBadRequest(nil, "unable to parse query parameters")
 		return c.Status(res.Status).JSON(res)
 	}
 
-	res = types.RespondOk(customers, "Success")
+	sq := new(types.SalesmanCustomerQueries)
+	if err := c.QueryParser(sq); err != nil {
+		res = types.RespondBadRequest(nil, "unable to parse query parameters")
+		return c.Status(res.Status).JSON(res)
+	}
+
+	switch {
+	case mq != nil:
+		customers, err := h.db.GetCustomersByManager(mq.Manager)
+		if err != nil {
+			res = types.RespondNotFound(err.Error(), "Failed")
+			return c.Status(res.Status).JSON(res)
+		}
+		res = types.RespondOk(customers, "Success manager")
+
+	case sq != nil:
+		customers, err := h.db.GetCustomersBySalesman(sq.Salesman)
+		if err != nil {
+			res = types.RespondNotFound(err.Error(), "Failed")
+			return c.Status(res.Status).JSON(res)
+		}
+		res = types.RespondOk(customers, "Success salesman")
+
+	default:
+		customers, err := h.db.GetCustomers()
+		if err != nil {
+			res = types.RespondNotFound(err.Error(), "Failed")
+			return c.Status(res.Status).JSON(res)
+		}
+		res = types.RespondOk(customers, "Success")
+	}
+
 	return c.Status(res.Status).JSON(res)
 }
 
-func (h *customerHandler) GetCustomer(c *fiber.Ctx) error {
+func (h *customerHandler) GetCustomerByCode(c *fiber.Ctx) error {
 	res := new(types.APIResponse)
-	id, err := util.GetIdFromParams(c.Params("id"))
-	if err != nil {
-		res = types.RespondBadRequest(err.Error(), "Invalid request")
-		return c.Status(res.Status).JSON(res)
-	}
 
-	customer, err := h.db.GetCustomer(id)
+	customer, err := h.db.GetCustomerByCode(c.Params("code"))
 	if err != nil {
 		res = types.RespondNotFound(err.Error(), "Failed")
 		return c.Status(res.Status).JSON(res)
@@ -89,23 +112,5 @@ func (h *customerHandler) UpdateCustomer(c *fiber.Ctx) error {
 	}
 
 	res = types.RespondAccepted(m, "Success")
-	return c.Status(res.Status).JSON(res)
-}
-
-func (h *customerHandler) DeleteCustomer(c *fiber.Ctx) error {
-	res := new(types.APIResponse)
-	id, err := util.GetIdFromParams(c.Params("id"))
-	if err != nil {
-		res = types.RespondBadRequest(err.Error(), "Invalid request")
-		return c.Status(res.Status).JSON(res)
-	}
-
-	err = h.db.DeleteCustomer(id)
-	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
-		return c.Status(res.Status).JSON(res)
-	}
-
-	res = types.RespondNoContent("Deleted", "Success")
 	return c.Status(res.Status).JSON(res)
 }

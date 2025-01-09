@@ -10,7 +10,6 @@ func (a *api) UserRoutes(api fiber.Router) {
 	handler := handlers.NewUserHandler(a.db.UserStore())
 
 	group.Get("/", handler.GetUsers)
-	group.Get("/:id", handler.GetUser)
-	group.Patch("/:id", handler.UpdateUser)
+	group.Get("/:id", handler.GetUserById)
 	group.Delete("/:id", handler.DeleteUser)
 }

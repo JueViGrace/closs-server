@@ -42,6 +42,10 @@ type UpdatePasswordRequest struct {
 
 type Role string
 
+func (r Role) String() string {
+	return string(r)
+}
+
 const (
 	RoleCustomer Role = "customer"
 	RoleSalesman Role = "salesman"
@@ -64,5 +68,19 @@ func DbUserToUser(db *db.ClossUser) *UserResponse {
 }
 
 func CreateUserToDb(r *CreateUserRequest) (*db.CreateUserParams, error) {
-	return &db.CreateUserParams{}, nil
+	id, err := uuid.NewV7()
+	if err != nil {
+		return nil, err
+	}
+	return &db.CreateUserParams{
+		ID:        id.String(),
+		Username:  r.Username,
+		Password:  r.Password,
+		Codigo:    r.Code,
+		Role:      RoleSalesman.String(),
+		UltSinc:   r.LastSync,
+		Version:   r.Version,
+		CreatedAt: time.Now().String(),
+		UpdatedAt: time.Now().String(),
+	}, nil
 }

@@ -196,15 +196,13 @@ CREATE TABLE IF NOT EXISTS closs_order(
 CREATE TABLE IF NOT EXISTS closs_order_lines(
     kti_tdoc TEXT NOT NULL DEFAULT '',
     kti_ndoc TEXT NOT NULL DEFAULT '',
-    kti_tipprec TEXT NOT NULL DEFAULT '1',
+    kti_tipprec INTEGER NOT NULL DEFAULT 1,
     kmv_codart TEXT NOT NULL DEFAULT '',
     kmv_nombre TEXT NOT NULL DEFAULT '',
     kmv_cant INTEGER NOT NULL DEFAULT 0.00,
     kmv_artprec REAL NOT NULL DEFAULT 0.00,
     kmv_stot REAL NOT NULL DEFAULT 0.00,
     kmv_dctolin REAL NOT NULL DEFAULT 0.00,
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (kti_ndoc, kmv_codart)
 );
 

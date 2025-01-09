@@ -1,4 +1,4 @@
--- name: CreateOrderLine :exec
+-- name: CreateOrderLine :one
 insert into closs_order_lines (
     kti_tdoc,
     kti_ndoc,
@@ -8,9 +8,7 @@ insert into closs_order_lines (
     kmv_cant,
     kmv_artprec,
     kmv_stot,
-    kmv_dctolin,
-    created_at,
-    updated_at
+    kmv_dctolin
 )
 values (
     ?,
@@ -21,19 +19,19 @@ values (
     ?,
     ?,
     ?,
-    ?,
-    ?,
     ?
-);
+)
+RETURNING *;
 
--- name: UpdateOrderLine :exec
-update closs_order_lines set kti_tdoc = ?,
+-- name: UpdateOrderLine :one
+update closs_order_lines set 
+    kti_tdoc = ?,
     kti_tipprec = ?,
     kmv_nombre = ?,
     kmv_cant = ?,
     kmv_artprec = ?,
     kmv_stot = ?,
-    kmv_dctolin = ?,
-    updated_at = ?
-WHERE kti_ndoc = ? and kmv_codart = ?;
+    kmv_dctolin = ?
+WHERE kti_ndoc = ? and kmv_codart = ?
+RETURNING *;
 

@@ -7,11 +7,14 @@ import (
 
 func (a *api) CustomerRoutes(api fiber.Router) {
 	group := api.Group("/customers")
+	adminGroup := group.Group("/admin")
+
 	handler := handlers.NewCustomerHandler(a.db.CustomerStore())
 
 	group.Get("/", handler.GetCustomers)
-	group.Get("/:id", handler.GetCustomer)
-	group.Post("/", handler.CreateCustomer)
-	group.Patch("/", handler.UpdateCustomer)
-	group.Delete("/:id", handler.DeleteCustomer)
+	group.Get("/:code", handler.GetCustomerByCode)
+	adminGroup.Post("/", handler.CreateCustomer)
+	adminGroup.Put("/", handler.UpdateCustomer)
 }
+
+// todo: Middlewares

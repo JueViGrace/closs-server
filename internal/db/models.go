@@ -202,15 +202,13 @@ type ClossOrder struct {
 type ClossOrderLine struct {
 	KtiTdoc    string
 	KtiNdoc    string
-	KtiTipprec string
+	KtiTipprec int64
 	KmvCodart  string
 	KmvNombre  string
 	KmvCant    int64
 	KmvArtprec float64
 	KmvStot    float64
 	KmvDctolin float64
-	CreatedAt  string
-	UpdatedAt  string
 }
 
 type ClossProduct struct {

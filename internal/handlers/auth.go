@@ -7,10 +7,9 @@ import (
 )
 
 type AuthHandler interface {
-	SignUp(c *fiber.Ctx) error
 	SignIn(c *fiber.Ctx) error
-	RecoverPassword(c *fiber.Ctx) error
 	Refresh(c *fiber.Ctx) error
+	RecoverPassword(c *fiber.Ctx) error
 }
 
 type authHandler struct {
@@ -23,6 +22,7 @@ func NewAuthHandler(db data.AuthStore) AuthHandler {
 	}
 }
 
+// todo: set token cookie or header
 func (h *authHandler) SignIn(c *fiber.Ctx) error {
 	res := new(types.APIResponse)
 	r := new(types.SignInRequest)
@@ -42,22 +42,22 @@ func (h *authHandler) SignIn(c *fiber.Ctx) error {
 	return c.Status(res.Status).JSON(res)
 }
 
-func (h *authHandler) SignUp(c *fiber.Ctx) error {
+func (h *authHandler) Refresh(c *fiber.Ctx) error {
 	res := new(types.APIResponse)
-	r := new(types.SignUpRequest)
+	r := new(types.RefreshRequest)
 
-	if err := c.BodyParser(r); err != nil {
-		res = types.RespondBadRequest(err, "Invalid request")
+	if err := c.BodyParser(r); err == nil {
+		res = types.RespondBadRequest(err.Error(), "Invalid request")
 		return c.Status(res.Status).JSON(res)
 	}
 
-	token, err := h.db.SignUp(r)
+	token, err := h.db.Refresh(r)
 	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
+		res = types.RespondNotFound(err.Error(), "Invalid request")
 		return c.Status(res.Status).JSON(res)
 	}
 
-	res = types.RespondCreated(token, "Success")
+	res = types.RespondOk(token, "Success")
 	return c.Status(res.Status).JSON(res)
 }
 

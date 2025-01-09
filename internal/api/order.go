@@ -10,8 +10,7 @@ func (a *api) OrderRoutes(api fiber.Router) {
 	handler := handlers.NewOrderHandler(a.db.OrderStore())
 
 	group.Get("/", handler.GetOrders)
-	group.Get("/:id", handler.GetOrder)
+	group.Get("/:code", handler.GetOrderByCode)
 	group.Post("/", handler.CreateOrder)
 	group.Patch("/", handler.UpdateOrder)
-	group.Delete("/:id", handler.DeleteOrder)
 }

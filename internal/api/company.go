@@ -7,11 +7,15 @@ import (
 
 func (a *api) CompanyRoutes(api fiber.Router) {
 	group := api.Group("/company")
+	adminGroup := group.Group("/admin")
+
 	handler := handlers.NewCompanyHandler(a.db.CompanyStore())
 
-	group.Get("/", handler.GetCompanies)
-	group.Get("/:id", handler.GetCompany)
-	group.Post("/", handler.CreateCompany)
-	group.Patch("/", handler.UpdateCompany)
-	group.Delete("/:id", handler.DeleteCompany)
+	adminGroup.Get("/", handler.GetCompanies)
+	adminGroup.Get("/:code", handler.GetCompanyByCode)
+	group.Get("/:code", handler.GetExistingCompanyByCode)
+	adminGroup.Post("/", handler.CreateCompany)
+	adminGroup.Put("/", handler.UpdateCompany)
+	adminGroup.Delete("/:code", handler.SoftDeleteCompany)
+	adminGroup.Delete("/forever/:code", handler.DeleteCompany)
 }

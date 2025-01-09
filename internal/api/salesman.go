@@ -9,9 +9,7 @@ func (a *api) SalesmanRoutes(api fiber.Router) {
 	group := api.Group("/salesman")
 	handler := handlers.NewSalesmanHandler(a.db.SalesmanStore())
 
-	group.Get("/", handler.GetSalesmen)
 	group.Get("/:id", handler.GetSalesman)
 	group.Post("/", handler.CreateSalesman)
 	group.Patch("/", handler.UpdateSalesman)
-	group.Delete("/:id", handler.DeleteSalesman)
 }

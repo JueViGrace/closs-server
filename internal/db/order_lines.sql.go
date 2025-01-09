@@ -9,7 +9,7 @@ import (
 	"context"
 )
 
-const createOrderLine = `-- name: CreateOrderLine :exec
+const createOrderLine = `-- name: CreateOrderLine :one
 insert into closs_order_lines (
     kti_tdoc,
     kti_ndoc,
@@ -19,9 +19,7 @@ insert into closs_order_lines (
     kmv_cant,
     kmv_artprec,
     kmv_stot,
-    kmv_dctolin,
-    created_at,
-    updated_at
+    kmv_dctolin
 )
 values (
     ?,
@@ -32,28 +30,25 @@ values (
     ?,
     ?,
     ?,
-    ?,
-    ?,
     ?
 )
+RETURNING kti_tdoc, kti_ndoc, kti_tipprec, kmv_codart, kmv_nombre, kmv_cant, kmv_artprec, kmv_stot, kmv_dctolin
 `
 
 type CreateOrderLineParams struct {
 	KtiTdoc    string
 	KtiNdoc    string
-	KtiTipprec string
+	KtiTipprec int64
 	KmvCodart  string
 	KmvNombre  string
 	KmvCant    int64
 	KmvArtprec float64
 	KmvStot    float64
 	KmvDctolin float64
-	CreatedAt  string
-	UpdatedAt  string
 }
 
-func (q *Queries) CreateOrderLine(ctx context.Context, arg CreateOrderLineParams) error {
-	_, err := q.db.ExecContext(ctx, createOrderLine,
+func (q *Queries) CreateOrderLine(ctx context.Context, arg CreateOrderLineParams) (ClossOrderLine, error) {
+	row := q.db.QueryRowContext(ctx, createOrderLine,
 		arg.KtiTdoc,
 		arg.KtiNdoc,
 		arg.KtiTipprec,
@@ -63,39 +58,49 @@ func (q *Queries) CreateOrderLine(ctx context.Context, arg CreateOrderLineParams
 		arg.KmvArtprec,
 		arg.KmvStot,
 		arg.KmvDctolin,
-		arg.CreatedAt,
-		arg.UpdatedAt,
 	)
-	return err
+	var i ClossOrderLine
+	err := row.Scan(
+		&i.KtiTdoc,
+		&i.KtiNdoc,
+		&i.KtiTipprec,
+		&i.KmvCodart,
+		&i.KmvNombre,
+		&i.KmvCant,
+		&i.KmvArtprec,
+		&i.KmvStot,
+		&i.KmvDctolin,
+	)
+	return i, err
 }
 
-const updateOrderLine = `-- name: UpdateOrderLine :exec
-update closs_order_lines set kti_tdoc = ?,
+const updateOrderLine = `-- name: UpdateOrderLine :one
+update closs_order_lines set 
+    kti_tdoc = ?,
     kti_tipprec = ?,
     kmv_nombre = ?,
     kmv_cant = ?,
     kmv_artprec = ?,
     kmv_stot = ?,
-    kmv_dctolin = ?,
-    updated_at = ?
+    kmv_dctolin = ?
 WHERE kti_ndoc = ? and kmv_codart = ?
+RETURNING kti_tdoc, kti_ndoc, kti_tipprec, kmv_codart, kmv_nombre, kmv_cant, kmv_artprec, kmv_stot, kmv_dctolin
 `
 
 type UpdateOrderLineParams struct {
 	KtiTdoc    string
-	KtiTipprec string
+	KtiTipprec int64
 	KmvNombre  string
 	KmvCant    int64
 	KmvArtprec float64
 	KmvStot    float64
 	KmvDctolin float64
-	UpdatedAt  string
 	KtiNdoc    string
 	KmvCodart  string
 }
 
-func (q *Queries) UpdateOrderLine(ctx context.Context, arg UpdateOrderLineParams) error {
-	_, err := q.db.ExecContext(ctx, updateOrderLine,
+func (q *Queries) UpdateOrderLine(ctx context.Context, arg UpdateOrderLineParams) (ClossOrderLine, error) {
+	row := q.db.QueryRowContext(ctx, updateOrderLine,
 		arg.KtiTdoc,
 		arg.KtiTipprec,
 		arg.KmvNombre,
@@ -103,9 +108,20 @@ func (q *Queries) UpdateOrderLine(ctx context.Context, arg UpdateOrderLineParams
 		arg.KmvArtprec,
 		arg.KmvStot,
 		arg.KmvDctolin,
-		arg.UpdatedAt,
 		arg.KtiNdoc,
 		arg.KmvCodart,
 	)
-	return err
+	var i ClossOrderLine
+	err := row.Scan(
+		&i.KtiTdoc,
+		&i.KtiNdoc,
+		&i.KtiTipprec,
+		&i.KmvCodart,
+		&i.KmvNombre,
+		&i.KmvCant,
+		&i.KmvArtprec,
+		&i.KmvStot,
+		&i.KmvDctolin,
+	)
+	return i, err
 }

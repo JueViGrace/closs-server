@@ -51,20 +51,30 @@ func (s *documentStore) GetDocuments() ([]types.DocumentResponse, error) {
 }
 
 func (s *documentStore) GetDocumentsWithLines() ([]types.DocumentWithLinesResponse, error) {
-	_, err := s.db.GetDocumentsWithLines(s.ctx)
+	dbDocuments, err := s.db.GetDocumentsWithLines(s.ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	return nil, nil
+	return types.GroupDocWithLinesRows(dbDocuments), nil
 }
 
 func (s *documentStore) GetDocumentByCode(code string) (*types.DocumentResponse, error) {
-	return nil, nil
+	dbDocument, err := s.db.GetDocumentByCode(s.ctx, code)
+	if err != nil {
+		return nil, err
+	}
+
+	return types.DbDocToDocument(&dbDocument), nil
 }
 
 func (s *documentStore) GetDocumentByCodeWithLines(code string) (*types.DocumentWithLinesResponse, error) {
-	return nil, nil
+	dbDocuments, err := s.db.GetDocumentWithLinesByCode(s.ctx, code)
+	if err != nil {
+		return nil, err
+	}
+
+	return types.GroupDocWithLinesByCodeRows(dbDocuments), nil
 }
 
 func (s *documentStore) GetDocumentsByManager(code string) ([]types.DocumentResponse, error) {
@@ -113,7 +123,7 @@ func (s *documentStore) GetDocumentsByCustomer(code string) ([]types.DocumentRes
 }
 
 func (s *documentStore) CreateDocument(r *types.CreateDocumentRequest) (*types.DocumentWithLinesResponse, error) {
-	lines := make([]types.DocumentLineResponse, 0, 0)
+	lines := make([]types.DocumentLineResponse, 0)
 
 	dbDoc, err := s.db.CreateDocument(s.ctx, *types.CreateDocumentToDb(r))
 	if err != nil {
@@ -123,7 +133,7 @@ func (s *documentStore) CreateDocument(r *types.CreateDocumentRequest) (*types.D
 	head := types.DbDocToDocument(&dbDoc)
 
 	for _, line := range r.Lines {
-		dbLine, _ := s.db.CreateDocumentLine(s.ctx, *types.CreateDocumentLinesToDb(&line))
+		dbLine, err := s.db.CreateDocumentLine(s.ctx, *types.CreateDocumentLineToDb(&line))
 		if err != nil {
 			continue
 		}
@@ -131,11 +141,11 @@ func (s *documentStore) CreateDocument(r *types.CreateDocumentRequest) (*types.D
 		lines = append(lines, *types.DbDocLineToDocLine(&dbLine))
 	}
 
-	return types.DocToDocWithLines(head, lines), nil
+	return types.MapToDocWithLines(head, lines), nil
 }
 
 func (s *documentStore) UpdateDocument(r *types.UpdateDocumentRequest) (*types.DocumentWithLinesResponse, error) {
-	lines := make([]types.DocumentLineResponse, 0, 0)
+	lines := make([]types.DocumentLineResponse, 0)
 
 	dbDoc, err := s.db.UpdateDocument(s.ctx, *types.UpdateDocumentToDb(r))
 	if err != nil {
@@ -145,7 +155,7 @@ func (s *documentStore) UpdateDocument(r *types.UpdateDocumentRequest) (*types.D
 	head := types.DbDocToDocument(&dbDoc)
 
 	for _, line := range r.Lines {
-		dbLine, _ := s.db.UpdateDocumentLine(s.ctx, *types.UpdateDocumentLinesToDb(&line))
+		dbLine, _ := s.db.UpdateDocumentLine(s.ctx, *types.UpdateDocumentLineToDb(&line))
 		if err != nil {
 			continue
 		}
@@ -153,5 +163,5 @@ func (s *documentStore) UpdateDocument(r *types.UpdateDocumentRequest) (*types.D
 		lines = append(lines, *types.DbDocLineToDocLine(&dbLine))
 	}
 
-	return types.DocToDocWithLines(head, lines), nil
+	return types.MapToDocWithLines(head, lines), nil
 }

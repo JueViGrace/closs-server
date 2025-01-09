@@ -322,10 +322,10 @@ func (q *Queries) GetOrderByCode(ctx context.Context, ktiNdoc string) (ClossOrde
 	return i, err
 }
 
-const getOrderWithLinesByCode = `-- name: GetOrderWithLinesByCode :one
+const getOrderWithLinesByCode = `-- name: GetOrderWithLinesByCode :many
 ;
 
-select closs_order.kti_ndoc, closs_order.kti_tdoc, kti_codcli, kti_nombrecli, kti_codven, kti_docsol, kti_condicion, closs_order.kti_tipprec, kti_totneto, kti_status, kti_nroped, kti_fchdoc, kti_negesp, ke_pedstatus, dolarflete, complemento, nro_complemento, closs_order.created_at, closs_order.updated_at, closs_order_lines.kti_tdoc, closs_order_lines.kti_ndoc, closs_order_lines.kti_tipprec, kmv_codart, kmv_nombre, kmv_cant, kmv_artprec, kmv_stot, kmv_dctolin, closs_order_lines.created_at, closs_order_lines.updated_at, codigo, grupo, subgrupo, nombre, referencia, marca, unidad, discont, existencia, vta_max, vta_min, vta_minenx, comprometido, precio1, precio2, precio3, precio4, precio5, precio6, precio7, preventa, dctotope, vta_solofac, vta_solone, codbarras, detalles, cantbulto, costo_prom, util1, util2, util3, fchultcomp, qtyultcomp, images, closs_product.created_at, closs_product.updated_at, deleted_at
+select closs_order.kti_ndoc, closs_order.kti_tdoc, kti_codcli, kti_nombrecli, kti_codven, kti_docsol, kti_condicion, closs_order.kti_tipprec, kti_totneto, kti_status, kti_nroped, kti_fchdoc, kti_negesp, ke_pedstatus, dolarflete, complemento, nro_complemento, closs_order.created_at, closs_order.updated_at, closs_order_lines.kti_tdoc, closs_order_lines.kti_ndoc, closs_order_lines.kti_tipprec, kmv_codart, kmv_nombre, kmv_cant, kmv_artprec, kmv_stot, kmv_dctolin, codigo, grupo, subgrupo, nombre, referencia, marca, unidad, discont, existencia, vta_max, vta_min, vta_minenx, comprometido, precio1, precio2, precio3, precio4, precio5, precio6, precio7, preventa, dctotope, vta_solofac, vta_solone, codbarras, detalles, cantbulto, costo_prom, util1, util2, util3, fchultcomp, qtyultcomp, images, closs_product.created_at, closs_product.updated_at, deleted_at
 from closs_order
 left join closs_order_lines on closs_order.kti_ndoc = closs_order_lines.kti_ndoc
 left join closs_product on closs_product.codigo = closs_order_lines.kmv_codart
@@ -354,15 +354,13 @@ type GetOrderWithLinesByCodeRow struct {
 	UpdatedAt      string
 	KtiTdoc_2      sql.NullString
 	KtiNdoc_2      sql.NullString
-	KtiTipprec_2   sql.NullString
+	KtiTipprec_2   sql.NullInt64
 	KmvCodart      sql.NullString
 	KmvNombre      sql.NullString
 	KmvCant        sql.NullInt64
 	KmvArtprec     sql.NullFloat64
 	KmvStot        sql.NullFloat64
 	KmvDctolin     sql.NullFloat64
-	CreatedAt_2    sql.NullString
-	UpdatedAt_2    sql.NullString
 	Codigo         sql.NullString
 	Grupo          sql.NullString
 	Subgrupo       sql.NullString
@@ -397,84 +395,98 @@ type GetOrderWithLinesByCodeRow struct {
 	Fchultcomp     sql.NullString
 	Qtyultcomp     sql.NullInt64
 	Images         sql.NullString
-	CreatedAt_3    sql.NullString
-	UpdatedAt_3    sql.NullString
+	CreatedAt_2    sql.NullString
+	UpdatedAt_2    sql.NullString
 	DeletedAt      sql.NullString
 }
 
-func (q *Queries) GetOrderWithLinesByCode(ctx context.Context, ktiNdoc string) (GetOrderWithLinesByCodeRow, error) {
-	row := q.db.QueryRowContext(ctx, getOrderWithLinesByCode, ktiNdoc)
-	var i GetOrderWithLinesByCodeRow
-	err := row.Scan(
-		&i.KtiNdoc,
-		&i.KtiTdoc,
-		&i.KtiCodcli,
-		&i.KtiNombrecli,
-		&i.KtiCodven,
-		&i.KtiDocsol,
-		&i.KtiCondicion,
-		&i.KtiTipprec,
-		&i.KtiTotneto,
-		&i.KtiStatus,
-		&i.KtiNroped,
-		&i.KtiFchdoc,
-		&i.KtiNegesp,
-		&i.KePedstatus,
-		&i.Dolarflete,
-		&i.Complemento,
-		&i.NroComplemento,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-		&i.KtiTdoc_2,
-		&i.KtiNdoc_2,
-		&i.KtiTipprec_2,
-		&i.KmvCodart,
-		&i.KmvNombre,
-		&i.KmvCant,
-		&i.KmvArtprec,
-		&i.KmvStot,
-		&i.KmvDctolin,
-		&i.CreatedAt_2,
-		&i.UpdatedAt_2,
-		&i.Codigo,
-		&i.Grupo,
-		&i.Subgrupo,
-		&i.Nombre,
-		&i.Referencia,
-		&i.Marca,
-		&i.Unidad,
-		&i.Discont,
-		&i.Existencia,
-		&i.VtaMax,
-		&i.VtaMin,
-		&i.VtaMinenx,
-		&i.Comprometido,
-		&i.Precio1,
-		&i.Precio2,
-		&i.Precio3,
-		&i.Precio4,
-		&i.Precio5,
-		&i.Precio6,
-		&i.Precio7,
-		&i.Preventa,
-		&i.Dctotope,
-		&i.VtaSolofac,
-		&i.VtaSolone,
-		&i.Codbarras,
-		&i.Detalles,
-		&i.Cantbulto,
-		&i.CostoProm,
-		&i.Util1,
-		&i.Util2,
-		&i.Util3,
-		&i.Fchultcomp,
-		&i.Qtyultcomp,
-		&i.Images,
-		&i.CreatedAt_3,
-		&i.UpdatedAt_3,
-		&i.DeletedAt,
-	)
-	return i, err
+func (q *Queries) GetOrderWithLinesByCode(ctx context.Context, ktiNdoc string) ([]GetOrderWithLinesByCodeRow, error) {
+	rows, err := q.db.QueryContext(ctx, getOrderWithLinesByCode, ktiNdoc)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetOrderWithLinesByCodeRow
+	for rows.Next() {
+		var i GetOrderWithLinesByCodeRow
+		if err := rows.Scan(
+			&i.KtiNdoc,
+			&i.KtiTdoc,
+			&i.KtiCodcli,
+			&i.KtiNombrecli,
+			&i.KtiCodven,
+			&i.KtiDocsol,
+			&i.KtiCondicion,
+			&i.KtiTipprec,
+			&i.KtiTotneto,
+			&i.KtiStatus,
+			&i.KtiNroped,
+			&i.KtiFchdoc,
+			&i.KtiNegesp,
+			&i.KePedstatus,
+			&i.Dolarflete,
+			&i.Complemento,
+			&i.NroComplemento,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.KtiTdoc_2,
+			&i.KtiNdoc_2,
+			&i.KtiTipprec_2,
+			&i.KmvCodart,
+			&i.KmvNombre,
+			&i.KmvCant,
+			&i.KmvArtprec,
+			&i.KmvStot,
+			&i.KmvDctolin,
+			&i.Codigo,
+			&i.Grupo,
+			&i.Subgrupo,
+			&i.Nombre,
+			&i.Referencia,
+			&i.Marca,
+			&i.Unidad,
+			&i.Discont,
+			&i.Existencia,
+			&i.VtaMax,
+			&i.VtaMin,
+			&i.VtaMinenx,
+			&i.Comprometido,
+			&i.Precio1,
+			&i.Precio2,
+			&i.Precio3,
+			&i.Precio4,
+			&i.Precio5,
+			&i.Precio6,
+			&i.Precio7,
+			&i.Preventa,
+			&i.Dctotope,
+			&i.VtaSolofac,
+			&i.VtaSolone,
+			&i.Codbarras,
+			&i.Detalles,
+			&i.Cantbulto,
+			&i.CostoProm,
+			&i.Util1,
+			&i.Util2,
+			&i.Util3,
+			&i.Fchultcomp,
+			&i.Qtyultcomp,
+			&i.Images,
+			&i.CreatedAt_2,
+			&i.UpdatedAt_2,
+			&i.DeletedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const getOrders = `-- name: GetOrders :many
@@ -703,7 +715,7 @@ func (q *Queries) GetOrdersBySalesman(ctx context.Context, codigo string) ([]Clo
 const getOrdersWithLines = `-- name: GetOrdersWithLines :many
 ;
 
-select closs_order.kti_ndoc, closs_order.kti_tdoc, kti_codcli, kti_nombrecli, kti_codven, kti_docsol, kti_condicion, closs_order.kti_tipprec, kti_totneto, kti_status, kti_nroped, kti_fchdoc, kti_negesp, ke_pedstatus, dolarflete, complemento, nro_complemento, closs_order.created_at, closs_order.updated_at, closs_order_lines.kti_tdoc, closs_order_lines.kti_ndoc, closs_order_lines.kti_tipprec, kmv_codart, kmv_nombre, kmv_cant, kmv_artprec, kmv_stot, kmv_dctolin, closs_order_lines.created_at, closs_order_lines.updated_at, codigo, grupo, subgrupo, nombre, referencia, marca, unidad, discont, existencia, vta_max, vta_min, vta_minenx, comprometido, precio1, precio2, precio3, precio4, precio5, precio6, precio7, preventa, dctotope, vta_solofac, vta_solone, codbarras, detalles, cantbulto, costo_prom, util1, util2, util3, fchultcomp, qtyultcomp, images, closs_product.created_at, closs_product.updated_at, deleted_at
+select closs_order.kti_ndoc, closs_order.kti_tdoc, kti_codcli, kti_nombrecli, kti_codven, kti_docsol, kti_condicion, closs_order.kti_tipprec, kti_totneto, kti_status, kti_nroped, kti_fchdoc, kti_negesp, ke_pedstatus, dolarflete, complemento, nro_complemento, closs_order.created_at, closs_order.updated_at, closs_order_lines.kti_tdoc, closs_order_lines.kti_ndoc, closs_order_lines.kti_tipprec, kmv_codart, kmv_nombre, kmv_cant, kmv_artprec, kmv_stot, kmv_dctolin, codigo, grupo, subgrupo, nombre, referencia, marca, unidad, discont, existencia, vta_max, vta_min, vta_minenx, comprometido, precio1, precio2, precio3, precio4, precio5, precio6, precio7, preventa, dctotope, vta_solofac, vta_solone, codbarras, detalles, cantbulto, costo_prom, util1, util2, util3, fchultcomp, qtyultcomp, images, closs_product.created_at, closs_product.updated_at, deleted_at
 from closs_order
 left join closs_order_lines on closs_order.kti_ndoc = closs_order_lines.kti_ndoc
 left join closs_product on closs_product.codigo = closs_order_lines.kmv_codart
@@ -731,15 +743,13 @@ type GetOrdersWithLinesRow struct {
 	UpdatedAt      string
 	KtiTdoc_2      sql.NullString
 	KtiNdoc_2      sql.NullString
-	KtiTipprec_2   sql.NullString
+	KtiTipprec_2   sql.NullInt64
 	KmvCodart      sql.NullString
 	KmvNombre      sql.NullString
 	KmvCant        sql.NullInt64
 	KmvArtprec     sql.NullFloat64
 	KmvStot        sql.NullFloat64
 	KmvDctolin     sql.NullFloat64
-	CreatedAt_2    sql.NullString
-	UpdatedAt_2    sql.NullString
 	Codigo         sql.NullString
 	Grupo          sql.NullString
 	Subgrupo       sql.NullString
@@ -774,8 +784,8 @@ type GetOrdersWithLinesRow struct {
 	Fchultcomp     sql.NullString
 	Qtyultcomp     sql.NullInt64
 	Images         sql.NullString
-	CreatedAt_3    sql.NullString
-	UpdatedAt_3    sql.NullString
+	CreatedAt_2    sql.NullString
+	UpdatedAt_2    sql.NullString
 	DeletedAt      sql.NullString
 }
 
@@ -817,8 +827,6 @@ func (q *Queries) GetOrdersWithLines(ctx context.Context) ([]GetOrdersWithLinesR
 			&i.KmvArtprec,
 			&i.KmvStot,
 			&i.KmvDctolin,
-			&i.CreatedAt_2,
-			&i.UpdatedAt_2,
 			&i.Codigo,
 			&i.Grupo,
 			&i.Subgrupo,
@@ -853,8 +861,8 @@ func (q *Queries) GetOrdersWithLines(ctx context.Context) ([]GetOrdersWithLinesR
 			&i.Fchultcomp,
 			&i.Qtyultcomp,
 			&i.Images,
-			&i.CreatedAt_3,
-			&i.UpdatedAt_3,
+			&i.CreatedAt_2,
+			&i.UpdatedAt_2,
 			&i.DeletedAt,
 		); err != nil {
 			return nil, err
@@ -870,7 +878,7 @@ func (q *Queries) GetOrdersWithLines(ctx context.Context) ([]GetOrdersWithLinesR
 	return items, nil
 }
 
-const updateOrder = `-- name: UpdateOrder :exec
+const updateOrder = `-- name: UpdateOrder :one
 update closs_order set 
     kti_tdoc = ?,
     kti_codcli = ?,
@@ -890,6 +898,7 @@ update closs_order set
     nro_complemento = ?,
     updated_at = ?
 WHERE kti_ndoc = ?
+RETURNING kti_ndoc, kti_tdoc, kti_codcli, kti_nombrecli, kti_codven, kti_docsol, kti_condicion, kti_tipprec, kti_totneto, kti_status, kti_nroped, kti_fchdoc, kti_negesp, ke_pedstatus, dolarflete, complemento, nro_complemento, created_at, updated_at
 `
 
 type UpdateOrderParams struct {
@@ -913,8 +922,8 @@ type UpdateOrderParams struct {
 	KtiNdoc        string
 }
 
-func (q *Queries) UpdateOrder(ctx context.Context, arg UpdateOrderParams) error {
-	_, err := q.db.ExecContext(ctx, updateOrder,
+func (q *Queries) UpdateOrder(ctx context.Context, arg UpdateOrderParams) (ClossOrder, error) {
+	row := q.db.QueryRowContext(ctx, updateOrder,
 		arg.KtiTdoc,
 		arg.KtiCodcli,
 		arg.KtiNombrecli,
@@ -934,5 +943,27 @@ func (q *Queries) UpdateOrder(ctx context.Context, arg UpdateOrderParams) error 
 		arg.UpdatedAt,
 		arg.KtiNdoc,
 	)
-	return err
+	var i ClossOrder
+	err := row.Scan(
+		&i.KtiNdoc,
+		&i.KtiTdoc,
+		&i.KtiCodcli,
+		&i.KtiNombrecli,
+		&i.KtiCodven,
+		&i.KtiDocsol,
+		&i.KtiCondicion,
+		&i.KtiTipprec,
+		&i.KtiTotneto,
+		&i.KtiStatus,
+		&i.KtiNroped,
+		&i.KtiFchdoc,
+		&i.KtiNegesp,
+		&i.KePedstatus,
+		&i.Dolarflete,
+		&i.Complemento,
+		&i.NroComplemento,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
 }
