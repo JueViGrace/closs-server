@@ -19,4 +19,6 @@ bin/
 
 .env
 
+*.db
+
 *templ.go
