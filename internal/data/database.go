@@ -18,6 +18,7 @@ type Storage interface {
 	Health() map[string]string
 	Close() error
 
+	SessionStore() SessionStore
 	AuthStore() AuthStore
 	CompanyStore() CompanyStore
 	ConfigStore() ConfigStore

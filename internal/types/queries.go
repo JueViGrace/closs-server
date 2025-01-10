@@ -3,12 +3,10 @@ package types
 type CustomerQueries struct{}
 
 type ManagerCustomerQueries struct {
-	CustomerQueries
 	Manager string `query:"manager"`
 }
 
 type SalesmanCustomerQueries struct {
-	CustomerQueries
 	Salesman string `query:"salesman"`
 }
 

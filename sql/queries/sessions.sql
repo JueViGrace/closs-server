@@ -1,10 +1,10 @@
--- name: GetTokenById :one
+-- name: GetSessionById :one
 select *
 from closs_session
 where user_id = ?
 ;
 
--- name: GetTokenByToken :one
+-- name: GetSessionByToken :one
 select *
 from closs_session
 where token = ?
@@ -24,7 +24,7 @@ UPDATE closs_session SET
 WHERE user_id = ?
 RETURNING *;
 
--- name: DeleteSession :exec
+-- name: DeleteSessionById :exec
 delete from closs_session
 where user_id = ?
 ;
