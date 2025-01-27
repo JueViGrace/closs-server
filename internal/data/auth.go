@@ -11,7 +11,7 @@ import (
 
 type AuthStore interface {
 	SignIn(r *types.SignInRequest) (*types.AuthResponse, error)
-	Refresh(r *types.RefreshRequest) (*types.AuthResponse, error)
+	Refresh(r *types.RefreshRequest, d *types.AuthData) (*types.AuthResponse, error)
 	RecoverPassword(r *types.RecoverPasswordResquest) (*types.AuthResponse, error)
 }
 
@@ -31,6 +31,7 @@ func NewAuthStore(ctx context.Context, db *db.Queries) AuthStore {
 	}
 }
 
+// todo: refactor functions
 func (s *authStore) SignIn(r *types.SignInRequest) (*types.AuthResponse, error) {
 	user, err := s.db.GetUserByUsername(s.ctx, r.Username)
 	if err != nil {
@@ -50,9 +51,11 @@ func (s *authStore) SignIn(r *types.SignInRequest) (*types.AuthResponse, error) 
 		return nil, err
 	}
 
-	_, err = s.db.CreateSession(s.ctx, db.CreateSessionParams{
-		UserID: user.ID,
-		Token:  res.RefreshToken,
+	err = s.db.CreateSession(s.ctx, db.CreateSessionParams{
+		RefreshToken: res.RefreshToken,
+		AccessToken:  res.AccessToken,
+		Username:     user.Username,
+		UserID:       user.ID,
 	})
 	if err != nil {
 		return nil, err
@@ -61,19 +64,8 @@ func (s *authStore) SignIn(r *types.SignInRequest) (*types.AuthResponse, error) 
 	return res, nil
 }
 
-func (s *authStore) Refresh(r *types.RefreshRequest) (*types.AuthResponse, error) {
-	token, err := util.ValidateJWT(r.Token)
-	if err != nil {
-		s.db.DeleteSessionByToken(s.ctx, r.Token)
-		return nil, err
-	}
-
-	claims, ok := token.Claims.(util.JWTClaims)
-	if !ok {
-		return nil, errors.New("invalid request")
-	}
-
-	user, err := s.db.GetUserById(s.ctx, claims.ID)
+func (s *authStore) Refresh(r *types.RefreshRequest, d *types.AuthData) (*types.AuthResponse, error) {
+	user, err := s.db.GetUserById(s.ctx, d.UserId.String())
 	if err != nil {
 		return nil, err
 	}
@@ -83,9 +75,10 @@ func (s *authStore) Refresh(r *types.RefreshRequest) (*types.AuthResponse, error
 		return nil, err
 	}
 
-	_, err = s.db.CreateSession(s.ctx, db.CreateSessionParams{
-		UserID: user.ID,
-		Token:  res.RefreshToken,
+	err = s.db.UpdateSession(s.ctx, db.UpdateSessionParams{
+		RefreshToken: res.RefreshToken,
+		AccessToken:  res.AccessToken,
+		UserID:       user.ID,
 	})
 	if err != nil {
 		return nil, err

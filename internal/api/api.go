@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/JueViGrace/clo-backend/internal/data"
+	"github.com/JueViGrace/clo-backend/internal/types"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -17,12 +18,17 @@ type Api interface {
 
 type api struct {
 	*fiber.App
-	db data.Storage
+	db        data.Storage
+	validator *types.XValidator
 }
 
 func New() Api {
 	return &api{
 		App: fiber.New(fiber.Config{
+			ErrorHandler: func(c *fiber.Ctx, err error) error {
+				res := types.RespondInternalServerError(nil, err.Error())
+				return c.Status(res.Status).JSON(res)
+			},
 			ServerHeader: "CloServer",
 			AppName:      "CloServer",
 		}),

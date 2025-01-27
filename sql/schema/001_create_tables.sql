@@ -301,7 +301,9 @@ CREATE TABLE IF NOT EXISTS closs_sector(
 );
 
 CREATE TABLE IF NOT EXISTS closs_session(
-    token TEXT NOT NULL,
+    refresh_token TEXT NOT NULL,
+    access_token TEXT NOT NULL,
+    username TEXT NOT NULL UNIQUE,
     user_id TEXT NOT NULL PRIMARY KEY,
     FOREIGN KEY (user_id) REFERENCES closs_user(id)
 );

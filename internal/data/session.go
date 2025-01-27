@@ -4,13 +4,14 @@ import (
 	"context"
 
 	"github.com/JueViGrace/clo-backend/internal/db"
+	"github.com/JueViGrace/clo-backend/internal/types"
+	"github.com/google/uuid"
 )
 
 type SessionStore interface {
-	GetSessionById(id string) (*db.ClossSession, error)
-	GetSessionByToken(token string) (*db.ClossSession, error)
-	DeleteSessionById(id string) error
-	DeleteSessionByToken(token string) error
+	GetSessionById(id uuid.UUID) (*types.Session, error)
+	GetSessionByUsername(username string) (*types.Session, error)
+	DeleteSessionById(id uuid.UUID) error
 }
 
 func (s *storage) SessionStore() SessionStore {
@@ -29,34 +30,46 @@ func NewSessionStore(ctx context.Context, db *db.Queries) SessionStore {
 	}
 }
 
-func (s *sessionStore) GetSessionById(id string) (*db.ClossSession, error) {
-	session, err := s.db.GetSessionById(s.ctx, id)
+func (s *sessionStore) GetSessionById(id uuid.UUID) (*types.Session, error) {
+	session, err := s.db.GetSessionById(s.ctx, id.String())
 	if err != nil {
 		return nil, err
 	}
 
-	return &session, nil
-}
-
-func (s *sessionStore) GetSessionByToken(token string) (*db.ClossSession, error) {
-	session, err := s.db.GetSessionByToken(s.ctx, token)
+	userId, err := uuid.Parse(session.UserID)
 	if err != nil {
 		return nil, err
 	}
 
-	return &session, nil
+	return &types.Session{
+		RefreshToken: session.RefreshToken,
+		AccessToken:  session.AccessToken,
+		Username:     session.Username,
+		UserId:       userId,
+	}, nil
 }
 
-func (s *sessionStore) DeleteSessionById(id string) error {
-	err := s.db.DeleteSessionById(s.ctx, id)
+func (s *sessionStore) GetSessionByUsername(username string) (*types.Session, error) {
+	session, err := s.db.GetSessionByUsername(s.ctx, username)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+
+	userId, err := uuid.Parse(session.UserID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.Session{
+		RefreshToken: session.RefreshToken,
+		AccessToken:  session.AccessToken,
+		Username:     session.Username,
+		UserId:       userId,
+	}, nil
 }
 
-func (s *sessionStore) DeleteSessionByToken(token string) error {
-	err := s.db.DeleteSessionByToken(s.ctx, token)
+func (s *sessionStore) DeleteSessionById(id uuid.UUID) error {
+	err := s.db.DeleteSessionById(s.ctx, id.String())
 	if err != nil {
 		return err
 	}

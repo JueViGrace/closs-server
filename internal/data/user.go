@@ -12,13 +12,13 @@ import (
 
 type UserStore interface {
 	GetUsers() (users []types.UserResponse, err error)
-	GetUserById(id *uuid.UUID) (user *types.UserResponse, err error)
+	GetUserById(id uuid.UUID) (user *types.UserResponse, err error)
 	GetUserByUsername(username string) (user *types.UserResponse, err error)
 	CreateUser(r *types.CreateUserRequest) (user *types.UserResponse, err error)
 	UpdateLastSync(r *types.UpdateLastSyncRequest) (err error)
 	UpdatePassword(r *types.UpdatePasswordRequest) (err error)
-	SoftDeleteUser(id *uuid.UUID) (err error)
-	DeleteUser(id *uuid.UUID) (err error)
+	SoftDeleteUser(id uuid.UUID) (err error)
+	DeleteUser(id uuid.UUID) (err error)
 }
 
 func (s *storage) UserStore() UserStore {
@@ -52,7 +52,7 @@ func (s *userStore) GetUsers() ([]types.UserResponse, error) {
 	return users, nil
 }
 
-func (s *userStore) GetUserById(id *uuid.UUID) (*types.UserResponse, error) {
+func (s *userStore) GetUserById(id uuid.UUID) (*types.UserResponse, error) {
 	dbUser, err := s.db.GetUserById(s.ctx, id.String())
 	if err != nil {
 		return nil, err
@@ -111,7 +111,7 @@ func (s *userStore) UpdateLastSync(r *types.UpdateLastSyncRequest) error {
 	return nil
 }
 
-func (s *userStore) SoftDeleteUser(id *uuid.UUID) error {
+func (s *userStore) SoftDeleteUser(id uuid.UUID) error {
 	err := s.db.SoftDeleteUser(s.ctx, db.SoftDeleteUserParams{
 		UpdatedAt: time.Now().String(),
 		DeletedAt: sql.NullString{
@@ -127,7 +127,7 @@ func (s *userStore) SoftDeleteUser(id *uuid.UUID) error {
 	return nil
 }
 
-func (s *userStore) DeleteUser(id *uuid.UUID) error {
+func (s *userStore) DeleteUser(id uuid.UUID) error {
 	err := s.db.DeleteUserById(s.ctx, id.String())
 	if err != nil {
 		return err

@@ -9,27 +9,34 @@ import (
 	"context"
 )
 
-const createSession = `-- name: CreateSession :one
+const createSession = `-- name: CreateSession :exec
 ;
 
 INSERT  INTO closs_session(
-    token,
+    refresh_token,
+    access_token,
+    username,
     user_id
 )
-VALUES (?, ?)
-RETURNING token, user_id
+VALUES (?, ?, ?, ?)
+RETURNING refresh_token, access_token, username, user_id
 `
 
 type CreateSessionParams struct {
-	Token  string
-	UserID string
+	RefreshToken string
+	AccessToken  string
+	Username     string
+	UserID       string
 }
 
-func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (ClossSession, error) {
-	row := q.db.QueryRowContext(ctx, createSession, arg.Token, arg.UserID)
-	var i ClossSession
-	err := row.Scan(&i.Token, &i.UserID)
-	return i, err
+func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) error {
+	_, err := q.db.ExecContext(ctx, createSession,
+		arg.RefreshToken,
+		arg.AccessToken,
+		arg.Username,
+		arg.UserID,
+	)
+	return err
 }
 
 const deleteSessionById = `-- name: DeleteSessionById :exec
@@ -42,20 +49,8 @@ func (q *Queries) DeleteSessionById(ctx context.Context, userID string) error {
 	return err
 }
 
-const deleteSessionByToken = `-- name: DeleteSessionByToken :exec
-;
-
-delete from closs_session
-where token = ?
-`
-
-func (q *Queries) DeleteSessionByToken(ctx context.Context, token string) error {
-	_, err := q.db.ExecContext(ctx, deleteSessionByToken, token)
-	return err
-}
-
 const getSessionById = `-- name: GetSessionById :one
-select token, user_id
+select refresh_token, access_token, username, user_id
 from closs_session
 where user_id = ?
 `
@@ -63,40 +58,50 @@ where user_id = ?
 func (q *Queries) GetSessionById(ctx context.Context, userID string) (ClossSession, error) {
 	row := q.db.QueryRowContext(ctx, getSessionById, userID)
 	var i ClossSession
-	err := row.Scan(&i.Token, &i.UserID)
+	err := row.Scan(
+		&i.RefreshToken,
+		&i.AccessToken,
+		&i.Username,
+		&i.UserID,
+	)
 	return i, err
 }
 
-const getSessionByToken = `-- name: GetSessionByToken :one
+const getSessionByUsername = `-- name: GetSessionByUsername :one
 ;
 
-select token, user_id
+select refresh_token, access_token, username, user_id
 from closs_session
-where token = ?
+where username = ?
 `
 
-func (q *Queries) GetSessionByToken(ctx context.Context, token string) (ClossSession, error) {
-	row := q.db.QueryRowContext(ctx, getSessionByToken, token)
+func (q *Queries) GetSessionByUsername(ctx context.Context, username string) (ClossSession, error) {
+	row := q.db.QueryRowContext(ctx, getSessionByUsername, username)
 	var i ClossSession
-	err := row.Scan(&i.Token, &i.UserID)
+	err := row.Scan(
+		&i.RefreshToken,
+		&i.AccessToken,
+		&i.Username,
+		&i.UserID,
+	)
 	return i, err
 }
 
-const updateSession = `-- name: UpdateSession :one
+const updateSession = `-- name: UpdateSession :exec
 UPDATE closs_session SET
-    token = ?
+    refresh_token = ?,
+    access_token = ?
 WHERE user_id = ?
-RETURNING token, user_id
+RETURNING refresh_token, access_token, username, user_id
 `
 
 type UpdateSessionParams struct {
-	Token  string
-	UserID string
+	RefreshToken string
+	AccessToken  string
+	UserID       string
 }
 
-func (q *Queries) UpdateSession(ctx context.Context, arg UpdateSessionParams) (ClossSession, error) {
-	row := q.db.QueryRowContext(ctx, updateSession, arg.Token, arg.UserID)
-	var i ClossSession
-	err := row.Scan(&i.Token, &i.UserID)
-	return i, err
+func (q *Queries) UpdateSession(ctx context.Context, arg UpdateSessionParams) error {
+	_, err := q.db.ExecContext(ctx, updateSession, arg.RefreshToken, arg.AccessToken, arg.UserID)
+	return err
 }

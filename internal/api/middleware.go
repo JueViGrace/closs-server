@@ -9,18 +9,8 @@ import (
 	"github.com/JueViGrace/clo-backend/internal/types"
 	"github.com/JueViGrace/clo-backend/internal/util"
 	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 )
-
-type AuthData struct {
-	jwt  JwtData
-	role string
-}
-
-type JwtData struct {
-	token  *jwt.Token
-	claims util.JWTClaims
-}
 
 func (a *api) adminAuthMiddleware(c *fiber.Ctx) error {
 	data, err := getUserDataForReq(c, a.db)
@@ -29,7 +19,7 @@ func (a *api) adminAuthMiddleware(c *fiber.Ctx) error {
 		return c.Status(res.Status).JSON(res)
 	}
 
-	if data.role != types.Admin {
+	if data.Role != types.Admin {
 		res := types.RespondForbbiden("permission denied", "Failed")
 		return c.Status(res.Status).JSON(res)
 	}
@@ -38,13 +28,7 @@ func (a *api) adminAuthMiddleware(c *fiber.Ctx) error {
 }
 
 func (a *api) sessionMiddleware(c *fiber.Ctx) error {
-	data, err := getUserDataForReq(c, a.db)
-	if err != nil {
-		res := types.RespondUnauthorized(err.Error(), "Failed")
-		return c.Status(res.Status).JSON(res)
-	}
-
-	_, err = a.db.SessionStore().GetSessionById(data.jwt.claims.UserId.String())
+	_, err := getUserDataForReq(c, a.db)
 	if err != nil {
 		res := types.RespondUnauthorized(err.Error(), "Failed")
 		return c.Status(res.Status).JSON(res)
@@ -53,26 +37,50 @@ func (a *api) sessionMiddleware(c *fiber.Ctx) error {
 	return c.Next()
 }
 
-func getUserDataForReq(c *fiber.Ctx, db data.Storage) (*AuthData, error) {
-	jwt, err := extractJWTFromHeader(c, func(s string) {
-		db.SessionStore().DeleteSessionByToken(s)
+func (a *api) authenticatedHandler(handler types.AuthHandler) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		data, err := getUserDataForReq(c, a.db)
+		if err != nil {
+			res := types.RespondUnauthorized(nil, "you are not authorized to access this endpoint")
+			return c.Status(res.Status).JSON(res)
+		}
+
+		return handler(c, data)
+	}
+}
+
+func getUserDataForReq(c *fiber.Ctx, db data.Storage) (*types.AuthData, error) {
+	jwt, err := extractJWTFromHeader(c, func(u uuid.UUID) {
+		db.SessionStore().DeleteSessionById(u)
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	user, err := db.UserStore().GetUserById(&jwt.claims.UserId)
+	session, err := db.SessionStore().GetSessionById(jwt.Claims.UserId)
 	if err != nil {
 		return nil, err
 	}
 
-	return &AuthData{
-		jwt:  *jwt,
-		role: user.Role.String(),
+	user, err := db.UserStore().GetUserById(session.UserId)
+	if err != nil {
+		return nil, err
+	}
+
+	userId, err := uuid.Parse(user.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.AuthData{
+		UserId:   userId,
+		Role:     user.Role.String(),
+		Username: user.Username,
+		Code:     user.Code,
 	}, nil
 }
 
-func extractJWTFromHeader(c *fiber.Ctx, expired func(string)) (*JwtData, error) {
+func extractJWTFromHeader(c *fiber.Ctx, expired func(uuid.UUID)) (*types.JwtData, error) {
 	header := strings.Join(c.GetReqHeaders()["Authorization"], "")
 
 	if !strings.HasPrefix(header, "Bearer") {
@@ -86,18 +94,16 @@ func extractJWTFromHeader(c *fiber.Ctx, expired func(string)) (*JwtData, error) 
 	}
 
 	if !token.Valid {
-		expired(tokenString)
 		return nil, errors.New("permission denied")
 	}
 
 	claims, ok := token.Claims.(util.JWTClaims)
 	if !ok {
-		expired(tokenString)
 		return nil, errors.New("permission denied")
 	}
 
 	if claims.ExpiresAt.Time.UTC().Unix() < time.Now().UTC().Unix() {
-		expired(tokenString)
+		expired(claims.UserId)
 		return nil, errors.New("permision denied")
 	}
 
@@ -110,8 +116,8 @@ func extractJWTFromHeader(c *fiber.Ctx, expired func(string)) (*JwtData, error) 
 		return nil, errors.New("permision denied")
 	}
 
-	return &JwtData{
-		token:  token,
-		claims: claims,
+	return &types.JwtData{
+		Token:  token,
+		Claims: claims,
 	}, nil
 }

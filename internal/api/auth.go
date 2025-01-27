@@ -11,5 +11,5 @@ func (a *api) AuthRoutes(api fiber.Router) {
 
 	group.Post("/signIn", handler.SignIn)
 	group.Post("/recover/password", handler.RecoverPassword)
-	group.Post("/refresh", handler.Refresh)
+	group.Post("/refresh", a.authenticatedHandler(handler.Refresh))
 }

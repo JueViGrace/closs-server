@@ -8,7 +8,7 @@ import (
 
 type AuthHandler interface {
 	SignIn(c *fiber.Ctx) error
-	Refresh(c *fiber.Ctx) error
+	Refresh(c *fiber.Ctx, d *types.AuthData) error
 	RecoverPassword(c *fiber.Ctx) error
 }
 
@@ -23,6 +23,7 @@ func NewAuthHandler(db data.AuthStore) AuthHandler {
 }
 
 // todo: set token cookie or header
+// todo: add validation
 func (h *authHandler) SignIn(c *fiber.Ctx) error {
 	res := new(types.APIResponse)
 	r := new(types.SignInRequest)
@@ -42,16 +43,16 @@ func (h *authHandler) SignIn(c *fiber.Ctx) error {
 	return c.Status(res.Status).JSON(res)
 }
 
-func (h *authHandler) Refresh(c *fiber.Ctx) error {
+func (h *authHandler) Refresh(c *fiber.Ctx, d *types.AuthData) error {
 	res := new(types.APIResponse)
 	r := new(types.RefreshRequest)
 
-	if err := c.BodyParser(r); err == nil {
+	if err := c.BodyParser(r); err != nil {
 		res = types.RespondBadRequest(err.Error(), "Invalid request")
 		return c.Status(res.Status).JSON(res)
 	}
 
-	token, err := h.db.Refresh(r)
+	token, err := h.db.Refresh(r, d)
 	if err != nil {
 		res = types.RespondNotFound(err.Error(), "Invalid request")
 		return c.Status(res.Status).JSON(res)

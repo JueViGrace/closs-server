@@ -306,8 +306,10 @@ type ClossSector struct {
 }
 
 type ClossSession struct {
-	Token  string
-	UserID string
+	RefreshToken string
+	AccessToken  string
+	Username     string
+	UserID       string
 }
 
 type ClossSubgroup struct {

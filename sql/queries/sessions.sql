@@ -4,33 +4,31 @@ from closs_session
 where user_id = ?
 ;
 
--- name: GetSessionByToken :one
+-- name: GetSessionByUsername :one
 select *
 from closs_session
-where token = ?
+where username = ?
 ;
 
--- name: CreateSession :one
+-- name: CreateSession :exec
 INSERT  INTO closs_session(
-    token,
+    refresh_token,
+    access_token,
+    username,
     user_id
 )
-VALUES (?, ?)
+VALUES (?, ?, ?, ?)
 RETURNING *;
 
--- name: UpdateSession :one
+-- name: UpdateSession :exec
 UPDATE closs_session SET
-    token = ?
+    refresh_token = ?,
+    access_token = ?
 WHERE user_id = ?
 RETURNING *;
 
 -- name: DeleteSessionById :exec
 delete from closs_session
 where user_id = ?
-;
-
--- name: DeleteSessionByToken :exec
-delete from closs_session
-where token = ?
 ;
 

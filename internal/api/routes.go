@@ -16,8 +16,9 @@ func (a *api) RegisterRoutes() {
 func (a *api) ApiRoutes() {
 	api := a.App.Group("/api")
 
-	api.Get("/health", a.HealthRoute)
-	api.Get("/metrics", monitor.New(monitor.Config{
+	// todo: protect for only admins
+	api.Get("/health", a.sessionMiddleware, a.HealthRoute)
+	api.Get("/metrics", a.sessionMiddleware, monitor.New(monitor.Config{
 		Refresh: time.Duration(time.Second),
 	}))
 
@@ -32,6 +33,7 @@ func (a *api) ApiRoutes() {
 	a.UserRoutes(api)
 }
 
+// this routes could be separated from this module
 func (a *api) WebRoutes() {
 	a.App.Get("/", func(c *fiber.Ctx) error {
 		return c.JSON("root")

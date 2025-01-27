@@ -9,7 +9,6 @@ func (a *api) UserRoutes(api fiber.Router) {
 	group := api.Group("/users")
 	handler := handlers.NewUserHandler(a.db.UserStore())
 
-	group.Get("/", handler.GetUsers)
-	group.Get("/:id", handler.GetUserById)
-	group.Delete("/:id", handler.DeleteUser)
+	group.Get("/", a.adminAuthMiddleware, handler.GetUsers)
+	group.Get("/me", a.authenticatedHandler(handler.GetUserById))
 }
