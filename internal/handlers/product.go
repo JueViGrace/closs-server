@@ -32,7 +32,7 @@ func (h *productHandler) GetProducts(c *fiber.Ctx) error {
 
 	products, err := h.db.GetProducts()
 	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
+		res = types.RespondNotFound(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
@@ -45,7 +45,7 @@ func (h *productHandler) GetExistingProducts(c *fiber.Ctx) error {
 
 	products, err := h.db.GetExistingProducts()
 	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
+		res = types.RespondNotFound(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
@@ -57,7 +57,7 @@ func (h *productHandler) GetProductByCode(c *fiber.Ctx) error {
 	res := new(types.APIResponse)
 	product, err := h.db.GetProductByCode(c.Params("code"))
 	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
+		res = types.RespondNotFound(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
@@ -69,7 +69,7 @@ func (h *productHandler) GetExistingProductByCode(c *fiber.Ctx) error {
 	res := new(types.APIResponse)
 	product, err := h.db.GetExistingProductByCode(c.Params("code"))
 	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
+		res = types.RespondNotFound(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
@@ -81,13 +81,13 @@ func (h *productHandler) CreateProduct(c *fiber.Ctx) error {
 	res := new(types.APIResponse)
 	r := new(types.CreateProductRequest)
 	if err := c.BodyParser(r); err != nil {
-		res = types.RespondBadRequest(err.Error(), "Invalid request")
+		res = types.RespondBadRequest(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
 	m, err := h.db.CreateProduct(r)
 	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
+		res = types.RespondNotFound(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
@@ -99,13 +99,13 @@ func (h *productHandler) UpdateProduct(c *fiber.Ctx) error {
 	res := new(types.APIResponse)
 	r := new(types.UpdateProductRequest)
 	if err := c.BodyParser(r); err != nil {
-		res = types.RespondBadRequest(err.Error(), "Invalid request")
+		res = types.RespondBadRequest(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
 	m, err := h.db.UpdateProduct(r)
 	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
+		res = types.RespondNotFound(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
@@ -117,7 +117,7 @@ func (h *productHandler) SoftDeleteProduct(c *fiber.Ctx) error {
 	res := new(types.APIResponse)
 	err := h.db.SoftDeleteProduct(c.Params("code"))
 	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
+		res = types.RespondNotFound(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
@@ -129,7 +129,7 @@ func (h *productHandler) DeleteProduct(c *fiber.Ctx) error {
 	res := new(types.APIResponse)
 	err := h.db.DeleteProduct(c.Params("code"))
 	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
+		res = types.RespondNotFound(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 

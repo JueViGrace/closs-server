@@ -26,7 +26,7 @@ func (h *userHandler) GetUsers(c *fiber.Ctx) error {
 
 	users, err := h.db.GetUsers()
 	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
+		res = types.RespondNotFound(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
@@ -39,7 +39,7 @@ func (h *userHandler) GetUserById(c *fiber.Ctx, d *types.AuthData) error {
 
 	user, err := h.db.GetUserById(d.UserId)
 	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
+		res = types.RespondNotFound(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 

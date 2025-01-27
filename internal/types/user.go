@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/JueViGrace/clo-backend/internal/db"
+	"github.com/JueViGrace/clo-backend/internal/util"
 	"github.com/google/uuid"
 )
 
@@ -21,37 +22,24 @@ type UserResponse struct {
 }
 
 type CreateUserRequest struct {
-	Username string `json:"username"`
-	Password string `json:"-"`
-	Code     string `json:"codigo"`
+	Username string `json:"username" validate:"required"`
+	Password string `json:"password" validate:"required"`
+	Code     string `json:"codigo" validate:"required"`
 	Role     Role   `json:"-"`
 	LastSync string `json:"lastSync"`
 	Version  string `json:"version"`
 }
 
 type UpdateLastSyncRequest struct {
-	LastSync time.Time `json:"lastSync"`
-	Version  string    `json:"version"`
-	ID       uuid.UUID `json:"id"`
+	LastSync time.Time `json:"lastSync" validate:"required"`
+	Version  string    `json:"version" validate:"required"`
+	ID       uuid.UUID `json:"id" validate:"required"`
 }
 
 type UpdatePasswordRequest struct {
-	Password string    `json:"password"`
-	ID       uuid.UUID `json:"id"`
+	Password string    `json:"password" validate:"required"`
+	ID       uuid.UUID `json:"id" validate:"required"`
 }
-
-type Role string
-
-func (r Role) String() string {
-	return string(r)
-}
-
-const (
-	RoleCustomer Role = "customer"
-	RoleSalesman Role = "salesman"
-	RoleManager  Role = "manager"
-	RoleAdmin    Role = "admin"
-)
 
 func DbUserToUser(db *db.ClossUser) *UserResponse {
 	return &UserResponse{
@@ -72,10 +60,16 @@ func CreateUserToDb(r *CreateUserRequest) (*db.CreateUserParams, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	pass, err := util.HashPassword(r.Password)
+	if err != nil {
+		return nil, err
+	}
+
 	return &db.CreateUserParams{
 		ID:        id.String(),
 		Username:  r.Username,
-		Password:  r.Password,
+		Password:  pass,
 		Codigo:    r.Code,
 		Role:      RoleSalesman.String(),
 		UltSinc:   r.LastSync,

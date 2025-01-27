@@ -47,69 +47,69 @@ type OrderLineResponse struct {
 }
 
 type CreateOrderRequest struct {
-	KtiNdoc        string                   `json:"ktiNdoc"`
-	KtiTdoc        string                   `json:"ktiTdoc"`
-	KtiCodcli      string                   `json:"ktiCodcli"`
-	KtiNombrecli   string                   `json:"ktiNombrecli"`
-	KtiCodven      string                   `json:"ktiCodven"`
-	KtiDocsol      string                   `json:"ktiDocsol"`
-	KtiCondicion   string                   `json:"ktiCondicion"`
-	KtiTipprec     int                      `json:"ktiTipprec"`
-	KtiTotneto     float64                  `json:"ktiTotneto"`
-	KtiStatus      int                      `json:"ktiStatus"`
-	KtiNroped      string                   `json:"ktiNroped"`
-	KtiFchdoc      string                   `json:"ktiFchdoc"`
-	KtiNegesp      bool                     `json:"ktiNegesp"`
-	KePedstatus    int                      `json:"kePedstatus"`
-	Dolarflete     bool                     `json:"dolarflete"`
-	Complemento    bool                     `json:"complemento"`
-	NroComplemento string                   `json:"nroComplemento"`
-	Lines          []CreateOrderLineRequest `json:"lines"`
+	KtiNdoc        string                   `json:"ktiNdoc" validate:"required"`
+	KtiTdoc        string                   `json:"ktiTdoc" validate:"required"`
+	KtiCodcli      string                   `json:"ktiCodcli" validate:"required"`
+	KtiNombrecli   string                   `json:"ktiNombrecli" validate:"required"`
+	KtiCodven      string                   `json:"ktiCodven" validate:"required"`
+	KtiDocsol      string                   `json:"ktiDocsol" validate:"required"`
+	KtiCondicion   string                   `json:"ktiCondicion" validate:"required"`
+	KtiTipprec     int                      `json:"ktiTipprec" validate:"required"`
+	KtiTotneto     float64                  `json:"ktiTotneto" validate:"required"`
+	KtiStatus      int                      `json:"ktiStatus" validate:"required"`
+	KtiNroped      string                   `json:"ktiNroped" validate:"required"`
+	KtiFchdoc      string                   `json:"ktiFchdoc" validate:"required"`
+	KtiNegesp      bool                     `json:"ktiNegesp" validate:"required"`
+	KePedstatus    int                      `json:"kePedstatus" validate:"required"`
+	Dolarflete     bool                     `json:"dolarflete" validate:"required"`
+	Complemento    bool                     `json:"complemento" validate:"required"`
+	NroComplemento string                   `json:"nroComplemento" validate:"required"`
+	Lines          []CreateOrderLineRequest `json:"lines" validate:"required"`
 }
 
 type CreateOrderLineRequest struct {
-	KtiTdoc    string  `json:"ktiTdoc"`
-	KtiNdoc    string  `json:"ktiNdoc"`
-	KtiTipprec int     `json:"ktiTipprec"`
-	KmvCodart  string  `json:"kmvCodart"`
-	KmvNombre  string  `json:"kmvNombre"`
-	KmvCant    int     `json:"kmvCant"`
-	KmvArtprec float64 `json:"kmvArtprec"`
-	KmvStot    float64 `json:"kmvStot"`
-	KmvDctolin float64 `json:"kmvDctolin"`
+	KtiTdoc    string  `json:"ktiTdoc" validate:"required"`
+	KtiNdoc    string  `json:"ktiNdoc" validate:"required"`
+	KtiTipprec int     `json:"ktiTipprec" validate:"required"`
+	KmvCodart  string  `json:"kmvCodart" validate:"required"`
+	KmvNombre  string  `json:"kmvNombre" validate:"required"`
+	KmvCant    int     `json:"kmvCant" validate:"required"`
+	KmvArtprec float64 `json:"kmvArtprec" validate:"required"`
+	KmvStot    float64 `json:"kmvStot" validate:"required"`
+	KmvDctolin float64 `json:"kmvDctolin" validate:"required"`
 }
 
 type UpdateOrderRequest struct {
-	KtiNdoc        string                   `json:"ktiNdoc"`
-	KtiTdoc        string                   `json:"ktiTdoc"`
-	KtiCodcli      string                   `json:"ktiCodcli"`
-	KtiNombrecli   string                   `json:"ktiNombrecli"`
-	KtiCodven      string                   `json:"ktiCodven"`
-	KtiDocsol      string                   `json:"ktiDocsol"`
-	KtiCondicion   string                   `json:"ktiCondicion"`
-	KtiTipprec     int                      `json:"ktiTipprec"`
-	KtiTotneto     float64                  `json:"ktiTotneto"`
-	KtiStatus      int                      `json:"ktiStatus"`
-	KtiNroped      string                   `json:"ktiNroped"`
-	KtiFchdoc      string                   `json:"ktiFchdoc"`
-	KtiNegesp      bool                     `json:"ktiNegesp"`
-	KePedstatus    int                      `json:"kePedstatus"`
-	Dolarflete     bool                     `json:"dolarflete"`
-	Complemento    bool                     `json:"complemento"`
-	NroComplemento string                   `json:"nroComplemento"`
-	Lines          []UpdateOrderLineRequest `json:"lines"`
+	KtiNdoc        string                   `json:"ktiNdoc" validate:"required"`
+	KtiTdoc        string                   `json:"ktiTdoc" validate:"required"`
+	KtiCodcli      string                   `json:"ktiCodcli" validate:"required"`
+	KtiNombrecli   string                   `json:"ktiNombrecli" validate:"required"`
+	KtiCodven      string                   `json:"ktiCodven" validate:"required"`
+	KtiDocsol      string                   `json:"ktiDocsol" validate:"required"`
+	KtiCondicion   string                   `json:"ktiCondicion" validate:"required"`
+	KtiTipprec     int                      `json:"ktiTipprec" validate:"required"`
+	KtiTotneto     float64                  `json:"ktiTotneto" validate:"required"`
+	KtiStatus      int                      `json:"ktiStatus" validate:"required"`
+	KtiNroped      string                   `json:"ktiNroped" validate:"required"`
+	KtiFchdoc      string                   `json:"ktiFchdoc" validate:"required"`
+	KtiNegesp      bool                     `json:"ktiNegesp" validate:"required"`
+	KePedstatus    int                      `json:"kePedstatus" validate:"required"`
+	Dolarflete     bool                     `json:"dolarflete" validate:"required"`
+	Complemento    bool                     `json:"complemento" validate:"required"`
+	NroComplemento string                   `json:"nroComplemento" validate:"required"`
+	Lines          []UpdateOrderLineRequest `json:"lines" validate:"required"`
 }
 
 type UpdateOrderLineRequest struct {
-	KtiTdoc    string  `json:"ktiTdoc"`
-	KtiNdoc    string  `json:"ktiNdoc"`
-	KtiTipprec int     `json:"ktiTipprec"`
-	KmvCodart  string  `json:"kmvCodart"`
-	KmvNombre  string  `json:"kmvNombre"`
-	KmvCant    int     `json:"kmvCant"`
-	KmvArtprec float64 `json:"kmvArtprec"`
-	KmvStot    float64 `json:"kmvStot"`
-	KmvDctolin float64 `json:"kmvDctolin"`
+	KtiTdoc    string  `json:"ktiTdoc" validate:"required"`
+	KtiNdoc    string  `json:"ktiNdoc" validate:"required"`
+	KtiTipprec int     `json:"ktiTipprec" validate:"required"`
+	KmvCodart  string  `json:"kmvCodart" validate:"required"`
+	KmvNombre  string  `json:"kmvNombre" validate:"required"`
+	KmvCant    int     `json:"kmvCant" validate:"required"`
+	KmvArtprec float64 `json:"kmvArtprec" validate:"required"`
+	KmvStot    float64 `json:"kmvStot" validate:"required"`
+	KmvDctolin float64 `json:"kmvDctolin" validate:"required"`
 }
 
 func DbOrderToOrder(db *db.ClossOrder) *OrderResponse {

@@ -47,75 +47,75 @@ type ProductResponse struct {
 }
 
 type CreateProductRequest struct {
-	Grupo        string    `json:"grupo"`
-	Subgrupo     string    `json:"subgrupo"`
-	Nombre       string    `json:"nombre"`
-	Codigo       string    `json:"codigo"`
-	Referencia   string    `json:"referencia"`
-	Marca        string    `json:"marca"`
-	Unidad       string    `json:"unidad"`
-	Existencia   int32     `json:"existencia"`
-	Precio1      float64   `json:"precio1"`
-	Precio2      float64   `json:"precio2"`
-	Precio3      float64   `json:"precio3"`
-	Precio4      float64   `json:"precio4"`
-	Precio5      float64   `json:"precio5"`
-	Precio6      float64   `json:"precio6"`
-	Precio7      float64   `json:"precio7"`
-	Discont      bool      `json:"discont"`
-	VtaMax       int32     `json:"vta_max"`
-	VtaMin       int32     `json:"vta_min"`
-	Dctotope     float64   `json:"dctotope"`
-	Preventa     bool      `json:"enpreventa"`
-	Comprometido int32     `json:"comprometido"`
-	VtaMinenx    int32     `json:"vta_minenx"`
-	VtaSolofac   bool      `json:"vta_solofac"`
-	VtaSolone    bool      `json:"vta_solone"`
-	Codbarras    int       `json:"codbarras"`
-	Detalles     string    `json:"detalles"`
-	Cantbulto    int32     `json:"cantbulto"`
-	CostoProm    float64   `json:"costoProm"`
-	Util1        float64   `json:"util1"`
-	Util2        float64   `json:"util2"`
-	Util3        float64   `json:"util3"`
-	Fchultcomp   time.Time `json:"fchultcomp"`
-	Qtyultcomp   int32     `json:"qtyultcomp"`
+	Grupo        string    `json:"grupo" validate:"required"`
+	Subgrupo     string    `json:"subgrupo" validate:"required"`
+	Nombre       string    `json:"nombre" validate:"required"`
+	Codigo       string    `json:"codigo" validate:"required"`
+	Referencia   string    `json:"referencia" validate:"required"`
+	Marca        string    `json:"marca" validate:"required"`
+	Unidad       string    `json:"unidad" validate:"required"`
+	Existencia   int32     `json:"existencia" validate:"required"`
+	Precio1      float64   `json:"precio1" validate:"required"`
+	Precio2      float64   `json:"precio2" validate:"required"`
+	Precio3      float64   `json:"precio3" validate:"required"`
+	Precio4      float64   `json:"precio4" validate:"required"`
+	Precio5      float64   `json:"precio5" validate:"required"`
+	Precio6      float64   `json:"precio6" validate:"required"`
+	Precio7      float64   `json:"precio7" validate:"required"`
+	Discont      bool      `json:"discont" validate:"required"`
+	VtaMax       int32     `json:"vta_max" validate:"required"`
+	VtaMin       int32     `json:"vta_min" validate:"required"`
+	Dctotope     float64   `json:"dctotope" validate:"required"`
+	Preventa     bool      `json:"enpreventa" validate:"required"`
+	Comprometido int32     `json:"comprometido" validate:"required"`
+	VtaMinenx    int32     `json:"vta_minenx" validate:"required"`
+	VtaSolofac   bool      `json:"vta_solofac" validate:"required"`
+	VtaSolone    bool      `json:"vta_solone" validate:"required"`
+	Codbarras    int       `json:"codbarras" validate:"required"`
+	Detalles     string    `json:"detalles" validate:"required"`
+	Cantbulto    int32     `json:"cantbulto" validate:"required"`
+	CostoProm    float64   `json:"costoProm" validate:"required"`
+	Util1        float64   `json:"util1" validate:"required"`
+	Util2        float64   `json:"util2" validate:"required"`
+	Util3        float64   `json:"util3" validate:"required"`
+	Fchultcomp   time.Time `json:"fchultcomp" validate:"required"`
+	Qtyultcomp   int32     `json:"qtyultcomp" validate:"required"`
 }
 
 type UpdateProductRequest struct {
-	Grupo        string    `json:"grupo"`
-	Subgrupo     string    `json:"subgrupo"`
-	Nombre       string    `json:"nombre"`
-	Codigo       string    `json:"codigo"`
-	Referencia   string    `json:"referencia"`
-	Marca        string    `json:"marca"`
-	Unidad       string    `json:"unidad"`
-	Existencia   int32     `json:"existencia"`
-	Precio1      float64   `json:"precio1"`
-	Precio2      float64   `json:"precio2"`
-	Precio3      float64   `json:"precio3"`
-	Precio4      float64   `json:"precio4"`
-	Precio5      float64   `json:"precio5"`
-	Precio6      float64   `json:"precio6"`
-	Precio7      float64   `json:"precio7"`
-	Discont      bool      `json:"discont"`
-	VtaMax       int32     `json:"vta_max"`
-	VtaMin       int32     `json:"vta_min"`
-	Dctotope     float64   `json:"dctotope"`
-	Preventa     bool      `json:"enpreventa"`
-	Comprometido int32     `json:"comprometido"`
-	VtaMinenx    int32     `json:"vta_minenx"`
-	VtaSolofac   bool      `json:"vta_solofac"`
-	VtaSolone    bool      `json:"vta_solone"`
-	Codbarras    int       `json:"codbarras"`
-	Detalles     string    `json:"detalles"`
-	Cantbulto    int32     `json:"cantbulto"`
-	CostoProm    float64   `json:"costoProm"`
-	Util1        float64   `json:"util1"`
-	Util2        float64   `json:"util2"`
-	Util3        float64   `json:"util3"`
-	Fchultcomp   time.Time `json:"fchultcomp"`
-	Qtyultcomp   int32     `json:"qtyultcomp"`
+	Grupo        string    `json:"grupo" validate:"required"`
+	Subgrupo     string    `json:"subgrupo" validate:"required"`
+	Nombre       string    `json:"nombre" validate:"required"`
+	Codigo       string    `json:"codigo" validate:"required"`
+	Referencia   string    `json:"referencia" validate:"required"`
+	Marca        string    `json:"marca" validate:"required"`
+	Unidad       string    `json:"unidad" validate:"required"`
+	Existencia   int32     `json:"existencia" validate:"required"`
+	Precio1      float64   `json:"precio1" validate:"required"`
+	Precio2      float64   `json:"precio2" validate:"required"`
+	Precio3      float64   `json:"precio3" validate:"required"`
+	Precio4      float64   `json:"precio4" validate:"required"`
+	Precio5      float64   `json:"precio5" validate:"required"`
+	Precio6      float64   `json:"precio6" validate:"required"`
+	Precio7      float64   `json:"precio7" validate:"required"`
+	Discont      bool      `json:"discont" validate:"required"`
+	VtaMax       int32     `json:"vta_max" validate:"required"`
+	VtaMin       int32     `json:"vta_min" validate:"required"`
+	Dctotope     float64   `json:"dctotope" validate:"required"`
+	Preventa     bool      `json:"enpreventa" validate:"required"`
+	Comprometido int32     `json:"comprometido" validate:"required"`
+	VtaMinenx    int32     `json:"vta_minenx" validate:"required"`
+	VtaSolofac   bool      `json:"vta_solofac" validate:"required"`
+	VtaSolone    bool      `json:"vta_solone" validate:"required"`
+	Codbarras    int       `json:"codbarras" validate:"required"`
+	Detalles     string    `json:"detalles" validate:"required"`
+	Cantbulto    int32     `json:"cantbulto" validate:"required"`
+	CostoProm    float64   `json:"costoProm" validate:"required"`
+	Util1        float64   `json:"util1" validate:"required"`
+	Util2        float64   `json:"util2" validate:"required"`
+	Util3        float64   `json:"util3" validate:"required"`
+	Fchultcomp   time.Time `json:"fchultcomp" validate:"required"`
+	Qtyultcomp   int32     `json:"qtyultcomp" validate:"required"`
 }
 
 func DbProductToProduct(db *db.ClossProduct) *ProductResponse {

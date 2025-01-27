@@ -18,19 +18,19 @@ type CompanyResponse struct {
 }
 
 type CreateCompanyRequest struct {
-	KedCodigo string `json:"ked_codigo"`
-	KedNombre string `json:"ked_nombre"`
-	KedStatus int    `json:"ked_status"`
-	KedEnlace string `json:"ked_enlace"`
-	KedAgen   string `json:"ked_agen"`
+	KedCodigo string `json:"ked_codigo" validate:"required"`
+	KedNombre string `json:"ked_nombre" validate:"required"`
+	KedStatus int    `json:"ked_status" validate:"required"`
+	KedEnlace string `json:"ked_enlace" validate:"required"`
+	KedAgen   string `json:"ked_agen" validate:"required"`
 }
 
 type UpdateCompanyRequest struct {
-	KedNombre string `json:"ked_nombre"`
-	KedStatus int    `json:"ked_status"`
-	KedEnlace string `json:"ked_enlace"`
-	KedAgen   string `json:"ked_agen"`
-	KedCodigo string `json:"ked_codigo"`
+	KedNombre string `json:"ked_nombre" validate:"required"`
+	KedStatus int    `json:"ked_status" validate:"required"`
+	KedEnlace string `json:"ked_enlace" validate:"required"`
+	KedAgen   string `json:"ked_agen" validate:"required"`
+	KedCodigo string `json:"ked_codigo" validate:"required"`
 }
 
 func DbComanyToCompany(db *db.ClossCompany) *CompanyResponse {

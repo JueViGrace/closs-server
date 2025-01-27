@@ -19,7 +19,7 @@ func (a *api) adminAuthMiddleware(c *fiber.Ctx) error {
 		return c.Status(res.Status).JSON(res)
 	}
 
-	if data.Role != types.Admin {
+	if data.Role == types.RoleAdmin {
 		res := types.RespondForbbiden("permission denied", "Failed")
 		return c.Status(res.Status).JSON(res)
 	}
@@ -35,6 +35,23 @@ func (a *api) sessionMiddleware(c *fiber.Ctx) error {
 	}
 
 	return c.Next()
+}
+
+func (a *api) authenticatedAdminHandler(handler types.AuthHandler) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		data, err := getUserDataForReq(c, a.db)
+		if err != nil {
+			res := types.RespondUnauthorized(nil, "you are not authorized to access this endpoint")
+			return c.Status(res.Status).JSON(res)
+		}
+
+		if data.Role != types.RoleAdmin {
+			res := types.RespondForbbiden(nil, "forbbiden resource")
+			return c.Status(res.Status).JSON(res)
+		}
+
+		return handler(c, data)
+	}
 }
 
 func (a *api) authenticatedHandler(handler types.AuthHandler) fiber.Handler {
@@ -74,7 +91,7 @@ func getUserDataForReq(c *fiber.Ctx, db data.Storage) (*types.AuthData, error) {
 
 	return &types.AuthData{
 		UserId:   userId,
-		Role:     user.Role.String(),
+		Role:     user.Role,
 		Username: user.Username,
 		Code:     user.Code,
 	}, nil

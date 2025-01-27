@@ -102,179 +102,179 @@ type DocumentLineResponse struct {
 }
 
 type CreateDocumentRequest struct {
-	Agencia        string                      `json:"agencia"`
-	Tipodoc        string                      `json:"tipodoc"`
-	Documento      string                      `json:"documento"`
-	Tipodocv       string                      `json:"tipodocv"`
-	Codcliente     string                      `json:"codcliente"`
-	Nombrecli      string                      `json:"nombrecli"`
-	Contribesp     bool                        `json:"contribesp"`
-	RutaParme      bool                        `json:"rutaParme"`
-	Tipoprecio     int                         `json:"tipoprecio"`
-	Emision        time.Time                   `json:"emision"`
-	Recepcion      time.Time                   `json:"recepcion"`
-	Vence          time.Time                   `json:"vence"`
-	Diascred       int                         `json:"diascred"`
-	Estatusdoc     int                         `json:"estatusdoc"`
-	Dtotneto       float64                     `json:"dtotneto"`
-	Dtotimpuest    float64                     `json:"dtotimpuest"`
-	Dtotalfinal    float64                     `json:"dtotalfinal"`
-	Dtotpagos      float64                     `json:"dtotpagos"`
-	Dtotdescuen    float64                     `json:"dtotdescuen"`
-	Dflete         float64                     `json:"dFlete"`
-	Dtotdev        float64                     `json:"dtotdev"`
-	Dvndmtototal   float64                     `json:"dvndmtototal"`
-	Dretencion     float64                     `json:"dretencion"`
-	Dretencioniva  float64                     `json:"dretencioniva"`
-	Vendedor       string                      `json:"vendedor"`
-	Codcoord       string                      `json:"codcoord"`
-	Aceptadev      bool                        `json:"aceptadev"`
-	KtiNegesp      bool                        `json:"ktiNegesp"`
-	Bsiva          float64                     `json:"bsiva"`
-	Bsflete        float64                     `json:"bsflete"`
-	Bsretencion    float64                     `json:"bsretencion"`
-	Bsretencioniva float64                     `json:"bsretencioniva"`
-	Tasadoc        float64                     `json:"tasadoc"`
-	Mtodcto        float64                     `json:"mtodcto"`
-	Fchvencedcto   time.Time                   `json:"fchvencedcto"`
-	Tienedcto      bool                        `json:"tienedcto"`
-	Cbsret         float64                     `json:"cbsret"`
-	Cdret          float64                     `json:"cdret"`
-	Cbsretiva      float64                     `json:"cbsretiva"`
-	Cdretiva       float64                     `json:"cdretiva"`
-	Cbsrparme      float64                     `json:"cbsrparme"`
-	Cdrparme       float64                     `json:"cdrparme"`
-	Cbsretflete    float64                     `json:"cbsretflete"`
-	Cdretflete     float64                     `json:"cdretflete"`
-	Bsmtoiva       float64                     `json:"bsmtoiva"`
-	Bsmtofte       float64                     `json:"bsmtofte"`
-	RetmunMto      float64                     `json:"retmunMto"`
-	Dolarflete     bool                        `json:"dolarflete"`
-	Bsretflete     float64                     `json:"bsretflete"`
-	Dretflete      float64                     `json:"dretflete"`
-	DretmunMto     float64                     `json:"dretmunMto"`
-	Retivaoblig    bool                        `json:"retivaoblig"`
-	Edoentrega     bool                        `json:"edoentrega"`
-	Dmtoiva        float64                     `json:"dmtoiva"`
-	Prcdctoaplic   float64                     `json:"prcdctoaplic"`
-	Montodctodol   float64                     `json:"montodctodol"`
-	Montodctobs    float64                     `json:"montodctobs"`
-	Lines          []CreateDocumentLineRequest `json:"lines"`
+	Agencia        string                      `json:"agencia" validate:"required"`
+	Tipodoc        string                      `json:"tipodoc" validate:"required"`
+	Documento      string                      `json:"documento" validate:"required"`
+	Tipodocv       string                      `json:"tipodocv" validate:"required"`
+	Codcliente     string                      `json:"codcliente" validate:"required"`
+	Nombrecli      string                      `json:"nombrecli" validate:"required"`
+	Contribesp     bool                        `json:"contribesp" validate:"required"`
+	RutaParme      bool                        `json:"rutaParme" validate:"required"`
+	Tipoprecio     int                         `json:"tipoprecio" validate:"required"`
+	Emision        time.Time                   `json:"emision" validate:"required"`
+	Recepcion      time.Time                   `json:"recepcion" validate:"required"`
+	Vence          time.Time                   `json:"vence" validate:"required"`
+	Diascred       int                         `json:"diascred" validate:"required"`
+	Estatusdoc     int                         `json:"estatusdoc" validate:"required"`
+	Dtotneto       float64                     `json:"dtotneto" validate:"required"`
+	Dtotimpuest    float64                     `json:"dtotimpuest" validate:"required"`
+	Dtotalfinal    float64                     `json:"dtotalfinal" validate:"required"`
+	Dtotpagos      float64                     `json:"dtotpagos" validate:"required"`
+	Dtotdescuen    float64                     `json:"dtotdescuen" validate:"required"`
+	Dflete         float64                     `json:"dFlete" validate:"required"`
+	Dtotdev        float64                     `json:"dtotdev" validate:"required"`
+	Dvndmtototal   float64                     `json:"dvndmtototal" validate:"required"`
+	Dretencion     float64                     `json:"dretencion" validate:"required"`
+	Dretencioniva  float64                     `json:"dretencioniva" validate:"required"`
+	Vendedor       string                      `json:"vendedor" validate:"required"`
+	Codcoord       string                      `json:"codcoord" validate:"required"`
+	Aceptadev      bool                        `json:"aceptadev" validate:"required"`
+	KtiNegesp      bool                        `json:"ktiNegesp" validate:"required"`
+	Bsiva          float64                     `json:"bsiva" validate:"required"`
+	Bsflete        float64                     `json:"bsflete" validate:"required"`
+	Bsretencion    float64                     `json:"bsretencion" validate:"required"`
+	Bsretencioniva float64                     `json:"bsretencioniva" validate:"required"`
+	Tasadoc        float64                     `json:"tasadoc" validate:"required"`
+	Mtodcto        float64                     `json:"mtodcto" validate:"required"`
+	Fchvencedcto   time.Time                   `json:"fchvencedcto" validate:"required"`
+	Tienedcto      bool                        `json:"tienedcto" validate:"required"`
+	Cbsret         float64                     `json:"cbsret" validate:"required"`
+	Cdret          float64                     `json:"cdret" validate:"required"`
+	Cbsretiva      float64                     `json:"cbsretiva" validate:"required"`
+	Cdretiva       float64                     `json:"cdretiva" validate:"required"`
+	Cbsrparme      float64                     `json:"cbsrparme" validate:"required"`
+	Cdrparme       float64                     `json:"cdrparme" validate:"required"`
+	Cbsretflete    float64                     `json:"cbsretflete" validate:"required"`
+	Cdretflete     float64                     `json:"cdretflete" validate:"required"`
+	Bsmtoiva       float64                     `json:"bsmtoiva" validate:"required"`
+	Bsmtofte       float64                     `json:"bsmtofte" validate:"required"`
+	RetmunMto      float64                     `json:"retmunMto" validate:"required"`
+	Dolarflete     bool                        `json:"dolarflete" validate:"required"`
+	Bsretflete     float64                     `json:"bsretflete" validate:"required"`
+	Dretflete      float64                     `json:"dretflete" validate:"required"`
+	DretmunMto     float64                     `json:"dretmunMto" validate:"required"`
+	Retivaoblig    bool                        `json:"retivaoblig" validate:"required"`
+	Edoentrega     bool                        `json:"edoentrega" validate:"required"`
+	Dmtoiva        float64                     `json:"dmtoiva" validate:"required"`
+	Prcdctoaplic   float64                     `json:"prcdctoaplic" validate:"required"`
+	Montodctodol   float64                     `json:"montodctodol" validate:"required"`
+	Montodctobs    float64                     `json:"montodctobs" validate:"required"`
+	Lines          []CreateDocumentLineRequest `json:"lines" validate:"required"`
 }
 
 type CreateDocumentLineRequest struct {
-	Agencia       string    `json:"agencia"`
-	Tipodoc       string    `json:"tipodoc"`
-	Documento     string    `json:"documento"`
-	Tipodocv      string    `json:"tipodocv"`
-	Grupo         string    `json:"grupo"`
-	Subgrupo      string    `json:"subgrupo"`
-	Origen        int       `json:"origen"`
-	Codigo        string    `json:"codigo"`
-	Codhijo       string    `json:"codhijo"`
-	Pid           string    `json:"pid"`
-	Nombre        string    `json:"nombre"`
-	Cantidad      int       `json:"cantidad"`
-	Cntdevuelt    int       `json:"cntdevuelt"`
-	Vndcntdevuelt int       `json:"vndcntdevuelt"`
-	Dvndmtototal  float64   `json:"dvndmtototal"`
-	Dpreciofin    float64   `json:"dpreciofin"`
-	Dpreciounit   float64   `json:"dpreciounit"`
-	Dmontoneto    float64   `json:"dmontoneto"`
-	Dmontototal   float64   `json:"dmontototal"`
-	Timpueprc     float64   `json:"timpueprc"`
-	Unidevuelt    int32     `json:"unidevuelt"`
-	Fechadoc      time.Time `json:"fechadoc"`
-	Vendedor      string    `json:"vendedor"`
-	Codcoord      string    `json:"codcoord"`
+	Agencia       string    `json:"agencia" validate:"required"`
+	Tipodoc       string    `json:"tipodoc" validate:"required"`
+	Documento     string    `json:"documento" validate:"required"`
+	Tipodocv      string    `json:"tipodocv" validate:"required"`
+	Grupo         string    `json:"grupo" validate:"required"`
+	Subgrupo      string    `json:"subgrupo" validate:"required"`
+	Origen        int       `json:"origen" validate:"required"`
+	Codigo        string    `json:"codigo" validate:"required"`
+	Codhijo       string    `json:"codhijo" validate:"required"`
+	Pid           string    `json:"pid" validate:"required"`
+	Nombre        string    `json:"nombre" validate:"required"`
+	Cantidad      int       `json:"cantidad" validate:"required"`
+	Cntdevuelt    int       `json:"cntdevuelt" validate:"required"`
+	Vndcntdevuelt int       `json:"vndcntdevuelt" validate:"required"`
+	Dvndmtototal  float64   `json:"dvndmtototal" validate:"required"`
+	Dpreciofin    float64   `json:"dpreciofin" validate:"required"`
+	Dpreciounit   float64   `json:"dpreciounit" validate:"required"`
+	Dmontoneto    float64   `json:"dmontoneto" validate:"required"`
+	Dmontototal   float64   `json:"dmontototal" validate:"required"`
+	Timpueprc     float64   `json:"timpueprc" validate:"required"`
+	Unidevuelt    int32     `json:"unidevuelt" validate:"required"`
+	Fechadoc      time.Time `json:"fechadoc" validate:"required"`
+	Vendedor      string    `json:"vendedor" validate:"required"`
+	Codcoord      string    `json:"codcoord" validate:"required"`
 }
 
 type UpdateDocumentRequest struct {
-	Agencia        string                      `json:"agencia"`
-	Tipodoc        string                      `json:"tipodoc"`
-	Documento      string                      `json:"documento"`
-	Tipodocv       string                      `json:"tipodocv"`
-	Codcliente     string                      `json:"codcliente"`
-	Nombrecli      string                      `json:"nombrecli"`
-	Contribesp     bool                        `json:"contribesp"`
-	RutaParme      bool                        `json:"rutaParme"`
-	Tipoprecio     int                         `json:"tipoprecio"`
-	Emision        time.Time                   `json:"emision"`
-	Recepcion      time.Time                   `json:"recepcion"`
-	Vence          time.Time                   `json:"vence"`
-	Diascred       int                         `json:"diascred"`
-	Estatusdoc     int                         `json:"estatusdoc"`
-	Dtotneto       float64                     `json:"dtotneto"`
-	Dtotimpuest    float64                     `json:"dtotimpuest"`
-	Dtotalfinal    float64                     `json:"dtotalfinal"`
-	Dtotpagos      float64                     `json:"dtotpagos"`
-	Dtotdescuen    float64                     `json:"dtotdescuen"`
-	Dflete         float64                     `json:"dFlete"`
-	Dtotdev        float64                     `json:"dtotdev"`
-	Dvndmtototal   float64                     `json:"dvndmtototal"`
-	Dretencion     float64                     `json:"dretencion"`
-	Dretencioniva  float64                     `json:"dretencioniva"`
-	Vendedor       string                      `json:"vendedor"`
-	Codcoord       string                      `json:"codcoord"`
-	Aceptadev      bool                        `json:"aceptadev"`
-	KtiNegesp      bool                        `json:"ktiNegesp"`
-	Bsiva          float64                     `json:"bsiva"`
-	Bsflete        float64                     `json:"bsflete"`
-	Bsretencion    float64                     `json:"bsretencion"`
-	Bsretencioniva float64                     `json:"bsretencioniva"`
-	Tasadoc        float64                     `json:"tasadoc"`
-	Mtodcto        float64                     `json:"mtodcto"`
-	Fchvencedcto   time.Time                   `json:"fchvencedcto"`
-	Tienedcto      bool                        `json:"tienedcto"`
-	Cbsret         float64                     `json:"cbsret"`
-	Cdret          float64                     `json:"cdret"`
-	Cbsretiva      float64                     `json:"cbsretiva"`
-	Cdretiva       float64                     `json:"cdretiva"`
-	Cbsrparme      float64                     `json:"cbsrparme"`
-	Cdrparme       float64                     `json:"cdrparme"`
-	Cbsretflete    float64                     `json:"cbsretflete"`
-	Cdretflete     float64                     `json:"cdretflete"`
-	Bsmtoiva       float64                     `json:"bsmtoiva"`
-	Bsmtofte       float64                     `json:"bsmtofte"`
-	RetmunMto      float64                     `json:"retmunMto"`
-	Dolarflete     bool                        `json:"dolarflete"`
-	Bsretflete     float64                     `json:"bsretflete"`
-	Dretflete      float64                     `json:"dretflete"`
-	DretmunMto     float64                     `json:"dretmunMto"`
-	Retivaoblig    bool                        `json:"retivaoblig"`
-	Edoentrega     bool                        `json:"edoentrega"`
-	Dmtoiva        float64                     `json:"dmtoiva"`
-	Prcdctoaplic   float64                     `json:"prcdctoaplic"`
-	Montodctodol   float64                     `json:"montodctodol"`
-	Montodctobs    float64                     `json:"montodctobs"`
-	Lines          []UpdateDocumentLineRequest `json:"lines"`
+	Agencia        string                      `json:"agencia" validate:"required"`
+	Tipodoc        string                      `json:"tipodoc" validate:"required"`
+	Documento      string                      `json:"documento" validate:"required"`
+	Tipodocv       string                      `json:"tipodocv" validate:"required"`
+	Codcliente     string                      `json:"codcliente" validate:"required"`
+	Nombrecli      string                      `json:"nombrecli" validate:"required"`
+	Contribesp     bool                        `json:"contribesp" validate:"required"`
+	RutaParme      bool                        `json:"rutaParme" validate:"required"`
+	Tipoprecio     int                         `json:"tipoprecio" validate:"required"`
+	Emision        time.Time                   `json:"emision" validate:"required"`
+	Recepcion      time.Time                   `json:"recepcion" validate:"required"`
+	Vence          time.Time                   `json:"vence" validate:"required"`
+	Diascred       int                         `json:"diascred" validate:"required"`
+	Estatusdoc     int                         `json:"estatusdoc" validate:"required"`
+	Dtotneto       float64                     `json:"dtotneto" validate:"required"`
+	Dtotimpuest    float64                     `json:"dtotimpuest" validate:"required"`
+	Dtotalfinal    float64                     `json:"dtotalfinal" validate:"required"`
+	Dtotpagos      float64                     `json:"dtotpagos" validate:"required"`
+	Dtotdescuen    float64                     `json:"dtotdescuen" validate:"required"`
+	Dflete         float64                     `json:"dFlete" validate:"required"`
+	Dtotdev        float64                     `json:"dtotdev" validate:"required"`
+	Dvndmtototal   float64                     `json:"dvndmtototal" validate:"required"`
+	Dretencion     float64                     `json:"dretencion" validate:"required"`
+	Dretencioniva  float64                     `json:"dretencioniva" validate:"required"`
+	Vendedor       string                      `json:"vendedor" validate:"required"`
+	Codcoord       string                      `json:"codcoord" validate:"required"`
+	Aceptadev      bool                        `json:"aceptadev" validate:"required"`
+	KtiNegesp      bool                        `json:"ktiNegesp" validate:"required"`
+	Bsiva          float64                     `json:"bsiva" validate:"required"`
+	Bsflete        float64                     `json:"bsflete" validate:"required"`
+	Bsretencion    float64                     `json:"bsretencion" validate:"required"`
+	Bsretencioniva float64                     `json:"bsretencioniva" validate:"required"`
+	Tasadoc        float64                     `json:"tasadoc" validate:"required"`
+	Mtodcto        float64                     `json:"mtodcto" validate:"required"`
+	Fchvencedcto   time.Time                   `json:"fchvencedcto" validate:"required"`
+	Tienedcto      bool                        `json:"tienedcto" validate:"required"`
+	Cbsret         float64                     `json:"cbsret" validate:"required"`
+	Cdret          float64                     `json:"cdret" validate:"required"`
+	Cbsretiva      float64                     `json:"cbsretiva" validate:"required"`
+	Cdretiva       float64                     `json:"cdretiva" validate:"required"`
+	Cbsrparme      float64                     `json:"cbsrparme" validate:"required"`
+	Cdrparme       float64                     `json:"cdrparme" validate:"required"`
+	Cbsretflete    float64                     `json:"cbsretflete" validate:"required"`
+	Cdretflete     float64                     `json:"cdretflete" validate:"required"`
+	Bsmtoiva       float64                     `json:"bsmtoiva" validate:"required"`
+	Bsmtofte       float64                     `json:"bsmtofte" validate:"required"`
+	RetmunMto      float64                     `json:"retmunMto" validate:"required"`
+	Dolarflete     bool                        `json:"dolarflete" validate:"required"`
+	Bsretflete     float64                     `json:"bsretflete" validate:"required"`
+	Dretflete      float64                     `json:"dretflete" validate:"required"`
+	DretmunMto     float64                     `json:"dretmunMto" validate:"required"`
+	Retivaoblig    bool                        `json:"retivaoblig" validate:"required"`
+	Edoentrega     bool                        `json:"edoentrega" validate:"required"`
+	Dmtoiva        float64                     `json:"dmtoiva" validate:"required"`
+	Prcdctoaplic   float64                     `json:"prcdctoaplic" validate:"required"`
+	Montodctodol   float64                     `json:"montodctodol" validate:"required"`
+	Montodctobs    float64                     `json:"montodctobs" validate:"required"`
+	Lines          []UpdateDocumentLineRequest `json:"lines" validate:"required"`
 }
 
 type UpdateDocumentLineRequest struct {
-	Agencia       string    `json:"agencia"`
-	Tipodoc       string    `json:"tipodoc"`
-	Documento     string    `json:"documento"`
-	Tipodocv      string    `json:"tipodocv"`
-	Grupo         string    `json:"grupo"`
-	Subgrupo      string    `json:"subgrupo"`
-	Origen        int       `json:"origen"`
-	Codigo        string    `json:"codigo"`
-	Codhijo       string    `json:"codhijo"`
-	Pid           string    `json:"pid"`
-	Nombre        string    `json:"nombre"`
-	Cantidad      int       `json:"cantidad"`
-	Cntdevuelt    int       `json:"cntdevuelt"`
-	Vndcntdevuelt int       `json:"vndcntdevuelt"`
-	Dvndmtototal  float64   `json:"dvndmtototal"`
-	Dpreciofin    float64   `json:"dpreciofin"`
-	Dpreciounit   float64   `json:"dpreciounit"`
-	Dmontoneto    float64   `json:"dmontoneto"`
-	Dmontototal   float64   `json:"dmontototal"`
-	Timpueprc     float64   `json:"timpueprc"`
-	Unidevuelt    int32     `json:"unidevuelt"`
-	Fechadoc      time.Time `json:"fechadoc"`
-	Vendedor      string    `json:"vendedor"`
-	Codcoord      string    `json:"codcoord"`
+	Agencia       string    `json:"agencia" validate:"required"`
+	Tipodoc       string    `json:"tipodoc" validate:"required"`
+	Documento     string    `json:"documento" validate:"required"`
+	Tipodocv      string    `json:"tipodocv" validate:"required"`
+	Grupo         string    `json:"grupo" validate:"required"`
+	Subgrupo      string    `json:"subgrupo" validate:"required"`
+	Origen        int       `json:"origen" validate:"required"`
+	Codigo        string    `json:"codigo" validate:"required"`
+	Codhijo       string    `json:"codhijo" validate:"required"`
+	Pid           string    `json:"pid" validate:"required"`
+	Nombre        string    `json:"nombre" validate:"required"`
+	Cantidad      int       `json:"cantidad" validate:"required"`
+	Cntdevuelt    int       `json:"cntdevuelt" validate:"required"`
+	Vndcntdevuelt int       `json:"vndcntdevuelt" validate:"required"`
+	Dvndmtototal  float64   `json:"dvndmtototal" validate:"required"`
+	Dpreciofin    float64   `json:"dpreciofin" validate:"required"`
+	Dpreciounit   float64   `json:"dpreciounit" validate:"required"`
+	Dmontoneto    float64   `json:"dmontoneto" validate:"required"`
+	Dmontototal   float64   `json:"dmontototal" validate:"required"`
+	Timpueprc     float64   `json:"timpueprc" validate:"required"`
+	Unidevuelt    int32     `json:"unidevuelt" validate:"required"`
+	Fechadoc      time.Time `json:"fechadoc" validate:"required"`
+	Vendedor      string    `json:"vendedor" validate:"required"`
+	Codcoord      string    `json:"codcoord" validate:"required"`
 }
 
 func DbDocToDocument(db *db.ClossDocument) *DocumentResponse {

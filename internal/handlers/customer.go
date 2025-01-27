@@ -7,8 +7,8 @@ import (
 )
 
 type CustomerHandler interface {
-	GetCustomers(c *fiber.Ctx) error
-	GetCustomerByCode(c *fiber.Ctx) error
+	GetCustomers(c *fiber.Ctx, d *types.AuthData) error
+	GetCustomerByCode(c *fiber.Ctx, d *types.AuthData) error
 	CreateCustomer(c *fiber.Ctx) error
 	UpdateCustomer(c *fiber.Ctx) error
 }
@@ -23,17 +23,18 @@ func NewCustomerHandler(db data.CustomerStore) CustomerHandler {
 	}
 }
 
-func (h *customerHandler) GetCustomers(c *fiber.Ctx) error {
+// todo: use auth data for search
+func (h *customerHandler) GetCustomers(c *fiber.Ctx, d *types.AuthData) error {
 	res := new(types.APIResponse)
 	mq := new(types.ManagerCustomerQueries)
 	if err := c.QueryParser(mq); err != nil {
-		res = types.RespondBadRequest(nil, "unable to parse query parameters")
+		res = types.RespondBadRequest(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
 	sq := new(types.SalesmanCustomerQueries)
 	if err := c.QueryParser(sq); err != nil {
-		res = types.RespondBadRequest(nil, "unable to parse query parameters")
+		res = types.RespondBadRequest(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
@@ -41,7 +42,7 @@ func (h *customerHandler) GetCustomers(c *fiber.Ctx) error {
 	case mq != nil:
 		customers, err := h.db.GetCustomersByManager(mq.Manager)
 		if err != nil {
-			res = types.RespondNotFound(err.Error(), "Failed")
+			res = types.RespondNotFound(nil, err.Error())
 			return c.Status(res.Status).JSON(res)
 		}
 		res = types.RespondOk(customers, "Success manager")
@@ -49,7 +50,7 @@ func (h *customerHandler) GetCustomers(c *fiber.Ctx) error {
 	case sq != nil:
 		customers, err := h.db.GetCustomersBySalesman(sq.Salesman)
 		if err != nil {
-			res = types.RespondNotFound(err.Error(), "Failed")
+			res = types.RespondNotFound(nil, err.Error())
 			return c.Status(res.Status).JSON(res)
 		}
 		res = types.RespondOk(customers, "Success salesman")
@@ -57,7 +58,7 @@ func (h *customerHandler) GetCustomers(c *fiber.Ctx) error {
 	default:
 		customers, err := h.db.GetCustomers()
 		if err != nil {
-			res = types.RespondNotFound(err.Error(), "Failed")
+			res = types.RespondNotFound(nil, err.Error())
 			return c.Status(res.Status).JSON(res)
 		}
 		res = types.RespondOk(customers, "Success")
@@ -66,12 +67,12 @@ func (h *customerHandler) GetCustomers(c *fiber.Ctx) error {
 	return c.Status(res.Status).JSON(res)
 }
 
-func (h *customerHandler) GetCustomerByCode(c *fiber.Ctx) error {
+func (h *customerHandler) GetCustomerByCode(c *fiber.Ctx, d *types.AuthData) error {
 	res := new(types.APIResponse)
 
 	customer, err := h.db.GetCustomerByCode(c.Params("code"))
 	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
+		res = types.RespondNotFound(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
@@ -83,13 +84,13 @@ func (h *customerHandler) CreateCustomer(c *fiber.Ctx) error {
 	res := new(types.APIResponse)
 	r := new(types.CreateCustomerRequest)
 	if err := c.BodyParser(r); err != nil {
-		res = types.RespondBadRequest(err.Error(), "Invalid request")
+		res = types.RespondBadRequest(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
 	m, err := h.db.CreateCustomer(r)
 	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
+		res = types.RespondNotFound(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
@@ -101,13 +102,13 @@ func (h *customerHandler) UpdateCustomer(c *fiber.Ctx) error {
 	res := new(types.APIResponse)
 	r := new(types.UpdateCustomerRequest)
 	if err := c.BodyParser(r); err != nil {
-		res = types.RespondBadRequest(err.Error(), "Invalid request")
+		res = types.RespondBadRequest(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
 	m, err := h.db.UpdateCustomer(r)
 	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
+		res = types.RespondNotFound(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 

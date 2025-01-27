@@ -42,67 +42,67 @@ type CustomerResponse struct {
 }
 
 type CreateCustomerRequest struct {
-	Codigo          string    `json:"codigo"`
-	Nombre          string    `json:"nombre"`
-	Direccion       string    `json:"direccion"`
-	Telefonos       string    `json:"telefonos"`
-	Perscont        string    `json:"perscont"`
-	Vendedor        string    `json:"vendedor"`
-	Contribespecial bool      `json:"contribespecial"`
-	Status          int16     `json:"status"`
-	Sector          string    `json:"sector"`
-	Subcodigo       string    `json:"subcodigo"`
-	Precio          int16     `json:"precio"`
-	Email           string    `json:"email"`
-	KneActiva       bool      `json:"kne_activa"`
-	KneMtomin       float64   `json:"kne_mtomin"`
-	Noemifac        bool      `json:"noemifac"`
-	Noeminota       bool      `json:"noeminota"`
-	Fchultvta       time.Time `json:"fchultvta"`
-	Mtoultvta       float64   `json:"mtoultvta"`
-	Prcdpagdia      float64   `json:"prcdpagdia"`
-	Promdiasp       float64   `json:"promdiasp"`
-	Riesgocrd       float64   `json:"riesgocrd"`
-	Cantdocs        int32     `json:"cantdocs"`
-	Totmtodocs      float64   `json:"totmtodocs"`
-	Prommtodoc      float64   `json:"prommtodoc"`
-	Diasultvta      float64   `json:"diasultvta"`
-	Promdiasvta     float64   `json:"promdiasvta"`
-	Limcred         float64   `json:"limcred"`
-	Dolarflete      bool      `json:"dolarflete"`
-	Nodolarflete    bool      `json:"nodolarflete"`
+	Codigo          string    `json:"codigo" validate:"required"`
+	Nombre          string    `json:"nombre" validate:"required"`
+	Direccion       string    `json:"direccion" validate:"required"`
+	Telefonos       string    `json:"telefonos" validate:"required"`
+	Perscont        string    `json:"perscont" validate:"required"`
+	Vendedor        string    `json:"vendedor" validate:"required"`
+	Contribespecial bool      `json:"contribespecial" validate:"required"`
+	Status          int16     `json:"status" validate:"required"`
+	Sector          string    `json:"sector" validate:"required"`
+	Subcodigo       string    `json:"subcodigo" validate:"required"`
+	Precio          int16     `json:"precio" validate:"required"`
+	Email           string    `json:"email" validate:"required"`
+	KneActiva       bool      `json:"kne_activa" validate:"required"`
+	KneMtomin       float64   `json:"kne_mtomin" validate:"required"`
+	Noemifac        bool      `json:"noemifac" validate:"required"`
+	Noeminota       bool      `json:"noeminota" validate:"required"`
+	Fchultvta       time.Time `json:"fchultvta" validate:"required"`
+	Mtoultvta       float64   `json:"mtoultvta" validate:"required"`
+	Prcdpagdia      float64   `json:"prcdpagdia" validate:"required"`
+	Promdiasp       float64   `json:"promdiasp" validate:"required"`
+	Riesgocrd       float64   `json:"riesgocrd" validate:"required"`
+	Cantdocs        int32     `json:"cantdocs" validate:"required"`
+	Totmtodocs      float64   `json:"totmtodocs" validate:"required"`
+	Prommtodoc      float64   `json:"prommtodoc" validate:"required"`
+	Diasultvta      float64   `json:"diasultvta" validate:"required"`
+	Promdiasvta     float64   `json:"promdiasvta" validate:"required"`
+	Limcred         float64   `json:"limcred" validate:"required"`
+	Dolarflete      bool      `json:"dolarflete" validate:"required"`
+	Nodolarflete    bool      `json:"nodolarflete" validate:"required"`
 }
 
 type UpdateCustomerRequest struct {
-	Codigo          string    `json:"codigo"`
-	Nombre          string    `json:"nombre"`
-	Direccion       string    `json:"direccion"`
-	Telefonos       string    `json:"telefonos"`
-	Perscont        string    `json:"perscont"`
-	Vendedor        string    `json:"vendedor"`
-	Contribespecial bool      `json:"contribespecial"`
-	Status          int16     `json:"status"`
-	Sector          string    `json:"sector"`
-	Subcodigo       string    `json:"subcodigo"`
-	Precio          int16     `json:"precio"`
-	Email           string    `json:"email"`
-	KneActiva       bool      `json:"kne_activa"`
-	KneMtomin       float64   `json:"kne_mtomin"`
-	Noemifac        bool      `json:"noemifac"`
-	Noeminota       bool      `json:"noeminota"`
-	Fchultvta       time.Time `json:"fchultvta"`
-	Mtoultvta       float64   `json:"mtoultvta"`
-	Prcdpagdia      float64   `json:"prcdpagdia"`
-	Promdiasp       float64   `json:"promdiasp"`
-	Riesgocrd       float64   `json:"riesgocrd"`
-	Cantdocs        int32     `json:"cantdocs"`
-	Totmtodocs      float64   `json:"totmtodocs"`
-	Prommtodoc      float64   `json:"prommtodoc"`
-	Diasultvta      float64   `json:"diasultvta"`
-	Promdiasvta     float64   `json:"promdiasvta"`
-	Limcred         float64   `json:"limcred"`
-	Dolarflete      bool      `json:"dolarflete"`
-	Nodolarflete    bool      `json:"nodolarflete"`
+	Codigo          string    `json:"codigo" validate:"required"`
+	Nombre          string    `json:"nombre" validate:"required"`
+	Direccion       string    `json:"direccion" validate:"required"`
+	Telefonos       string    `json:"telefonos" validate:"required"`
+	Perscont        string    `json:"perscont" validate:"required"`
+	Vendedor        string    `json:"vendedor" validate:"required"`
+	Contribespecial bool      `json:"contribespecial" validate:"required"`
+	Status          int16     `json:"status" validate:"required"`
+	Sector          string    `json:"sector" validate:"required"`
+	Subcodigo       string    `json:"subcodigo" validate:"required"`
+	Precio          int16     `json:"precio" validate:"required"`
+	Email           string    `json:"email" validate:"required"`
+	KneActiva       bool      `json:"kne_activa" validate:"required"`
+	KneMtomin       float64   `json:"kne_mtomin" validate:"required"`
+	Noemifac        bool      `json:"noemifac" validate:"required"`
+	Noeminota       bool      `json:"noeminota" validate:"required"`
+	Fchultvta       time.Time `json:"fchultvta" validate:"required"`
+	Mtoultvta       float64   `json:"mtoultvta" validate:"required"`
+	Prcdpagdia      float64   `json:"prcdpagdia" validate:"required"`
+	Promdiasp       float64   `json:"promdiasp" validate:"required"`
+	Riesgocrd       float64   `json:"riesgocrd" validate:"required"`
+	Cantdocs        int32     `json:"cantdocs" validate:"required"`
+	Totmtodocs      float64   `json:"totmtodocs" validate:"required"`
+	Prommtodoc      float64   `json:"prommtodoc" validate:"required"`
+	Diasultvta      float64   `json:"diasultvta" validate:"required"`
+	Promdiasvta     float64   `json:"promdiasvta" validate:"required"`
+	Limcred         float64   `json:"limcred" validate:"required"`
+	Dolarflete      bool      `json:"dolarflete" validate:"required"`
+	Nodolarflete    bool      `json:"nodolarflete" validate:"required"`
 }
 
 func DbCustomerToCustomer(db *db.ClossCustomer) *CustomerResponse {

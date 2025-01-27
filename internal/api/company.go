@@ -11,11 +11,11 @@ func (a *api) CompanyRoutes(api fiber.Router) {
 
 	handler := handlers.NewCompanyHandler(a.db.CompanyStore())
 
-	adminGroup.Get("/", handler.GetCompanies)
-	adminGroup.Get("/:code", handler.GetCompanyByCode)
+	adminGroup.Get("/", a.adminAuthMiddleware, handler.GetCompanies)
+	adminGroup.Get("/:code", a.adminAuthMiddleware, handler.GetCompanyByCode)
 	group.Get("/:code", handler.GetExistingCompanyByCode)
-	adminGroup.Post("/", handler.CreateCompany)
-	adminGroup.Put("/", handler.UpdateCompany)
-	adminGroup.Delete("/:code", handler.SoftDeleteCompany)
-	adminGroup.Delete("/forever/:code", handler.DeleteCompany)
+	adminGroup.Post("/", a.adminAuthMiddleware, handler.CreateCompany)
+	adminGroup.Put("/", a.adminAuthMiddleware, handler.UpdateCompany)
+	adminGroup.Delete("/:code", a.adminAuthMiddleware, handler.SoftDeleteCompany)
+	adminGroup.Delete("/forever/:code", a.adminAuthMiddleware, handler.DeleteCompany)
 }

@@ -32,6 +32,8 @@ func NewAuthStore(ctx context.Context, db *db.Queries) AuthStore {
 }
 
 // todo: refactor functions
+// todo: search for existing session and delete it?
+// if not add support for limited number of sessions
 func (s *authStore) SignIn(r *types.SignInRequest) (*types.AuthResponse, error) {
 	user, err := s.db.GetUserByUsername(s.ctx, r.Username)
 	if err != nil {

@@ -7,7 +7,7 @@ import (
 )
 
 type SalesmanHandler interface {
-	GetSalesman(c *fiber.Ctx) error
+	GetSalesman(c *fiber.Ctx, d *types.AuthData) error
 	CreateSalesman(c *fiber.Ctx) error
 	UpdateSalesman(c *fiber.Ctx) error
 }
@@ -22,11 +22,12 @@ func NewSalesmanHandler(db data.SalesmanStore) SalesmanHandler {
 	}
 }
 
-func (h *salesmanHandler) GetSalesman(c *fiber.Ctx) error {
+// todo: use auth data for search
+func (h *salesmanHandler) GetSalesman(c *fiber.Ctx, d *types.AuthData) error {
 	res := new(types.APIResponse)
 	salesman, err := h.db.GetSalesmanByCode(c.Params("code"))
 	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
+		res = types.RespondNotFound(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
@@ -38,13 +39,13 @@ func (h *salesmanHandler) CreateSalesman(c *fiber.Ctx) error {
 	res := new(types.APIResponse)
 	r := new(types.CreateSalesmanRequest)
 	if err := c.BodyParser(r); err != nil {
-		res = types.RespondBadRequest(err.Error(), "Invalid request")
+		res = types.RespondBadRequest(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
 	m, err := h.db.CreateSalesman(r)
 	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
+		res = types.RespondNotFound(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
@@ -56,13 +57,13 @@ func (h *salesmanHandler) UpdateSalesman(c *fiber.Ctx) error {
 	res := new(types.APIResponse)
 	r := new(types.UpdateSalesmanRequest)
 	if err := c.BodyParser(r); err != nil {
-		res = types.RespondBadRequest(err.Error(), "Invalid request")
+		res = types.RespondBadRequest(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
 	m, err := h.db.UpdateSalesman(r)
 	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
+		res = types.RespondNotFound(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 

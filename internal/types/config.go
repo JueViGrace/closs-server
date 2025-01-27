@@ -26,38 +26,38 @@ type ConfigResponse struct {
 }
 
 type CreateConfigRequest struct {
-	CnfgIdconfig string    `json:"cnfg_idconfig"`
-	CnfgClase    string    `json:"cnfg_clase"`
-	CnfgTipo     string    `json:"cnfg_tipo"`
-	CnfgValnum   float64   `json:"cnfg_valnum"`
-	CnfgValsino  bool      `json:"cnfg_valsino"`
-	CnfgValtxt   string    `json:"cnfg_valtxt"`
-	CnfgLentxt   int16     `json:"cnfg_lentxt"`
-	CnfgValfch   time.Time `json:"cnfg_valfch"`
-	CnfgActiva   bool      `json:"cnfg_activa"`
-	CnfgEtiq     string    `json:"cnfg_etiq"`
-	CnfgTtip     string    `json:"cnfg_ttip"`
-	Username     string    `json:"username"`
+	CnfgIdconfig string    `json:"cnfg_idconfig" validate:"required"`
+	CnfgClase    string    `json:"cnfg_clase" validate:"required"`
+	CnfgTipo     string    `json:"cnfg_tipo" validate:"required"`
+	CnfgValnum   float64   `json:"cnfg_valnum" validate:"required"`
+	CnfgValsino  bool      `json:"cnfg_valsino" validate:"required"`
+	CnfgValtxt   string    `json:"cnfg_valtxt" validate:"required"`
+	CnfgLentxt   int16     `json:"cnfg_lentxt" validate:"required"`
+	CnfgValfch   time.Time `json:"cnfg_valfch" validate:"required"`
+	CnfgActiva   bool      `json:"cnfg_activa" validate:"required"`
+	CnfgEtiq     string    `json:"cnfg_etiq" validate:"required"`
+	CnfgTtip     string    `json:"cnfg_ttip" validate:"required"`
+	Username     string    `json:"username" validate:"required"`
 }
 
 type UpdateConfigRequest struct {
-	CnfgClase    string    `json:"cnfg_clase"`
-	CnfgTipo     string    `json:"cnfg_tipo"`
-	CnfgValnum   float64   `json:"cnfg_valnum"`
-	CnfgValsino  bool      `json:"cnfg_valsino"`
-	CnfgValtxt   string    `json:"cnfg_valtxt"`
-	CnfgLentxt   int16     `json:"cnfg_lentxt"`
-	CnfgValfch   time.Time `json:"cnfg_valfch"`
-	CnfgActiva   bool      `json:"cnfg_activa"`
-	CnfgEtiq     string    `json:"cnfg_etiq"`
-	CnfgTtip     string    `json:"cnfg_ttip"`
-	Username     string    `json:"username"`
-	CnfgIdconfig string    `json:"cnfg_idconfig"`
+	CnfgClase    string    `json:"cnfg_clase" validate:"required"`
+	CnfgTipo     string    `json:"cnfg_tipo" validate:"required"`
+	CnfgValnum   float64   `json:"cnfg_valnum" validate:"required"`
+	CnfgValsino  bool      `json:"cnfg_valsino" validate:"required"`
+	CnfgValtxt   string    `json:"cnfg_valtxt" validate:"required"`
+	CnfgLentxt   int16     `json:"cnfg_lentxt" validate:"required"`
+	CnfgValfch   time.Time `json:"cnfg_valfch" validate:"required"`
+	CnfgActiva   bool      `json:"cnfg_activa" validate:"required"`
+	CnfgEtiq     string    `json:"cnfg_etiq" validate:"required"`
+	CnfgTtip     string    `json:"cnfg_ttip" validate:"required"`
+	Username     string    `json:"username" validate:"required"`
+	CnfgIdconfig string    `json:"cnfg_idconfig" validate:"required"`
 }
 
 type DeleteConfigRequest struct {
-	Username     string `json:"username"`
-	CnfgIdconfig string `json:"cnfg_idconfig"`
+	Username     string `json:"username" validate:"required"`
+	CnfgIdconfig string `json:"cnfg_idconfig" validate:"required"`
 }
 
 func DbConfigToConfig(db *db.ClossConfig) *ConfigResponse {

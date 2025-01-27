@@ -11,9 +11,9 @@ func (a *api) ConfigRoutes(api fiber.Router) {
 
 	handler := handlers.NewConfigHandler(a.db.ConfigStore())
 
-	adminGroup.Get("/", handler.GetConfigs)
-	group.Get("/:id", handler.GetConfigsByUser)
-	adminGroup.Post("/", handler.CreateConfig)
-	adminGroup.Put("/", handler.UpdateConfig)
-	adminGroup.Delete("/", handler.DeleteConfig)
+	adminGroup.Get("/", a.adminAuthMiddleware, handler.GetConfigs)
+	group.Get("/:id", a.authenticatedHandler(handler.GetConfigsByUser))
+	adminGroup.Post("/", a.adminAuthMiddleware, handler.CreateConfig)
+	adminGroup.Put("/", a.adminAuthMiddleware, handler.UpdateConfig)
+	adminGroup.Delete("/", a.adminAuthMiddleware, handler.DeleteConfig)
 }

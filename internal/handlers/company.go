@@ -31,7 +31,7 @@ func (h *companyHandler) GetCompanies(c *fiber.Ctx) error {
 
 	companies, err := h.db.GetCompanies()
 	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
+		res = types.RespondNotFound(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
@@ -44,7 +44,7 @@ func (h *companyHandler) GetCompanyByCode(c *fiber.Ctx) error {
 
 	company, err := h.db.GetCompanyByCode(c.Params("code"))
 	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
+		res = types.RespondNotFound(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
@@ -57,7 +57,7 @@ func (h *companyHandler) GetExistingCompanyByCode(c *fiber.Ctx) error {
 
 	company, err := h.db.GetExistingCompanyByCode(c.Params("code"))
 	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
+		res = types.RespondNotFound(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
@@ -69,13 +69,13 @@ func (h *companyHandler) CreateCompany(c *fiber.Ctx) error {
 	res := new(types.APIResponse)
 	r := new(types.CreateCompanyRequest)
 	if err := c.BodyParser(r); err != nil {
-		res = types.RespondBadRequest(err.Error(), "Invalid request")
+		res = types.RespondBadRequest(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
 	m, err := h.db.CreateCompany(r)
 	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
+		res = types.RespondNotFound(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
@@ -87,13 +87,13 @@ func (h *companyHandler) UpdateCompany(c *fiber.Ctx) error {
 	res := new(types.APIResponse)
 	r := new(types.UpdateCompanyRequest)
 	if err := c.BodyParser(r); err != nil {
-		res = types.RespondBadRequest(err.Error(), "Invalid request")
+		res = types.RespondBadRequest(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
 	m, err := h.db.UpdateCompany(r)
 	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
+		res = types.RespondNotFound(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
@@ -106,7 +106,7 @@ func (h *companyHandler) SoftDeleteCompany(c *fiber.Ctx) error {
 
 	err := h.db.SoftDeleteCompany(c.Params("code"))
 	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
+		res = types.RespondNotFound(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
@@ -119,7 +119,7 @@ func (h *companyHandler) DeleteCompany(c *fiber.Ctx) error {
 
 	err := h.db.DeleteCompany(c.Params("code"))
 	if err != nil {
-		res = types.RespondNotFound(err.Error(), "Failed")
+		res = types.RespondNotFound(nil, err.Error())
 		return c.Status(res.Status).JSON(res)
 	}
 
